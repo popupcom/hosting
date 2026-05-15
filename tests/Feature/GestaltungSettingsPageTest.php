@@ -54,4 +54,30 @@ class GestaltungSettingsPageTest extends TestCase
             Filament::getPanel('admin')->getBrandName(),
         );
     }
+
+    public function test_admin_can_save_notification_style_tokens(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin);
+
+        Livewire::test(GestaltungSettingsPage::class)
+            ->fillForm([
+                'notification_style' => [
+                    'toolbar_bg' => '#eef2ff',
+                    'pill_active_text' => '#312e81',
+                    'matrix_max_height' => 'min(60vh, 40rem)',
+                ],
+            ])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        DesignSetting::forgetRememberedInstance();
+
+        $tokens = DesignSetting::current()->resolvedNotificationTokens();
+
+        $this->assertSame('#eef2ff', $tokens['toolbar_bg']);
+        $this->assertSame('#312e81', $tokens['pill_active_text']);
+        $this->assertSame('min(60vh, 40rem)', $tokens['matrix_max_height']);
+    }
 }

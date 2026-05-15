@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\LicenseAssignmentStatus;
+use App\Support\LicenseCodeRules;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'license_product_id',
     'project_id',
     'client_id',
+    'license_code',
     'assigned_at',
     'activated_at',
     'cancelled_at',
@@ -38,6 +40,8 @@ class ProjectLicenseAssignment extends Model
         });
 
         static::saving(function (ProjectLicenseAssignment $assignment): void {
+            LicenseCodeRules::validateAssignment($assignment);
+
             if ($assignment->do_not_renew) {
                 if ($assignment->status === LicenseAssignmentStatus::Active) {
                     $assignment->status = LicenseAssignmentStatus::PendingCancellation;
@@ -92,5 +96,10 @@ class ProjectLicenseAssignment extends Model
             LicenseAssignmentStatus::Active->value,
             LicenseAssignmentStatus::PendingCancellation->value,
         ]);
+    }
+
+    public function effectiveLicenseCode(): ?string
+    {
+        return LicenseCodeRules::effectiveCode($this);
     }
 }

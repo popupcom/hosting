@@ -14,15 +14,20 @@ use App\Enums\ProjectDomainStatus;
 use App\Enums\ProjectServiceMocoSyncStatus;
 use App\Enums\ProjectServiceStatus;
 use App\Enums\ProjectStatus;
+use App\Enums\ProjectSupportPackageStatus;
+use App\Enums\ReminderStatus;
 use App\Enums\ServerStatus;
 use App\Enums\ServiceCatalogBillingInterval;
 use App\Enums\ServiceCatalogCategory;
 use App\Enums\ServiceCatalogUnit;
 use App\Enums\SupportPackageStatus;
+use App\Models\MaintenanceHistory;
 use App\Models\ProjectDomain;
 use App\Models\ProjectLicenseAssignment;
 use App\Models\Server;
 use App\Models\SupportPackage;
+use App\Support\UiLabelCatalog;
+use App\Support\UiLabelResolver;
 use Illuminate\Database\Eloquent\Model;
 
 final class GermanLabels
@@ -30,11 +35,7 @@ final class GermanLabels
     /** @return array<string, string> */
     public static function clientStatuses(): array
     {
-        return [
-            ClientStatus::Active->value => 'Aktiv',
-            ClientStatus::Inactive->value => 'Inaktiv',
-            ClientStatus::Lead->value => 'Lead',
-        ];
+        return UiLabelResolver::merge('client_statuses', UiLabelCatalog::defaults()['client_statuses']);
     }
 
     public static function clientStatus(?ClientStatus $state): string
@@ -49,12 +50,7 @@ final class GermanLabels
     /** @return array<string, string> */
     public static function projectStatuses(): array
     {
-        return [
-            ProjectStatus::Active->value => 'Aktiv',
-            ProjectStatus::Inactive->value => 'Inaktiv',
-            ProjectStatus::Archived->value => 'Archiviert',
-            ProjectStatus::OnHold->value => 'Pausiert',
-        ];
+        return UiLabelResolver::merge('project_statuses', UiLabelCatalog::defaults()['project_statuses']);
     }
 
     public static function projectStatus(?ProjectStatus $state): string
@@ -69,12 +65,7 @@ final class GermanLabels
     /** @return array<string, string> */
     public static function projectDomainStatuses(): array
     {
-        return [
-            ProjectDomainStatus::Active->value => 'Aktiv',
-            ProjectDomainStatus::PendingTransfer->value => 'Transfer ausstehend',
-            ProjectDomainStatus::Expired->value => 'Abgelaufen',
-            ProjectDomainStatus::Cancelled->value => 'Gekündigt',
-        ];
+        return UiLabelResolver::merge('project_domain_statuses', UiLabelCatalog::defaults()['project_domain_statuses']);
     }
 
     public static function projectDomainStatus(?ProjectDomainStatus $state): string
@@ -89,11 +80,7 @@ final class GermanLabels
     /** @return array<string, string> */
     public static function serverStatuses(): array
     {
-        return [
-            ServerStatus::Active->value => 'Aktiv',
-            ServerStatus::Maintenance->value => 'Wartung',
-            ServerStatus::Retired->value => 'Außer Betrieb',
-        ];
+        return UiLabelResolver::merge('server_statuses', UiLabelCatalog::defaults()['server_statuses']);
     }
 
     public static function serverStatus(?ServerStatus $state): string
@@ -108,12 +95,7 @@ final class GermanLabels
     /** @return array<string, string> */
     public static function licenseStatuses(): array
     {
-        return [
-            LicenseStatus::Active->value => 'Aktiv',
-            LicenseStatus::Expired->value => 'Abgelaufen',
-            LicenseStatus::Suspended->value => 'Ausgesetzt',
-            LicenseStatus::Cancelled->value => 'Gekündigt',
-        ];
+        return UiLabelResolver::merge('license_statuses', UiLabelCatalog::defaults()['license_statuses']);
     }
 
     public static function licenseStatus(?LicenseStatus $state): string
@@ -128,12 +110,7 @@ final class GermanLabels
     /** @return array<string, string> */
     public static function licenseAssignmentStatuses(): array
     {
-        return [
-            LicenseAssignmentStatus::Active->value => 'Aktiv',
-            LicenseAssignmentStatus::PendingCancellation->value => 'Kündigung vorgemerkt',
-            LicenseAssignmentStatus::Cancelled->value => 'Gekündigt',
-            LicenseAssignmentStatus::Expired->value => 'Abgelaufen',
-        ];
+        return UiLabelResolver::merge('license_assignment_statuses', UiLabelCatalog::defaults()['license_assignment_statuses']);
     }
 
     public static function licenseAssignmentStatus(?LicenseAssignmentStatus $state): string
@@ -148,11 +125,7 @@ final class GermanLabels
     /** @return array<string, string> */
     public static function billingCadences(): array
     {
-        return [
-            BillingCadence::Monthly->value => 'Monatlich',
-            BillingCadence::Yearly->value => 'Jährlich',
-            BillingCadence::OneTime->value => 'Einmalig',
-        ];
+        return UiLabelResolver::merge('billing_cadences', UiLabelCatalog::defaults()['billing_cadences']);
     }
 
     public static function billingCadence(?BillingCadence $state): string
@@ -167,19 +140,7 @@ final class GermanLabels
     /** @return array<string, string> */
     public static function serviceCatalogCategories(): array
     {
-        return [
-            ServiceCatalogCategory::Hosting->value => 'Hosting',
-            ServiceCatalogCategory::Domain->value => 'Domain',
-            ServiceCatalogCategory::Ssl->value => 'SSL',
-            ServiceCatalogCategory::License->value => 'Lizenz',
-            ServiceCatalogCategory::SupportPackage->value => 'Supportpaket',
-            ServiceCatalogCategory::QrCode->value => 'QR-Code',
-            ServiceCatalogCategory::MailExchange->value => 'Mail / Exchange',
-            ServiceCatalogCategory::Storage->value => 'Speicherplatz',
-            ServiceCatalogCategory::ToolSaas->value => 'Tool / SaaS',
-            ServiceCatalogCategory::Monitoring->value => 'Monitoring',
-            ServiceCatalogCategory::AdditionalService->value => 'Zusatzleistung',
-        ];
+        return UiLabelResolver::merge('service_catalog_categories', UiLabelCatalog::defaults()['service_catalog_categories']);
     }
 
     public static function serviceCatalogCategory(?ServiceCatalogCategory $state): string
@@ -194,12 +155,7 @@ final class GermanLabels
     /** @return array<string, string> */
     public static function serviceCatalogUnits(): array
     {
-        return [
-            ServiceCatalogUnit::Month->value => 'Monat',
-            ServiceCatalogUnit::Year->value => 'Jahr',
-            ServiceCatalogUnit::Piece->value => 'Stück',
-            ServiceCatalogUnit::FlatRate->value => 'pauschal',
-        ];
+        return UiLabelResolver::merge('service_catalog_units', UiLabelCatalog::defaults()['service_catalog_units']);
     }
 
     public static function serviceCatalogUnit(?ServiceCatalogUnit $state): string
@@ -214,12 +170,7 @@ final class GermanLabels
     /** @return array<string, string> */
     public static function serviceCatalogBillingIntervals(): array
     {
-        return [
-            ServiceCatalogBillingInterval::Monthly->value => 'monatlich',
-            ServiceCatalogBillingInterval::Yearly->value => 'jährlich',
-            ServiceCatalogBillingInterval::OneTime->value => 'einmalig',
-            ServiceCatalogBillingInterval::FlatRate->value => 'pauschal',
-        ];
+        return UiLabelResolver::merge('service_catalog_billing_intervals', UiLabelCatalog::defaults()['service_catalog_billing_intervals']);
     }
 
     public static function serviceCatalogBillingInterval(?ServiceCatalogBillingInterval $state): string
@@ -234,13 +185,7 @@ final class GermanLabels
     /** @return array<string, string> */
     public static function projectServiceStatuses(): array
     {
-        return [
-            ProjectServiceStatus::Active->value => 'Aktiv',
-            ProjectServiceStatus::Paused->value => 'Pausiert',
-            ProjectServiceStatus::PendingCancellation->value => 'Kündigung vorgemerkt',
-            ProjectServiceStatus::Cancelled->value => 'Gekündigt',
-            ProjectServiceStatus::Expired->value => 'Abgelaufen',
-        ];
+        return UiLabelResolver::merge('project_service_statuses', UiLabelCatalog::defaults()['project_service_statuses']);
     }
 
     public static function projectServiceStatus(?ProjectServiceStatus $state): string
@@ -255,12 +200,7 @@ final class GermanLabels
     /** @return array<string, string> */
     public static function projectServiceMocoSyncStatuses(): array
     {
-        return [
-            ProjectServiceMocoSyncStatus::NotSynced->value => 'Nicht synchronisiert',
-            ProjectServiceMocoSyncStatus::Ready->value => 'Bereit',
-            ProjectServiceMocoSyncStatus::Synced->value => 'Synchronisiert',
-            ProjectServiceMocoSyncStatus::Error->value => 'Fehler',
-        ];
+        return UiLabelResolver::merge('project_service_moco_sync_statuses', UiLabelCatalog::defaults()['project_service_moco_sync_statuses']);
     }
 
     public static function projectServiceMocoSyncStatus(?ProjectServiceMocoSyncStatus $state): string
@@ -275,11 +215,7 @@ final class GermanLabels
     /** @return array<string, string> */
     public static function licenseSharingModels(): array
     {
-        return [
-            LicenseSharingModel::Shared->value => 'Geteilt (shared)',
-            LicenseSharingModel::Dedicated->value => 'Dediziert',
-            LicenseSharingModel::SeatBased->value => 'Seat-basiert',
-        ];
+        return UiLabelResolver::merge('license_sharing_models', UiLabelCatalog::defaults()['license_sharing_models']);
     }
 
     public static function licenseSharingModel(?LicenseSharingModel $state): string
@@ -294,10 +230,7 @@ final class GermanLabels
     /** @return array<string, string> */
     public static function licenseProductStatuses(): array
     {
-        return [
-            LicenseProductStatus::Active->value => 'Aktiv',
-            LicenseProductStatus::Inactive->value => 'Inaktiv',
-        ];
+        return UiLabelResolver::merge('license_product_statuses', UiLabelCatalog::defaults()['license_product_statuses']);
     }
 
     public static function licenseProductStatus(?LicenseProductStatus $state): string
@@ -312,12 +245,7 @@ final class GermanLabels
     /** @return array<string, string> */
     public static function supportPackageStatuses(): array
     {
-        return [
-            SupportPackageStatus::Active->value => 'Aktiv',
-            SupportPackageStatus::Paused->value => 'Pausiert',
-            SupportPackageStatus::Cancelled->value => 'Gekündigt',
-            SupportPackageStatus::Expired->value => 'Abgelaufen',
-        ];
+        return UiLabelResolver::merge('support_package_statuses', UiLabelCatalog::defaults()['support_package_statuses']);
     }
 
     public static function supportPackageStatus(?SupportPackageStatus $state): string
@@ -330,17 +258,24 @@ final class GermanLabels
     }
 
     /** @return array<string, string> */
+    public static function projectSupportPackageStatuses(): array
+    {
+        return UiLabelResolver::merge('project_support_package_statuses', UiLabelCatalog::defaults()['project_support_package_statuses']);
+    }
+
+    public static function projectSupportPackageStatus(?ProjectSupportPackageStatus $state): string
+    {
+        if ($state === null) {
+            return '–';
+        }
+
+        return self::projectSupportPackageStatuses()[$state->value] ?? $state->value;
+    }
+
+    /** @return array<string, string> */
     public static function maintenanceTypes(): array
     {
-        return [
-            MaintenanceType::WordPressCore->value => 'WordPress Core',
-            MaintenanceType::PluginUpdate->value => 'Plugin-Updates',
-            MaintenanceType::ThemeUpdate->value => 'Theme-Updates',
-            MaintenanceType::Backup->value => 'Backup',
-            MaintenanceType::PerformanceCheck->value => 'Performance-Check',
-            MaintenanceType::SecurityCheck->value => 'Security-Check',
-            MaintenanceType::SupportPackageExcelSnapshot->value => 'Supportpaket-Import (Excel)',
-        ];
+        return UiLabelResolver::merge('maintenance_types', UiLabelCatalog::defaults()['maintenance_types']);
     }
 
     public static function maintenanceType(?MaintenanceType $state): string
@@ -355,12 +290,7 @@ final class GermanLabels
     /** @return array<string, string> */
     public static function mocoSyncStatuses(): array
     {
-        return [
-            MocoSyncStatus::Pending->value => 'Ausstehend',
-            MocoSyncStatus::Synced->value => 'Synchronisiert',
-            MocoSyncStatus::Failed->value => 'Fehlgeschlagen',
-            MocoSyncStatus::Skipped->value => 'Übersprungen',
-        ];
+        return UiLabelResolver::merge('moco_sync_statuses', UiLabelCatalog::defaults()['moco_sync_statuses']);
     }
 
     public static function mocoSyncStatus(?MocoSyncStatus $state): string
@@ -372,16 +302,19 @@ final class GermanLabels
         return self::mocoSyncStatuses()[$state->value] ?? $state->value;
     }
 
+    /** @return array<string, string> */
+    public static function billableMorphTypes(): array
+    {
+        return UiLabelResolver::merge('billable_morph_types', UiLabelCatalog::defaults()['billable_morph_types']);
+    }
+
     public static function billableMorphType(?string $class): string
     {
-        return match ($class) {
-            ProjectDomain::class => 'Domain',
-            Server::class => 'Server',
-            ProjectLicenseAssignment::class => 'Lizenz-Zuweisung',
-            SupportPackage::class => 'Supportpaket',
-            null, '' => '–',
-            default => class_basename($class),
-        };
+        if ($class === null || $class === '') {
+            return '–';
+        }
+
+        return self::billableMorphTypes()[$class] ?? class_basename($class);
     }
 
     public static function billableTitle(?Model $billable): string
@@ -396,6 +329,53 @@ final class GermanLabels
             $billable instanceof ProjectLicenseAssignment => $billable->licenseProduct?->name ?? ('Lizenz-Zuweisung #'.$billable->getKey()),
             $billable instanceof SupportPackage => $billable->name,
             default => $billable->getKey() ? (class_basename($billable).' #'.$billable->getKey()) : class_basename($billable),
+        };
+    }
+
+    /** @return array<string, string> */
+    public static function todoStatuses(): array
+    {
+        return UiLabelResolver::merge('todo_statuses', UiLabelCatalog::defaults()['todo_statuses']);
+    }
+
+    public static function todoStatus(?ReminderStatus $state): string
+    {
+        if ($state === null) {
+            return '–';
+        }
+
+        return self::todoStatuses()[$state->value] ?? $state->value;
+    }
+
+    /** @return array<class-string<Model>, string> */
+    public static function todoRemindableTypes(): array
+    {
+        /** @var array<class-string<Model>, string> $types */
+        $types = UiLabelResolver::merge('todo_remindable_types', UiLabelCatalog::defaults()['todo_remindable_types']);
+
+        return $types;
+    }
+
+    public static function todoRemindableType(?string $class): string
+    {
+        if ($class === null || $class === '') {
+            return '–';
+        }
+
+        return self::todoRemindableTypes()[$class] ?? class_basename($class);
+    }
+
+    public static function todoRemindableTitle(?Model $remindable): string
+    {
+        if ($remindable === null) {
+            return '–';
+        }
+
+        return match (true) {
+            $remindable instanceof ProjectDomain => $remindable->domain_name,
+            $remindable instanceof Server => $remindable->name,
+            $remindable instanceof MaintenanceHistory => ($remindable->project?->name ?? 'Wartung').' · '.self::maintenanceType($remindable->maintenance_type),
+            default => $remindable->getKey() ? (class_basename($remindable).' #'.$remindable->getKey()) : class_basename($remindable),
         };
     }
 }

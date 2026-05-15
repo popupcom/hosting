@@ -5,8 +5,10 @@ namespace App\Providers;
 use App\Models\DesignSetting;
 use App\Models\Project;
 use App\Models\ProjectService;
+use App\Models\ProjectSupportPackage;
 use App\Observers\ProjectObserver;
 use App\Observers\ProjectServiceObserver;
+use App\Observers\ProjectSupportPackageObserver;
 use Filament\Events\ServingFilament;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
@@ -35,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         ProjectService::observe(ProjectServiceObserver::class);
+        ProjectSupportPackage::observe(ProjectSupportPackageObserver::class);
         Project::observe(ProjectObserver::class);
 
         Event::listen(ServingFilament::class, function (): void {

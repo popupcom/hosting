@@ -256,7 +256,7 @@ final class SupportPackageExcelImporter
                     ? 'Kommentar: '.trim((string) $row['comment'])
                     : null,
                 isset($row['open_todos']) && trim((string) $row['open_todos']) !== ''
-                    ? 'Offene Aufgaben: '.trim((string) $row['open_todos'])
+                    ? 'Offene ToDos: '.trim((string) $row['open_todos'])
                     : null,
             ]);
             $serviceNotes = $notesParts !== [] ? implode("\n\n", $notesParts) : null;
@@ -516,7 +516,7 @@ final class SupportPackageExcelImporter
     {
         $parts = [$marker];
         if (filled($row['open_todos'] ?? null)) {
-            $parts[] = 'Offene Aufgaben: '.trim((string) $row['open_todos']);
+            $parts[] = 'Offene ToDos: '.trim((string) $row['open_todos']);
         }
         if (filled($row['comment'] ?? null)) {
             $parts[] = 'Kommentar: '.trim((string) $row['comment']);

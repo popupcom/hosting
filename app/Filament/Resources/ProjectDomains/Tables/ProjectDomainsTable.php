@@ -59,7 +59,7 @@ class ProjectDomainsTable
                     ->label('Intervall')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('reminder_at')
-                    ->label('Erinnerung')
+                    ->label('ToDo fällig am')
                     ->date()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

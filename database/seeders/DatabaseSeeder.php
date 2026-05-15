@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             ServiceCatalogSeeder::class,
+            SupportPackageSeeder::class,
             NotificationSystemSeeder::class,
         ]);
     }

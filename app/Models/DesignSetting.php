@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Support\NotificationStyleTokens;
+use App\Support\UiLabelCatalog;
+use App\Support\UiLabelResolver;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,12 +13,14 @@ use Illuminate\Support\Facades\Storage;
 #[Fillable([
     'app_name',
     'ui_locale',
+    'ui_label_overrides',
     'primary_color',
     'secondary_color',
     'accent_color',
     'background_color',
     'text_color',
     'border_radius',
+    'notification_style',
     'logo_path',
     'favicon_path',
     'custom_css',
@@ -26,9 +31,18 @@ class DesignSetting extends Model
 {
     private static ?self $rememberedInstance = null;
 
+    protected function casts(): array
+    {
+        return [
+            'notification_style' => 'array',
+            'ui_label_overrides' => 'array',
+        ];
+    }
+
     public static function forgetRememberedInstance(): void
     {
         self::$rememberedInstance = null;
+        UiLabelResolver::flush();
     }
 
     /**
@@ -100,6 +114,41 @@ class DesignSetting extends Model
             'text_color' => (string) ($this->text_color ?: $defaults['text_color']),
             'border_radius' => (string) ($this->border_radius ?: $defaults['border_radius']),
         ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function resolvedNotificationTokens(): array
+    {
+        $palette = $this->resolvedPalette();
+        $stored = is_array($this->notification_style) ? $this->notification_style : null;
+
+        return NotificationStyleTokens::resolve(
+            $stored,
+            (string) $palette['primary_color'],
+        );
+    }
+
+    /**
+     * @return array<string, array<string, string>>
+     */
+    public function resolvedUiLabelOverrides(): array
+    {
+        $resolved = UiLabelCatalog::defaults();
+        $stored = is_array($this->ui_label_overrides) ? $this->ui_label_overrides : [];
+
+        foreach ($resolved as $group => $labels) {
+            foreach ($labels as $key => $default) {
+                $override = $stored[$group][$key] ?? null;
+
+                if (is_string($override) && trim($override) !== '') {
+                    $resolved[$group][$key] = trim($override);
+                }
+            }
+        }
+
+        return $resolved;
     }
 
     public static function resolveConfiguredPublicLogoUrl(): ?string

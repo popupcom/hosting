@@ -59,6 +59,11 @@ class NotificationSettingsPage extends Page
         return 'Benachrichtigungen';
     }
 
+    public function getSubheading(): string|Htmlable|null
+    {
+        return 'Steuern Sie Gruppen, Ereignisse und Kanäle (E-Mail / In-App) für das gesamte Team.';
+    }
+
     public function loadMatrix(): void
     {
         $this->matrix = [];
@@ -162,6 +167,21 @@ class NotificationSettingsPage extends Page
     public function getCategoryOptionsProperty(): array
     {
         return NotificationEventCategory::labels();
+    }
+
+    /**
+     * @return Collection<string, Collection<int, NotificationEventType>>
+     */
+    public function getEventsGroupedByCategoryProperty(): Collection
+    {
+        return $this->eventTypes->groupBy(
+            fn (NotificationEventType $event): string => $event->category->value,
+        );
+    }
+
+    public function categoryLabel(string $category): string
+    {
+        return NotificationEventCategory::tryFrom($category)?->label() ?? $category;
     }
 
     protected function getHeaderActions(): array

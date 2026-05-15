@@ -12,6 +12,7 @@ use App\Enums\ProjectDomainStatus;
 use App\Enums\ProjectServiceMocoSyncStatus;
 use App\Enums\ProjectServiceStatus;
 use App\Enums\ProjectStatus;
+use App\Enums\ProjectSupportPackageStatus;
 use App\Enums\ReminderStatus;
 use App\Enums\ServerStatus;
 use App\Enums\SupportPackageStatus;
@@ -125,6 +126,17 @@ final class StatusBadge
         };
     }
 
+    public static function projectSupportPackage(?ProjectSupportPackageStatus $state): string
+    {
+        return match ($state) {
+            ProjectSupportPackageStatus::Active => 'success',
+            ProjectSupportPackageStatus::PendingCancellation => 'warning',
+            ProjectSupportPackageStatus::Expired => 'danger',
+            ProjectSupportPackageStatus::Cancelled => 'gray',
+            default => 'gray',
+        };
+    }
+
     public static function maintenanceType(?MaintenanceType $state): string
     {
         return match ($state) {
@@ -147,6 +159,11 @@ final class StatusBadge
     }
 
     public static function reminder(?ReminderStatus $state): string
+    {
+        return self::todo($state);
+    }
+
+    public static function todo(?ReminderStatus $state): string
     {
         return match ($state) {
             ReminderStatus::Completed => 'success',

@@ -85,7 +85,7 @@ class ProjectDomainForm
                             ->label('Abrechnungsintervall')
                             ->maxLength(32),
                         DatePicker::make('reminder_at')
-                            ->label('Erinnerung am')
+                            ->label('ToDo fällig am')
                             ->native(false),
                     ]),
                 Section::make('Notizen')

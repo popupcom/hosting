@@ -7,6 +7,7 @@ use App\Filament\Resources\SupportPackages\Pages\EditSupportPackage;
 use App\Filament\Resources\SupportPackages\Pages\ListSupportPackages;
 use App\Filament\Resources\SupportPackages\Schemas\SupportPackageForm;
 use App\Filament\Resources\SupportPackages\Tables\SupportPackagesTable;
+use App\Filament\Support\NavigationGroups;
 use App\Models\SupportPackage;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -23,13 +24,13 @@ class SupportPackageResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $modelLabel = 'Supportpaket';
+    protected static ?string $modelLabel = 'Supportpaket (Vorlage)';
 
-    protected static ?string $pluralModelLabel = 'Supportpakete';
+    protected static ?string $pluralModelLabel = 'Supportpaket-Vorlagen';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Lizenzen & Support';
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroups::Support;
 
-    protected static ?int $navigationSort = 55;
+    protected static ?int $navigationSort = 10;
 
     public static function form(Schema $schema): Schema
     {

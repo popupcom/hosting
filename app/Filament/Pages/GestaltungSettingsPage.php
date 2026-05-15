@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\DesignSetting;
 use App\Rules\SafeCustomCss;
+use App\Support\NotificationStyleTokens;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\ColorPicker;
@@ -77,8 +78,8 @@ class GestaltungSettingsPage extends Page
     {
         $setting = DesignSetting::current();
 
-        $this->form->fill(
-            $setting->only([
+        $this->form->fill([
+            ...$setting->only([
                 'app_name',
                 'primary_color',
                 'secondary_color',
@@ -91,7 +92,8 @@ class GestaltungSettingsPage extends Page
                 'custom_css',
                 'design_notes',
             ]),
-        );
+            'notification_style' => $setting->resolvedNotificationTokens(),
+        ]);
     }
 
     public function defaultForm(Schema $schema): Schema
@@ -215,6 +217,29 @@ class GestaltungSettingsPage extends Page
                                 'regex:/^[a-z0-9.\-\s%(),]+$/i',
                             ]),
                     ]),
+                Section::make('Benachrichtigungsseiten')
+                    ->description('Gestaltung für „Benachrichtigungen“ und „Meine Benachrichtigungen“ (Filter, Matrix, Karten, Toggle).')
+                    ->columns(2)
+                    ->schema(self::notificationStyleFormFields())
+                    ->collapsed(),
+                Section::make('Vorschau Benachrichtigungen')
+                    ->description('Live-Vorschau der Formularwerte.')
+                    ->schema([
+                        Placeholder::make('notification_style_preview')
+                            ->label('')
+                            ->content(function (Get $get): Htmlable {
+                                $primary = $get('primary_color') ?: DesignSetting::defaultAttributes()['primary_color'];
+
+                                return new HtmlString(view('filament.pages.partials.notification-style-preview', [
+                                    'tokens' => NotificationStyleTokens::resolve(
+                                        is_array($get('notification_style')) ? $get('notification_style') : null,
+                                        (string) $primary,
+                                    ),
+                                ])->render());
+                            })
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsed(),
                 Section::make('CSS & Gestaltungsdokument')
                     ->columns(1)
                     ->schema([
@@ -249,6 +274,51 @@ class GestaltungSettingsPage extends Page
                             ->columnSpanFull(),
                     ]),
             ]);
+    }
+
+    /**
+     * @return list<ColorPicker|TextInput>
+     */
+    protected static function notificationStyleFormFields(): array
+    {
+        $hexColorRule = ['nullable', 'string', 'regex:/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/'];
+        $cssColorRule = ['nullable', 'string', 'max:128', 'regex:/^(#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})|rgba?\([^)]+\))$/i'];
+        $cssSizeRule = ['nullable', 'string', 'max:64', 'regex:/^[a-z0-9.\-\s%(),]+$/i'];
+
+        $fields = [];
+
+        foreach (NotificationStyleTokens::fieldDefinitions() as $key => $definition) {
+            $fieldName = "notification_style.{$key}";
+
+            if ($definition['type'] === 'text' && $key === 'matrix_max_height') {
+                $fields[] = TextInput::make($fieldName)
+                    ->label($definition['label'])
+                    ->helperText($definition['helper'])
+                    ->live(onBlur: true)
+                    ->rules($cssSizeRule);
+
+                continue;
+            }
+
+            if ($definition['type'] === 'text') {
+                $fields[] = TextInput::make($fieldName)
+                    ->label($definition['label'])
+                    ->helperText($definition['helper'])
+                    ->live(onBlur: true)
+                    ->rules($cssColorRule);
+
+                continue;
+            }
+
+            $fields[] = ColorPicker::make($fieldName)
+                ->label($definition['label'])
+                ->helperText($definition['helper'])
+                ->hex()
+                ->live()
+                ->rules($hexColorRule);
+        }
+
+        return $fields;
     }
 
     public function content(Schema $schema): Schema

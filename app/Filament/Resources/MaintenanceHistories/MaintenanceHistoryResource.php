@@ -7,6 +7,7 @@ use App\Filament\Resources\MaintenanceHistories\Pages\EditMaintenanceHistory;
 use App\Filament\Resources\MaintenanceHistories\Pages\ListMaintenanceHistories;
 use App\Filament\Resources\MaintenanceHistories\Schemas\MaintenanceHistoryForm;
 use App\Filament\Resources\MaintenanceHistories\Tables\MaintenanceHistoriesTable;
+use App\Filament\Support\NavigationGroups;
 use App\Models\MaintenanceHistory;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -25,9 +26,9 @@ class MaintenanceHistoryResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Wartungsprotokolle';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Betrieb';
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroups::Support;
 
-    protected static ?int $navigationSort = 60;
+    protected static ?int $navigationSort = 30;
 
     public static function form(Schema $schema): Schema
     {

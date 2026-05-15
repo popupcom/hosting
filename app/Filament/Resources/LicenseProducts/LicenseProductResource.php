@@ -7,6 +7,7 @@ use App\Filament\Resources\LicenseProducts\Pages\EditLicenseProduct;
 use App\Filament\Resources\LicenseProducts\Pages\ListLicenseProducts;
 use App\Filament\Resources\LicenseProducts\Schemas\LicenseProductForm;
 use App\Filament\Resources\LicenseProducts\Tables\LicenseProductsTable;
+use App\Filament\Support\NavigationGroups;
 use App\Models\LicenseProduct;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -27,9 +28,9 @@ class LicenseProductResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Lizenzprodukte';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Lizenzen & Support';
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroups::Leistungskatalog;
 
-    protected static ?int $navigationSort = 48;
+    protected static ?int $navigationSort = 20;
 
     public static function form(Schema $schema): Schema
     {

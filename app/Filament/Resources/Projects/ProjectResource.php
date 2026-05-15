@@ -47,6 +47,7 @@ class ProjectResource extends Resource
         return [
             RelationManagers\ProjectServicesRelationManager::class,
             RelationManagers\ProjectLicensesRelationManager::class,
+            RelationManagers\ProjectSupportPackagesRelationManager::class,
             RelationManagers\BillingGroupsRelationManager::class,
         ];
     }

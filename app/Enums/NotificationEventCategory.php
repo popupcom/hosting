@@ -11,6 +11,7 @@ enum NotificationEventCategory: string
     case License = 'license';
     case Domain = 'domain';
     case Hosting = 'hosting';
+    case Todo = 'todo';
 
     public function label(): string
     {
@@ -22,6 +23,7 @@ enum NotificationEventCategory: string
             self::License => 'Lizenzen',
             self::Domain => 'Domains',
             self::Hosting => 'Hosting',
+            self::Todo => 'ToDos',
         };
     }
 

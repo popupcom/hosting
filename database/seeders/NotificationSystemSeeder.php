@@ -36,7 +36,7 @@ class NotificationSystemSeeder extends Seeder
                 ],
             ],
             'Technik' => [
-                'description' => 'Hosting, Domains, SSL, Server',
+                'description' => 'Hosting, Domains, SSL, Server, ToDos',
                 'events' => [
                     NotificationEventKey::SslRenewalRequired,
                     NotificationEventKey::DomainRenewalRequired,
@@ -44,13 +44,20 @@ class NotificationSystemSeeder extends Seeder
                     NotificationEventKey::HostingChanged,
                     NotificationEventKey::ServerExpiring,
                     NotificationEventKey::ProjectServiceCancelled,
+                    NotificationEventKey::TodoCreated,
+                    NotificationEventKey::TodoUpdated,
+                    NotificationEventKey::TodoOverdue,
                 ],
             ],
             'Support' => [
-                'description' => 'Supportpakete und Wartung',
+                'description' => 'Supportpakete, Wartung und ToDos',
                 'events' => [
                     NotificationEventKey::SupportUpdateDue,
                     NotificationEventKey::SupportUpdateOverdue,
+                    NotificationEventKey::TodoCreated,
+                    NotificationEventKey::TodoUpdated,
+                    NotificationEventKey::TodoCompleted,
+                    NotificationEventKey::TodoOverdue,
                 ],
             ],
             'Geschäftsführung' => [

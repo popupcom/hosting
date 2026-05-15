@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ReminderStatus;
 use App\Filament\Pages\LocalizationSettingsPage;
+use App\Filament\Support\GermanLabels;
 use App\Models\DesignSetting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -53,5 +55,30 @@ class LocalizationSettingsPageTest extends TestCase
 
         DesignSetting::forgetRememberedInstance();
         $this->assertSame('en', DesignSetting::current()->effectiveUiLocale());
+    }
+
+    public function test_admin_can_save_ui_label_overrides(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin);
+
+        Livewire::test(LocalizationSettingsPage::class)
+            ->fillForm([
+                'ui_label_overrides' => [
+                    'todo_statuses' => [
+                        'pending' => 'Offen (angepasst)',
+                    ],
+                ],
+            ])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        DesignSetting::forgetRememberedInstance();
+
+        $this->assertSame(
+            'Offen (angepasst)',
+            GermanLabels::todoStatus(ReminderStatus::Pending),
+        );
     }
 }

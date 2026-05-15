@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ProjectStatus;
+use App\Enums\ProjectSupportPackageStatus;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -80,9 +81,22 @@ class Project extends Model
         return $this->hasMany(ProjectService::class);
     }
 
+    public function projectSupportPackages(): HasMany
+    {
+        return $this->hasMany(ProjectSupportPackage::class);
+    }
+
+    public function activeProjectSupportPackage(): HasOne
+    {
+        return $this->hasOne(ProjectSupportPackage::class)
+            ->where('status', ProjectSupportPackageStatus::Active)
+            ->latestOfMany();
+    }
+
+    /** @deprecated Use activeProjectSupportPackage() */
     public function supportPackage(): HasOne
     {
-        return $this->hasOne(SupportPackage::class);
+        return $this->activeProjectSupportPackage();
     }
 
     public function maintenanceHistories(): HasMany

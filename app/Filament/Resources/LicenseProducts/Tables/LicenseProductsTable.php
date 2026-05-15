@@ -47,8 +47,19 @@ class LicenseProductsTable
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('used_count')
-                    ->label('Belegt')
+                    ->label('Verwendet')
                     ->numeric(),
+                TextColumn::make('free_licenses')
+                    ->label('Frei')
+                    ->state(fn (LicenseProduct $record): int => $record->freeLicensesCount()),
+                TextColumn::make('utilization')
+                    ->label('Auslastung')
+                    ->state(fn (LicenseProduct $record): string => ($p = $record->utilizationPercent()) !== null ? $p.' %' : '—')
+                    ->color(fn (LicenseProduct $record): string => match (true) {
+                        $record->isFullyUtilized() => 'danger',
+                        ($record->utilizationPercent() ?? 0) >= 80 => 'warning',
+                        default => 'success',
+                    }),
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()

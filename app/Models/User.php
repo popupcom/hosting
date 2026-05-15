@@ -67,4 +67,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(ChangeLog::class);
     }
+
+    public function assignedReminders(): HasMany
+    {
+        return $this->hasMany(Reminder::class, 'assigned_user_id');
+    }
 }

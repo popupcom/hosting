@@ -2,16 +2,14 @@
 
 namespace App\Filament\Pages;
 
-use App\Enums\LicenseProductStatus;
-use App\Filament\Resources\LicenseProducts\LicenseProductResource;
+use App\Filament\Resources\Projects\ProjectResource;
 use App\Filament\Support\GermanLabels;
-use App\Filament\Support\StatusBadge;
-use App\Models\LicenseProduct;
+use App\Filament\Support\NavigationGroups;
+use App\Filament\Support\Schemas\LicenseAssignmentTableColumns;
+use App\Models\ProjectLicenseAssignment;
 use BackedEnum;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
@@ -27,11 +25,11 @@ class LicenseUsageOverviewPage extends Page implements HasTable
 
     protected static ?string $navigationLabel = 'Lizenznutzung';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Lizenzen & Support';
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroups::Leistungskatalog;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartPie;
 
-    protected static ?int $navigationSort = 47;
+    protected static ?int $navigationSort = 25;
 
     protected static ?string $slug = 'lizenznutzung';
 
@@ -41,58 +39,36 @@ class LicenseUsageOverviewPage extends Page implements HasTable
     {
         return $table
             ->query(
-                LicenseProduct::query()
-                    ->withCount([
-                        'assignments as used_count' => fn (Builder $q) => $q->countsAsUsed(),
-                    ])
+                ProjectLicenseAssignment::query()
+                    ->with(['project.client', 'licenseProduct'])
             )
-            ->defaultSort('name')
-            ->columns([
-                TextColumn::make('name')
-                    ->label('Produkt')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('provider')
-                    ->label('Anbieter')
-                    ->searchable()
-                    ->toggleable(),
-                TextColumn::make('category')
-                    ->label('Kategorie')
-                    ->toggleable(),
-                TextColumn::make('total_available_licenses')
-                    ->label('Kontingent')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('used_count')
-                    ->label('Belegt')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('free_licenses')
-                    ->label('Frei')
-                    ->state(fn (LicenseProduct $record): int => $record->freeLicensesCount()),
-                TextColumn::make('utilization')
-                    ->label('Auslastung')
-                    ->state(fn (LicenseProduct $record): string => ($p = $record->utilizationPercent()) !== null ? $p.' %' : '—')
-                    ->color(fn (LicenseProduct $record): string => $record->isFullyUtilized() ? 'danger' : 'success'),
-                IconColumn::make('quota_warning')
-                    ->label('Voll')
-                    ->boolean()
-                    ->state(fn (LicenseProduct $record): bool => $record->isFullyUtilized())
-                    ->trueIcon(Heroicon::OutlinedExclamationTriangle)
-                    ->falseIcon(Heroicon::OutlinedCheckCircle)
-                    ->trueColor('danger')
-                    ->falseColor('success'),
-                TextColumn::make('status')
-                    ->label('Status')
-                    ->badge()
-                    ->formatStateUsing(fn (?LicenseProductStatus $state): string => GermanLabels::licenseProductStatus($state))
-                    ->color(fn (LicenseProduct $record): string => StatusBadge::licenseProduct($record->status)),
-            ])
+            ->defaultSort('activated_at', 'desc')
+            ->columns(LicenseAssignmentTableColumns::defaults(includeProject: true, includeProduct: true))
             ->filters([
                 SelectFilter::make('status')
                     ->label('Status')
-                    ->options(GermanLabels::licenseProductStatuses()),
+                    ->options(GermanLabels::licenseAssignmentStatuses()),
+                SelectFilter::make('license_model')
+                    ->label('Lizenzmodell')
+                    ->options(GermanLabels::licenseSharingModels())
+                    ->query(function (Builder $query, array $data): Builder {
+                        $value = $data['value'] ?? null;
+                        if (blank($value)) {
+                            return $query;
+                        }
+
+                        return $query->whereHas(
+                            'licenseProduct',
+                            fn (Builder $q) => $q->where('license_model', $value),
+                        );
+                    }),
             ])
-            ->recordUrl(fn (LicenseProduct $record): string => LicenseProductResource::getUrl('edit', ['record' => $record]));
+            ->recordUrl(function (ProjectLicenseAssignment $record): ?string {
+                if ($record->project_id === null) {
+                    return null;
+                }
+
+                return ProjectResource::getUrl('edit', ['record' => $record->project_id]);
+            });
     }
 }

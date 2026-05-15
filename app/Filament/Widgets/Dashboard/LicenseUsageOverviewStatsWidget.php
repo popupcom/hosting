@@ -15,9 +15,17 @@ class LicenseUsageOverviewStatsWidget extends StatsOverviewWidget
     protected function getStats(): array
     {
         return [
-            Stat::make('Aktive Zuweisungen', (string) LicenseUsageDashboardQuery::countActiveAssignments())
+            Stat::make('Aktive Nutzungen', (string) LicenseUsageDashboardQuery::countActiveAssignments())
+                ->description('Projekt-Zuweisungen aktiv')
                 ->color('success'),
-            Stat::make('Kündigung vorgemerkt', (string) LicenseUsageDashboardQuery::countPendingCancellation())
+            Stat::make('Shared-Produkte', (string) LicenseUsageDashboardQuery::countSharedProducts())
+                ->description('Ein Code für viele Projekte')
+                ->color('info'),
+            Stat::make('Dedicated-Produkte', (string) LicenseUsageDashboardQuery::countDedicatedProducts())
+                ->description('Eigener Code je Projekt')
+                ->color('primary'),
+            Stat::make('Hohe Auslastung', (string) LicenseUsageDashboardQuery::countHighUtilizationProducts())
+                ->description('≥ 80 % Kontingent belegt')
                 ->color('warning'),
             Stat::make('Kontingent voll', (string) LicenseUsageDashboardQuery::countFullyUtilizedProducts())
                 ->color('danger'),

@@ -2,74 +2,62 @@
 
 namespace App\Filament\Resources\SupportPackages\Tables;
 
-use App\Enums\SupportPackageStatus;
-use App\Filament\Support\GermanLabels;
-use App\Filament\Support\StatusBadge;
 use App\Models\SupportPackage;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class SupportPackagesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultSort('name')
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with('serviceCatalogItem'))
+            ->defaultSort('sort_order')
             ->columns([
-                TextColumn::make('project.name')
-                    ->label('Projekt')
-                    ->searchable()
-                    ->sortable(),
                 TextColumn::make('name')
-                    ->label('Bezeichnung')
+                    ->label('Name')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('status')
-                    ->label('Status')
-                    ->badge()
-                    ->formatStateUsing(fn (?SupportPackageStatus $state): string => GermanLabels::supportPackageStatus($state))
-                    ->color(fn (SupportPackage $record): string => StatusBadge::supportPackage($record->status)),
-                TextColumn::make('price')
-                    ->label('Preis')
+                TextColumn::make('serviceCatalogItem.name')
+                    ->label('Leistung (Katalog)')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('monthly_sales_price')
+                    ->label('Monatlicher VK')
                     ->money('EUR')
-                    ->sortable(),
-                TextColumn::make('billing_interval')
-                    ->label('Intervall')
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('starts_at')
-                    ->label('Start')
-                    ->date()
-                    ->sortable(),
-                TextColumn::make('response_time')
-                    ->label('Reaktionszeit')
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('update_interval')
-                    ->label('Updates')
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('created_at')
-                    ->label('Erstellt')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->label('Aktualisiert')
-                    ->dateTime()
+                    ->state(fn (SupportPackage $record): ?float => $record->serviceCatalogItem?->sales_price !== null
+                        ? (float) $record->serviceCatalogItem->sales_price
+                        : null),
+                TextColumn::make('yearly_sales_price')
+                    ->label('Jährlicher VK')
+                    ->money('EUR')
+                    ->state(fn (SupportPackage $record): ?float => $record->serviceCatalogItem?->sales_price !== null
+                        ? (float) $record->serviceCatalogItem->sales_price * 12
+                        : null),
+                TextColumn::make('monthly_minutes')
+                    ->label('Min./Monat')
+                    ->numeric(decimalPlaces: 0)
+                    ->toggleable(),
+                TextColumn::make('yearly_hours')
+                    ->label('Std./Jahr')
+                    ->numeric(decimalPlaces: 2)
+                    ->toggleable(),
+                IconColumn::make('is_active')
+                    ->label('Aktiv')
+                    ->boolean(),
+                TextColumn::make('sort_order')
+                    ->label('Sortierung')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('project_id')
-                    ->label('Projekt')
-                    ->relationship('project', 'name')
-                    ->searchable()
-                    ->preload(),
-                SelectFilter::make('status')
-                    ->label('Status')
-                    ->options(GermanLabels::supportPackageStatuses()),
+                TernaryFilter::make('is_active')->label('Aktiv'),
             ])
             ->recordActions([
                 EditAction::make(),

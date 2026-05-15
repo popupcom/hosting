@@ -19,6 +19,10 @@ enum NotificationEventKey: string
     case ServerExpiring = 'server_expiring';
     case ProjectCreated = 'project_created';
     case ProjectUpdated = 'project_updated';
+    case TodoCreated = 'todo_created';
+    case TodoUpdated = 'todo_updated';
+    case TodoCompleted = 'todo_completed';
+    case TodoOverdue = 'todo_overdue';
 
     public function label(): string
     {
@@ -38,6 +42,10 @@ enum NotificationEventKey: string
             self::ServerExpiring => 'Server läuft aus',
             self::ProjectCreated => 'Projekt angelegt',
             self::ProjectUpdated => 'Projekt geändert',
+            self::TodoCreated => 'Neues ToDo erhalten',
+            self::TodoUpdated => 'ToDo wurde aktualisiert',
+            self::TodoCompleted => 'ToDo wurde erledigt',
+            self::TodoOverdue => 'ToDo ist überfällig',
         };
     }
 
@@ -64,6 +72,11 @@ enum NotificationEventKey: string
 
             self::ProjectCreated,
             self::ProjectUpdated => NotificationEventCategory::Management,
+
+            self::TodoCreated,
+            self::TodoUpdated,
+            self::TodoCompleted,
+            self::TodoOverdue => NotificationEventCategory::Todo,
         };
     }
 
@@ -85,6 +98,10 @@ enum NotificationEventKey: string
             self::ServerExpiring => 'Server-Vertrag oder -Laufzeit endet bald.',
             self::ProjectCreated => 'Neues Projekt wurde angelegt.',
             self::ProjectUpdated => 'Projektdaten wurden geändert.',
+            self::TodoCreated => 'Ein neues ToDo wurde angelegt oder zugewiesen.',
+            self::TodoUpdated => 'Ein ToDo wurde geändert (Fälligkeit, Status oder Nachricht).',
+            self::TodoCompleted => 'Ein ToDo wurde als erledigt markiert.',
+            self::TodoOverdue => 'Ein ToDo hat das Fälligkeitsdatum überschritten.',
         };
     }
 }

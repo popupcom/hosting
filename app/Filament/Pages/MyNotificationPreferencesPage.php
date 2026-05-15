@@ -7,6 +7,7 @@ use App\Models\NotificationEventType;
 use App\Models\User;
 use App\Models\UserNotificationPreference;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
@@ -44,6 +45,11 @@ class MyNotificationPreferencesPage extends Page
     public function getHeading(): string|Htmlable
     {
         return 'Meine Benachrichtigungen';
+    }
+
+    public function getSubheading(): string|Htmlable|null
+    {
+        return 'Wählen Sie persönlich, welche Ereignisse Sie erhalten möchten – unabhängig von Ihrer Gruppenzugehörigkeit.';
     }
 
     public function loadPreferences(): void
@@ -113,5 +119,47 @@ class MyNotificationPreferencesPage extends Page
     public function getCategoryOptionsProperty(): array
     {
         return NotificationEventCategory::labels();
+    }
+
+    /**
+     * @return Collection<string, Collection<int, NotificationEventType>>
+     */
+    public function getEventsGroupedByCategoryProperty(): Collection
+    {
+        return $this->eventTypes->groupBy(
+            fn (NotificationEventType $event): string => $event->category->value,
+        );
+    }
+
+    public function categoryLabel(string $category): string
+    {
+        return NotificationEventCategory::tryFrom($category)?->label() ?? $category;
+    }
+
+    public function enabledCountForCategory(string $category): int
+    {
+        return $this->eventTypes
+            ->filter(fn (NotificationEventType $event): bool => $event->category->value === $category)
+            ->filter(fn (NotificationEventType $event): bool => (bool) ($this->preferences[(string) $event->id]['enabled'] ?? false))
+            ->count();
+    }
+
+    /**
+     * @return array<Action>
+     */
+    protected function getHeaderActions(): array
+    {
+        $user = Auth::user();
+
+        if (! $user instanceof User || ! $user->isAdmin()) {
+            return [];
+        }
+
+        return [
+            Action::make('groupSettings')
+                ->label('Gruppen-Einstellungen')
+                ->icon(Heroicon::OutlinedCog6Tooth)
+                ->url(fn (): string => NotificationSettingsPage::getUrl()),
+        ];
     }
 }

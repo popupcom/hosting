@@ -5,12 +5,15 @@
 
     /** @var array<string, scalar> $tokens */
     $tokens = config('filament-brand.tokens', []);
+    /** @var array<string, string> $notificationTokens */
+    $notificationTokens = \App\Support\NotificationStyleTokens::defaults();
     $customCss = null;
 
     try {
         if (Schema::hasTable('design_settings')) {
             $setting = DesignSetting::current();
             $palette = $setting->resolvedPalette();
+            $notificationTokens = $setting->resolvedNotificationTokens();
 
             if (filled($palette['background_color'] ?? null)) {
                 $bg = (string) $palette['background_color'];
@@ -39,6 +42,9 @@
     :root {
         @foreach ($tokens as $name => $value)
             --popup-{{ \Illuminate\Support\Str::kebab((string) $name) }}: {{ e((string) $value) }};
+        @endforeach
+        @foreach ($notificationTokens as $name => $value)
+            --popup-notifications-{{ \Illuminate\Support\Str::kebab((string) $name) }}: {{ e((string) $value) }};
         @endforeach
     }
 </style>
