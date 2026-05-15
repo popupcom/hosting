@@ -114,4 +114,12 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | One-time login link (Filament "Passwort vergessen")
+    |--------------------------------------------------------------------------
+    */
+
+    'one_time_login_expire_minutes' => (int) env('ONE_TIME_LOGIN_EXPIRE_MINUTES', 20),
+
 ];

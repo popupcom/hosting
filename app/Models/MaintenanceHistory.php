@@ -9,20 +9,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
+#[Fillable([
+    'project_id',
+    'maintenance_type',
+    'performed_by',
+    'performed_on',
+    'result',
+    'has_errors',
+    'notes',
+    'managewp_reference',
+])]
 class MaintenanceHistory extends Model
 {
     protected $table = 'maintenance_histories';
 
-    #[Fillable([
-        'project_id',
-        'maintenance_type',
-        'performed_by',
-        'performed_on',
-        'result',
-        'has_errors',
-        'notes',
-        'managewp_reference',
-    ])]
     protected static function booted(): void
     {
         static::saving(function (MaintenanceHistory $history): void {

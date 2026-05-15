@@ -15,11 +15,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $user = User::query()->firstOrNew(['email' => 'office@popup.at']);
+        $user->name = 'Popup Office';
+        $user->is_admin = true;
+        $user->role = 'admin';
+        $user->is_active = true;
+        $user->email_verified_at = now();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        if (! $user->exists) {
+            $user->password = 'netlotion';
+        }
+
+        $user->save();
+
+        $this->call([
+            ServiceCatalogSeeder::class,
+            NotificationSystemSeeder::class,
         ]);
     }
 }

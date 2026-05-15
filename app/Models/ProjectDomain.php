@@ -9,29 +9,29 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
+#[Fillable([
+    'project_id',
+    'domain_name',
+    'registrar',
+    'hosting_provider',
+    'autodns_id',
+    'dns_zone',
+    'nameservers',
+    'expires_at',
+    'cancellation_notice_days',
+    'cost_price',
+    'selling_price',
+    'billing_interval',
+    'status',
+    'reminder_at',
+    'notes',
+])]
 class ProjectDomain extends Model
 {
     use Concerns\HasIntegrationSyncStates;
 
     protected $table = 'project_domains';
 
-    #[Fillable([
-        'project_id',
-        'domain_name',
-        'registrar',
-        'hosting_provider',
-        'autodns_id',
-        'dns_zone',
-        'nameservers',
-        'expires_at',
-        'cancellation_notice_days',
-        'cost_price',
-        'selling_price',
-        'billing_interval',
-        'status',
-        'reminder_at',
-        'notes',
-    ])]
     protected static function booted(): void
     {
         static::saving(function (ProjectDomain $projectDomain): void {
@@ -60,11 +60,6 @@ class ProjectDomain extends Model
     public function reminders(): MorphMany
     {
         return $this->morphMany(Reminder::class, 'remindable');
-    }
-
-    public function costLineItems(): MorphMany
-    {
-        return $this->morphMany(CostLineItem::class, 'billable');
     }
 
     public function scopeActive(Builder $query): Builder

@@ -5,9 +5,9 @@ namespace App\Http\Requests\Api\V1;
 use App\Enums\IntegrationProvider;
 use App\Enums\MocoSyncStatus;
 use App\Models\Client;
-use App\Models\CostLineItem;
 use App\Models\Project;
 use App\Models\ProjectDomain;
+use App\Models\ProjectService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -28,7 +28,7 @@ class StoreIntegrationSyncStateRequest extends FormRequest
                 Client::class,
                 Project::class,
                 ProjectDomain::class,
-                CostLineItem::class,
+                ProjectService::class,
             ])],
             'syncable_id' => ['required', 'integer', 'min:1'],
             'provider' => ['required', Rule::enum(IntegrationProvider::class)],

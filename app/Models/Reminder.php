@@ -8,16 +8,16 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
+#[Fillable([
+    'remindable_type',
+    'remindable_id',
+    'reminder_at',
+    'status',
+    'message',
+    'is_done',
+])]
 class Reminder extends Model
 {
-    #[Fillable([
-        'remindable_type',
-        'remindable_id',
-        'reminder_at',
-        'status',
-        'message',
-        'is_done',
-    ])]
     protected function casts(): array
     {
         return [

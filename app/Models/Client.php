@@ -8,21 +8,21 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[Fillable([
+    'name',
+    'company',
+    'email',
+    'phone',
+    'address',
+    'moco_customer_id',
+    'status',
+    'slug',
+    'notes',
+])]
 class Client extends Model
 {
     use Concerns\HasIntegrationSyncStates;
 
-    #[Fillable([
-        'name',
-        'company',
-        'email',
-        'phone',
-        'address',
-        'moco_customer_id',
-        'status',
-        'slug',
-        'notes',
-    ])]
     protected static function booted(): void
     {
         static::saving(function (Client $client): void {
@@ -50,11 +50,6 @@ class Client extends Model
     public function projects(): HasMany
     {
         return $this->hasMany(Project::class);
-    }
-
-    public function costLineItems(): HasMany
-    {
-        return $this->hasMany(CostLineItem::class);
     }
 
     public function scopeActive(Builder $query): Builder

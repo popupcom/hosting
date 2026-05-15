@@ -10,4 +10,5 @@ enum MaintenanceType: string
     case Backup = 'backup';
     case PerformanceCheck = 'performance_check';
     case SecurityCheck = 'security_check';
+    case SupportPackageExcelSnapshot = 'support_package_excel_snapshot';
 }

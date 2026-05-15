@@ -2,15 +2,18 @@
 
 Dieses Dokument beschreibt die **REST-API**, **Authentifizierung**, **eingehende Webhooks**, **Sync-Status**, **externe IDs** (Moco, ManageWP, AutoDNS) und **empfohlene n8n-Workflows** für das Popup Hosting Overview Tool.
 
+**Kurzanleitung API-Token (n8n):** [api-token-n8n.md](./api-token-n8n.md) — einfache Endpunkte ohne `/v1`: `GET /api/projects`, `POST /api/maintenance-logs`.
+
 ## Überblick
 
 | Bereich | Technologie |
 |--------|----------------|
 | API-Prefix | `/api` (Laravel-Standard) |
+| Kurz-Endpunkte | `GET /api/projects`, `POST /api/maintenance-logs` (gleiche Auth wie `/api/v1`) |
 | Version | `/api/v1/...` |
 | Auth (API) | Laravel Sanctum Personal Access Token |
 | Auth (Webhooks) | Bearer-Token **oder** HMAC-SHA256 (`X-Webhook-Signature`) |
-| Sync-Status | Tabelle `integration_sync_states` (Morph zu Kund:in, Projekt, Domain, Kostenposition) + bestehende Felder (`moco_sync_status`, `moco_customer_id`, …) |
+| Sync-Status | Tabelle `integration_sync_states` (Morph zu Kund:in, Projekt, Domain, Projekt-Leistung) + Felder wie `project_services.moco_sync_status`, `moco_customer_id`, … |
 | Webhook-Audit | Tabelle `integration_webhook_events` (Payload, Dedupe-Key, `processed_at`) |
 
 ## Umgebungsvariablen (`.env`)
@@ -75,9 +78,9 @@ Alle folgenden Routen (außer Webhooks) erfordern: `Authorization: Bearer …` +
 | GET | `/api/v1/project-domains` | Domains (`project_id`, `search`) |
 | GET | `/api/v1/project-domains/{id}` | Detail |
 | PATCH | `/api/v1/project-domains/{id}` | u. a. `autodns_id` |
-| GET | `/api/v1/cost-line-items` | Kostenpositionen (`client_id`, `project_id`, `moco_sync_status`) |
-| GET | `/api/v1/cost-line-items/{id}` | Detail |
-| PATCH | `/api/v1/cost-line-items/{id}` | u. a. `moco_sync_status` |
+| GET | `/api/v1/project-services` | Projekt-Leistungen (`client_id`, `project_id`, `moco_sync_status`, `moco_ready`) |
+| GET | `/api/v1/project-services/{id}` | Detail inkl. EK/VK, Intervall, Moco-Status |
+| PATCH | `/api/v1/project-services/{id}` | u. a. `moco_sync_status`, Preise, `status` |
 | GET | `/api/v1/integration-sync-states` | Filter: `provider`, `status`, `syncable_type`, `external_id` |
 | POST | `/api/v1/integration-sync-states` | Upsert Sync-Zeile (siehe JSON-Vertrag unten) |
 | PATCH | `/api/v1/integration-sync-states/{id}` | Status/Fehler/Zeitstempel aktualisieren |
@@ -97,7 +100,7 @@ Alle folgenden Routen (außer Webhooks) erfordern: `Authorization: Bearer …` +
 }
 ```
 
-Erlaubte `syncable_type`-Werte: `App\Models\Client`, `App\Models\Project`, `App\Models\ProjectDomain`, `App\Models\CostLineItem`.
+Erlaubte `syncable_type`-Werte: `App\Models\Client`, `App\Models\Project`, `App\Models\ProjectDomain`, `App\Models\ProjectService`.
 
 `provider`: `moco` | `managewp` | `autodns`  
 `status`: Werte wie bei `MocoSyncStatus` (`pending`, `synced`, `failed`, `skipped`).
@@ -135,7 +138,7 @@ Die Services lesen typischerweise eines der Felder `external_id`, `customer_id`,
 
 | System | Speicherort |
 |--------|-------------|
-| **Moco** | `clients.moco_customer_id`, `projects.moco_project_id`, `cost_line_items.moco_sync_status` |
+| **Moco** | `clients.moco_customer_id`, `projects.moco_project_id`, `project_services.moco_sync_status` |
 | **ManageWP** | `projects.managewp_site_id`, optional `maintenance_histories.managewp_reference` |
 | **AutoDNS** | `project_domains.autodns_id` |
 
@@ -178,10 +181,11 @@ Unique-Indizes auf kritischen Spalten sind in den Migrationen bereits berücksic
 2. `PATCH /api/v1/project-domains/{id}` mit `autodns_id`.
 3. Webhook `POST /api/v1/webhooks/autodns` bei Zone-Änderungen → pending → n8n-Folgejob.
 
-### 5) „Kostenposition Moco-Sync“
+### 5) „Projekt-Leistung Moco-Sync“
 
-1. Nach erfolgreicher Moco-Rechnung: `PATCH /api/v1/cost-line-items/{id}` mit `moco_sync_status: synced`.
-2. Bei Fehler: `failed` + `notes` oder `meta` über Sync-State.
+1. Leistungen mit `moco_sync_status: ready` abrufen: `GET /api/v1/project-services?moco_ready=1`.
+2. Nach erfolgreicher Moco-Rechnung: `PATCH /api/v1/project-services/{id}` mit `moco_sync_status: synced`.
+3. Bei Fehler: `moco_sync_status: error` + optional Sync-State über `integration-sync-states`.
 
 ## Code-Referenz (Projekt)
 

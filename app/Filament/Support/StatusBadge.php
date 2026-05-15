@@ -3,11 +3,14 @@
 namespace App\Filament\Support;
 
 use App\Enums\ClientStatus;
-use App\Enums\CostLineItemType;
+use App\Enums\LicenseAssignmentStatus;
+use App\Enums\LicenseProductStatus;
 use App\Enums\LicenseStatus;
 use App\Enums\MaintenanceType;
 use App\Enums\MocoSyncStatus;
 use App\Enums\ProjectDomainStatus;
+use App\Enums\ProjectServiceMocoSyncStatus;
+use App\Enums\ProjectServiceStatus;
 use App\Enums\ProjectStatus;
 use App\Enums\ReminderStatus;
 use App\Enums\ServerStatus;
@@ -68,6 +71,49 @@ final class StatusBadge
         };
     }
 
+    public static function licenseAssignment(?LicenseAssignmentStatus $state): string
+    {
+        return match ($state) {
+            LicenseAssignmentStatus::Active => 'success',
+            LicenseAssignmentStatus::PendingCancellation => 'warning',
+            LicenseAssignmentStatus::Expired => 'danger',
+            LicenseAssignmentStatus::Cancelled => 'gray',
+            default => 'gray',
+        };
+    }
+
+    public static function projectService(?ProjectServiceStatus $state): string
+    {
+        return match ($state) {
+            ProjectServiceStatus::Active => 'success',
+            ProjectServiceStatus::Paused => 'warning',
+            ProjectServiceStatus::PendingCancellation => 'warning',
+            ProjectServiceStatus::Expired => 'danger',
+            ProjectServiceStatus::Cancelled => 'gray',
+            default => 'gray',
+        };
+    }
+
+    public static function projectServiceMoco(?ProjectServiceMocoSyncStatus $state): string
+    {
+        return match ($state) {
+            ProjectServiceMocoSyncStatus::Synced => 'success',
+            ProjectServiceMocoSyncStatus::Ready => 'info',
+            ProjectServiceMocoSyncStatus::NotSynced => 'gray',
+            ProjectServiceMocoSyncStatus::Error => 'danger',
+            default => 'gray',
+        };
+    }
+
+    public static function licenseProduct(?LicenseProductStatus $state): string
+    {
+        return match ($state) {
+            LicenseProductStatus::Active => 'success',
+            LicenseProductStatus::Inactive => 'gray',
+            default => 'gray',
+        };
+    }
+
     public static function supportPackage(?SupportPackageStatus $state): string
     {
         return match ($state) {
@@ -83,20 +129,8 @@ final class StatusBadge
     {
         return match ($state) {
             MaintenanceType::SecurityCheck, MaintenanceType::Backup => 'info',
-            MaintenanceType::WordPressCore, MaintenanceType::PluginUpdate, MaintenanceType::ThemeUpdate => 'primary',
+            MaintenanceType::WordPressCore, MaintenanceType::PluginUpdate, MaintenanceType::ThemeUpdate, MaintenanceType::SupportPackageExcelSnapshot => 'primary',
             MaintenanceType::PerformanceCheck => 'warning',
-            default => 'gray',
-        };
-    }
-
-    public static function costLineType(?CostLineItemType $state): string
-    {
-        return match ($state) {
-            CostLineItemType::Domain => 'info',
-            CostLineItemType::Hosting => 'warning',
-            CostLineItemType::License => 'primary',
-            CostLineItemType::SupportPackage => 'success',
-            CostLineItemType::AdditionalService => 'gray',
             default => 'gray',
         };
     }
@@ -105,7 +139,7 @@ final class StatusBadge
     {
         return match ($state) {
             MocoSyncStatus::Synced => 'success',
-            MocoSyncStatus::Pending => 'warning',
+            MocoSyncStatus::Pending => 'info',
             MocoSyncStatus::Failed => 'danger',
             MocoSyncStatus::Skipped => 'gray',
             default => 'gray',

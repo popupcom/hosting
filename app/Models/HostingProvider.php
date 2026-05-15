@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[Fillable(['name', 'slug', 'website_url', 'has_api', 'notes'])]
 class HostingProvider extends Model
 {
-    #[Fillable(['name', 'slug', 'website_url', 'has_api', 'notes'])]
     protected function casts(): array
     {
         return [

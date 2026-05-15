@@ -68,18 +68,12 @@ class ProjectForm
                             ->label('Moco-Projekt-ID')
                             ->maxLength(255),
                     ]),
-                Section::make('Infrastruktur & Lizenzen')
+                Section::make('Infrastruktur')
                     ->columns(1)
                     ->schema([
                         Select::make('servers')
                             ->label('Server')
                             ->relationship('servers', 'name')
-                            ->multiple()
-                            ->searchable()
-                            ->preload(),
-                        Select::make('licenses')
-                            ->label('Lizenzen')
-                            ->relationship('licenses', 'name')
                             ->multiple()
                             ->searchable()
                             ->preload(),

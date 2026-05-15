@@ -1,0 +1,40 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('billing_groups', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('project_id')->constrained()->cascadeOnDelete();
+            $table->string('name');
+            $table->string('billing_interval', 32)->nullable();
+            $table->string('status', 32)->default('active');
+            $table->text('notes')->nullable();
+            $table->timestamps();
+
+            $table->index(['project_id', 'status']);
+        });
+
+        Schema::create('billing_group_items', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('billing_group_id')->constrained()->cascadeOnDelete();
+            $table->string('billable_type');
+            $table->unsignedBigInteger('billable_id');
+            $table->timestamps();
+
+            $table->unique(['billable_type', 'billable_id']);
+            $table->index('billing_group_id');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('billing_group_items');
+        Schema::dropIfExists('billing_groups');
+    }
+};

@@ -1,0 +1,188 @@
+/*
+ * Popup Hosting Overview — Filament UI (nutzt :root-Variablen aus design-tokens.blade.php)
+ * Semantik Status-Badges: siehe Kommentar in config/filament-brand.php (colors)
+ */
+
+@layer base {
+    html.fi .fi-body {
+        background-color: var(--popup-body-bg);
+        color: var(--popup-body-text);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    html.dark.fi .fi-body {
+        background-color: var(--popup-body-bg-dark);
+        color: var(--popup-body-text-dark);
+    }
+}
+
+@layer components {
+    .fi-page-content {
+        row-gap: var(--popup-page-content-gap-y);
+    }
+
+    .fi-sidebar {
+        border-inline-end: 1px solid var(--popup-sidebar-border);
+        background-color: var(--popup-sidebar-bg);
+        box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+    }
+
+    html.dark.fi .fi-sidebar {
+        border-color: var(--popup-sidebar-border-dark);
+        background-color: var(--popup-sidebar-bg-dark);
+    }
+
+    .fi-topbar-ctn {
+        border-bottom: 1px solid var(--popup-topbar-border);
+        background-color: var(--popup-topbar-bg);
+        backdrop-filter: blur(8px);
+    }
+
+    html.dark.fi .fi-topbar-ctn {
+        border-color: var(--popup-topbar-border-dark);
+        background-color: var(--popup-topbar-bg-dark);
+    }
+
+    .fi-section:not(.fi-section-not-contained):not(.fi-aside) {
+        border-radius: var(--popup-section-radius);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+        outline: 1px solid var(--popup-section-ring);
+        outline-offset: -1px;
+    }
+
+    html.dark.fi .fi-section:not(.fi-section-not-contained):not(.fi-aside) {
+        outline-color: var(--popup-section-ring-dark);
+    }
+
+    .fi-section:not(.fi-section-not-contained):not(.fi-aside)
+        > .fi-section-content-ctn
+        > .fi-section-content {
+        padding: var(--popup-section-padding);
+    }
+
+    .fi-btn:not(.fi-icon-btn) {
+        border-radius: var(--popup-button-radius);
+        padding-inline: var(--popup-button-padding-x);
+        padding-block: var(--popup-button-padding-y);
+    }
+
+    .fi-btn.fi-size-sm:not(.fi-icon-btn) {
+        border-radius: var(--popup-button-radius);
+        padding-inline: var(--popup-button-sm-padding-x);
+        padding-block: var(--popup-button-sm-padding-y);
+    }
+
+    .fi-icon-btn {
+        border-radius: var(--popup-icon-button-radius);
+    }
+
+    .fi-ta-content-ctn .fi-ta-content-header {
+        padding-inline: var(--popup-table-header-pad-x);
+        padding-block: var(--popup-table-header-pad-y);
+    }
+
+    @media (min-width: 640px) {
+        .fi-ta-content-ctn .fi-ta-content-header {
+            padding-inline: var(--popup-table-header-pad-x-lg);
+        }
+    }
+
+    .fi-ta-table .fi-ta-header-cell {
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--popup-table-header-text);
+    }
+
+    html.dark.fi .fi-ta-table .fi-ta-header-cell {
+        color: var(--popup-table-header-text-dark);
+    }
+
+    .fi-ta-table .fi-ta-cell {
+        font-size: var(--popup-table-cell-size);
+        line-height: var(--popup-table-cell-leading);
+    }
+
+    .fi-wi-stats-overview-stat {
+        border-radius: var(--popup-stats-radius);
+        padding: var(--popup-stats-padding);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+        outline: 1px solid var(--popup-section-ring);
+        outline-offset: -1px;
+    }
+
+    html.dark.fi .fi-wi-stats-overview-stat {
+        outline-color: var(--popup-section-ring-dark);
+    }
+
+    .fi-wi-stats-overview-stat .fi-wi-stats-overview-stat-value {
+        font-size: var(--popup-stats-value-size);
+        font-weight: 600;
+        letter-spacing: -0.025em;
+    }
+
+    @media (min-width: 640px) {
+        .fi-wi-stats-overview-stat .fi-wi-stats-overview-stat-value {
+            font-size: var(--popup-stats-value-size-lg);
+        }
+    }
+
+    .fi-badge.fi-color {
+        border-radius: var(--popup-badge-radius);
+        padding-inline: var(--popup-badge-pad-x);
+        padding-block: var(--popup-badge-pad-y);
+        font-size: var(--popup-badge-font-size);
+        font-weight: var(--popup-badge-font-weight);
+        letter-spacing: var(--popup-badge-tracking);
+        text-transform: uppercase;
+    }
+
+    .fi-simple-layout {
+        min-height: 100vh;
+        background: linear-gradient(
+            to bottom,
+            var(--popup-login-gradient-from),
+            var(--popup-login-gradient-to)
+        );
+    }
+
+    html.dark.fi .fi-simple-layout {
+        background: linear-gradient(
+            to bottom,
+            var(--popup-login-gradient-from-dark),
+            var(--popup-login-gradient-to-dark)
+        );
+    }
+
+    .fi-simple-main {
+        padding-block: var(--popup-simple-main-pad-y);
+    }
+
+    @media (min-width: 640px) {
+        .fi-simple-main {
+            padding-block: var(--popup-simple-main-pad-y-sm);
+        }
+    }
+
+    .fi-simple-page-content {
+        row-gap: var(--popup-simple-page-gap-y);
+    }
+
+    .popup-auth-intro {
+        margin-inline: auto;
+        max-width: var(--popup-auth-intro-max-width);
+        text-align: center;
+    }
+
+    .popup-auth-intro p {
+        font-size: 0.875rem;
+        line-height: 1.5;
+        color: var(--popup-auth-intro-text);
+    }
+
+    html.dark.fi .popup-auth-intro p {
+        color: var(--popup-auth-intro-text-dark);
+    }
+}

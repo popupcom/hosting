@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Projects;
 
+use App\Filament\Resources\Projects\Pages\AddProjectServices;
 use App\Filament\Resources\Projects\Pages\CreateProject;
 use App\Filament\Resources\Projects\Pages\EditProject;
 use App\Filament\Resources\Projects\Pages\ListProjects;
@@ -43,7 +44,11 @@ class ProjectResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            RelationManagers\ProjectServicesRelationManager::class,
+            RelationManagers\ProjectLicensesRelationManager::class,
+            RelationManagers\BillingGroupsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
@@ -52,6 +57,7 @@ class ProjectResource extends Resource
             'index' => ListProjects::route('/'),
             'create' => CreateProject::route('/create'),
             'edit' => EditProject::route('/{record}/edit'),
+            'add-services' => AddProjectServices::route('/{record}/leistungen-hinzufuegen'),
         ];
     }
 }

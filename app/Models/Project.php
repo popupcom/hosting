@@ -11,23 +11,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+#[Fillable([
+    'client_id',
+    'name',
+    'url',
+    'wordpress_version',
+    'php_version',
+    'managewp_site_id',
+    'lastpass_reference',
+    'moco_project_id',
+    'status',
+    'maintenance_contract',
+    'notes',
+])]
 class Project extends Model
 {
     use Concerns\HasIntegrationSyncStates;
 
-    #[Fillable([
-        'client_id',
-        'name',
-        'url',
-        'wordpress_version',
-        'php_version',
-        'managewp_site_id',
-        'lastpass_reference',
-        'moco_project_id',
-        'status',
-        'maintenance_contract',
-        'notes',
-    ])]
     protected static function booted(): void
     {
         static::saving(function (Project $project): void {
@@ -62,14 +62,22 @@ class Project extends Model
     {
         return $this->belongsToMany(Server::class)
             ->withPivot('is_primary')
-            ->withPivotCasts(['is_primary' => 'boolean'])
             ->withTimestamps();
     }
 
-    public function licenses(): BelongsToMany
+    public function projectLicenses(): HasMany
     {
-        return $this->belongsToMany(License::class)
-            ->withTimestamps();
+        return $this->hasMany(ProjectLicenseAssignment::class);
+    }
+
+    public function licenseAssignments(): HasMany
+    {
+        return $this->projectLicenses();
+    }
+
+    public function projectServices(): HasMany
+    {
+        return $this->hasMany(ProjectService::class);
     }
 
     public function supportPackage(): HasOne
@@ -82,9 +90,9 @@ class Project extends Model
         return $this->hasMany(MaintenanceHistory::class);
     }
 
-    public function costLineItems(): HasMany
+    public function billingGroups(): HasMany
     {
-        return $this->hasMany(CostLineItem::class);
+        return $this->hasMany(BillingGroup::class);
     }
 
     public function scopeActive(Builder $query): Builder

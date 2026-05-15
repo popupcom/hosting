@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Fillable([
+    'popup_application_id',
+    'hostname',
+    'ssl_expires_at',
+    'is_primary',
+    'notes',
+])]
 class Domain extends Model
 {
-    #[Fillable([
-        'popup_application_id',
-        'hostname',
-        'ssl_expires_at',
-        'is_primary',
-        'notes',
-    ])]
     protected function casts(): array
     {
         return [
