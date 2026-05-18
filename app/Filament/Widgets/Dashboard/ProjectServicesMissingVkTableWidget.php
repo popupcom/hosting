@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets\Dashboard;
 
 use App\Filament\Resources\ProjectServices\ProjectServiceResource;
+use App\Models\DashboardPreference;
 use App\Models\ProjectService;
 use App\Services\Dashboard\ProjectServiceDashboardQuery;
 use Filament\Tables\Columns\TextColumn;
@@ -19,7 +20,7 @@ class ProjectServicesMissingVkTableWidget extends TableWidget
     {
         return $table
             ->heading('Projekt-Leistungen ohne VK')
-            ->query(fn () => ProjectServiceDashboardQuery::missingSalesPriceQuery()->limit(25))
+            ->query(fn () => ProjectServiceDashboardQuery::missingSellingQuery(DashboardPreference::forUser())->limit(25))
             ->paginated(false)
             ->emptyStateHeading('Keine Einträge')
             ->emptyStateDescription('Alle aktiven Projekt-Leistungen haben einen effektiven VK.')

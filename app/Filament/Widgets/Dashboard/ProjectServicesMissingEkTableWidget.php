@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets\Dashboard;
 
 use App\Filament\Resources\ProjectServices\ProjectServiceResource;
+use App\Models\DashboardPreference;
 use App\Models\ProjectService;
 use App\Services\Dashboard\ProjectServiceDashboardQuery;
 use Filament\Tables\Columns\TextColumn;
@@ -19,7 +20,7 @@ class ProjectServicesMissingEkTableWidget extends TableWidget
     {
         return $table
             ->heading('Projekt-Leistungen ohne EK')
-            ->query(fn () => ProjectServiceDashboardQuery::missingCostPriceQuery()->limit(25))
+            ->query(fn () => ProjectServiceDashboardQuery::missingCostQuery(DashboardPreference::forUser())->limit(25))
             ->paginated(false)
             ->emptyStateHeading('Keine Einträge')
             ->emptyStateDescription('Alle aktiven Projekt-Leistungen haben einen effektiven EK.')

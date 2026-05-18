@@ -72,14 +72,35 @@ class LicenseProduct extends Model
         ]);
     }
 
+    /**
+     * Lizenzprodukte mit Auslastung ≥ Schwellwert (SQLite: kein HAVING auf withCount-Alias).
+     */
+    public function scopeWhereUtilizationPercentAtLeast(Builder $query, float $thresholdPercent): Builder
+    {
+        $productTable = $query->getModel()->getTable();
+        $assignmentTable = (new ProjectLicenseAssignment)->getTable();
+        $prefix = $query->getConnection()->getTablePrefix();
+        $p = $prefix.$productTable;
+        $a = $prefix.$assignmentTable;
+
+        return $query->whereRaw(
+            '(SELECT COUNT(*) FROM '.$a.' WHERE '.$a.'.license_product_id = '.$p.'.id AND '.$a.'.status IN (?, ?)) * 100.0 / '.$p.'.total_available_licenses >= ?',
+            [
+                LicenseAssignmentStatus::Active->value,
+                LicenseAssignmentStatus::PendingCancellation->value,
+                $thresholdPercent,
+            ]
+        );
+    }
+
     public function scopeHighUtilization(Builder $query, float $thresholdPercent = 80): Builder
     {
         return $query
             ->where('total_available_licenses', '>', 0)
+            ->whereUtilizationPercentAtLeast($thresholdPercent)
             ->withCount([
                 'assignments as used_count' => fn (Builder $q) => $q->countsAsUsed(),
-            ])
-            ->havingRaw('(used_count * 100.0 / total_available_licenses) >= ?', [$thresholdPercent]);
+            ]);
     }
 
     public function assignments(): HasMany

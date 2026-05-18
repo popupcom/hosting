@@ -84,11 +84,11 @@ final class LicenseUsageDashboardQuery
     {
         return LicenseProduct::query()
             ->activeCatalog()
+            ->where('total_available_licenses', '>', 0)
+            ->whereUtilizationPercentAtLeast($thresholdPercent)
             ->withCount([
                 'assignments as used_count' => fn (Builder $q) => $q->countsAsUsed(),
             ])
-            ->where('total_available_licenses', '>', 0)
-            ->havingRaw('(used_count * 100.0 / total_available_licenses) >= ?', [$thresholdPercent])
             ->orderByDesc('used_count');
     }
 
