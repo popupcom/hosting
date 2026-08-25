@@ -23,11 +23,24 @@ umgeschaltet werden:
      - Automatische Prüfung der Bildauflösung („druckfähig“ / „evtl. zu klein“)
      - Rechte-/DSGVO-Bestätigung als Pflicht-Checkbox
    - Schritt 3: Bestätigung mit Referenznummer
+   - **Inserate & Partnerstories buchen:** Angebotskarten mit Live-Kontingent
+     (5 Partnerstories à € 1.100, 4 Inserate 1/1 à € 1.450, 8 Inserate 1/2 à
+     € 850). Ausgebuchte Formate sind gesperrt. Buchungsformular mit
+     verbindlicher Bestätigung; bei Inseraten Druckdaten-Upload (oder später
+     nachreichen), bei Partnerstories optional fixe Platzierung im Heft
+     (U2, Seite 5, Heftmitte, U3, U4) – vergebene Plätze sind gesperrt.
+     Referenzen PR-/INS-2026-xxx.
 
 2. **Redaktion (Backend)**
    - Dashboard-Kennzahlen, Termin-Leiste (Einsendeschluss, Druckfreigabe)
-   - Liste aller Einreichungen mit Suche und Status-Filter
-   - Detailansicht: Beitragstext, Kontaktdaten, Fotos mit Auflösung/Dateigröße
+   - Liste aller Einreichungen mit Suche, Status- und Art-Filter
+     (redaktionelle Beiträge / Partnerstories / Inserate); Buchungen mit
+     Format-Tag, Preis und Platzierung. Inventar-Leiste mit gebuchten
+     Kontingenten und Umsatzsumme.
+   - Detailansicht: Beitragstext, Kontaktdaten, Fotos mit Auflösung/Dateigröße;
+     bei Buchungen zusätzlich Format, Preis, Platzierung und Druckdaten-Status
+     (inkl. „ausständig“-Erinnerung). Buchungen laufen durch denselben
+     Status- und PDF-Freigabeprozess.
    - Redaktioneller Workflow: Neu → In Prüfung → Rückfrage → **Für Agentur
      freigegeben** (Gemeinde prüft die Texte und gibt sie an die Agentur frei)
    - Rückfragen an die Ansprechperson (simulierte E-Mail) + interne Notizen + Verlauf

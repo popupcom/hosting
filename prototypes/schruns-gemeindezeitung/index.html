@@ -276,6 +276,24 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
 .pdfmeta{font-size:.92rem;line-height:1.5}
 .pdfmeta b{display:inline-block}
 
+/* ---------- Inserate & Partnerstories ---------- */
+.offergrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin:1.6rem 0 1.2rem}
+.offer{border:1px solid var(--c-line);border-radius:var(--radius);background:#fff;padding:1.2rem 1.3rem;display:flex;flex-direction:column;gap:.25rem}
+.offer .o-name{font-weight:700;color:var(--c-head);font-size:1.08rem}
+.offer .o-detail{font-size:.85rem;color:var(--c-muted);min-height:2.6em}
+.offer .o-price{font-size:1.55rem;font-weight:700;color:var(--c-blue)}
+.offer .o-rest{font-size:.84rem;margin:.3rem 0 .7rem}
+.offer .o-rest .bar{height:6px;background:#ececec;border-radius:3px;margin-top:.35rem;overflow:hidden}
+.offer .o-rest .bar i{display:block;height:100%;background:var(--c-blue)}
+.offer .soldout{color:var(--c-red);font-weight:700}
+.offer .soldout ~ .bar i,.offer.full .bar i{background:var(--c-red)}
+.arttag{display:inline-block;font-size:.7rem;font-weight:700;border-radius:3px;padding:.08rem .45rem;margin-right:.35rem;vertical-align:1px;letter-spacing:.02em}
+.at-pr{background:#f1e8fb;color:#6d3fb4}
+.at-ins{background:#e5eaf0;color:#3c4c5e}
+.invbar{display:flex;gap:1.6rem;flex-wrap:wrap;align-items:center;padding:.7rem 1.2rem;margin-bottom:1.4rem;background:#fafafa;border:1px solid var(--c-line);border-radius:var(--radius);font-size:.9rem}
+.invbar b{color:var(--c-head)}
+.invbar .rev{margin-left:auto;font-weight:700;color:var(--c-green)}
+
 /* ---------- Toast ---------- */
 #toast{position:fixed;bottom:1.4rem;left:50%;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;padding:.7rem 1.3rem;border-radius:4px;font-size:.92rem;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:100;max-width:min(92vw,540px);text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.35)}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -475,6 +493,15 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
       </p>
     </section>
 
+    <!-- ---------- Inserate & Partnerstories ---------- -->
+    <h2 class="sechead" id="buchung">Inserate &amp; Partnerstories buchen</h2>
+    <div class="secline"></div>
+    <p class="introtext">Für Betriebe und Institutionen: Präsentieren Sie sich in der Gemeindezeitung –
+      als klassisches Inserat mit fertigen Druckdaten oder als redaktionell gestaltete Partnerstory.
+      Die Kontingente pro Ausgabe sind begrenzt; die Buchung ist verbindlich.</p>
+    <div class="offergrid" id="offergrid"></div>
+    <div id="bookarea"></div>
+
   </main>
 
   <!-- Ansicht, die Einsender:innen über den Freigabe-Link aus der E-Mail sehen -->
@@ -535,6 +562,8 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
         <span>Einsendeschluss <b>2. Oktober 2026</b> · Druckfreigabe geplant für <b>23. Oktober 2026</b> · Erscheinung <b>November 2026</b></span>
       </div>
 
+      <div class="invbar" id="invbar"></div>
+
       <div class="toolbar">
         <input type="search" id="q" placeholder="Suchen (Absender, Titel …)" oninput="renderList()">
         <select id="fstatus" onchange="renderList()">
@@ -546,6 +575,12 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
           <option value="pdf_offen">PDF-Freigabe läuft</option>
           <option value="pdf_aenderung">PDF: Änderungswunsch</option>
           <option value="pdf_ok">PDF freigegeben</option>
+        </select>
+        <select id="fart" onchange="renderList()">
+          <option value="">Alle Arten</option>
+          <option value="beitrag">Redaktionelle Beiträge</option>
+          <option value="partnerstory">Partnerstories</option>
+          <option value="inserat">Inserate</option>
         </select>
         <span class="spacer"></span>
         <button class="btn btn-primary btn-sm" onclick="downloadAll()">
@@ -606,6 +641,11 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
         </div>
 
         <div>
+          <section class="card det-sec hidden" id="d-buchung-sec">
+            <h3>Buchung</h3>
+            <dl class="kv" id="d-buchung"></dl>
+          </section>
+
           <section class="card det-sec">
             <h3>Einsender:in</h3>
             <dl class="kv" id="d-kontakt"></dl>
@@ -654,6 +694,15 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
 
 const STORE_KEY = 'gz-schruns-dummy-v1';
 const KATEGORIE_LABEL = {verein:'Verein', betrieb:'Betrieb / Wirtschaft', institution:'Institution / Organisation', gemeinde:'Gemeinde', privat:'Privatperson'};
+const OFFERS = {
+  partnerstory: {label:'Partnerstory · 1 Seite', detail:'Redaktionell gestaltete PR-Seite mit Text & Fotos – auf Wunsch mit fixer Platzierung im Heft.', preis:1100, max:5, prefix:'PR'},
+  inserat1:     {label:'Inserat · 1/1 Seite',   detail:'Ganzseitiges Inserat mit fertigen Druckdaten (PDF).', preis:1450, max:4, prefix:'INS'},
+  inserat12:    {label:'Inserat · 1/2 Seite',   detail:'Halbseitiges Inserat mit fertigen Druckdaten (PDF).', preis:850,  max:8, prefix:'INS'}
+};
+const PLACEMENTS = ['U2 (innere Titelseite)','Seite 5','Heftmitte','U3 (vorletzte Seite)','U4 (Rückseite)'];
+function fmtEUR(n){ return '€ ' + n.toLocaleString('de-AT'); }
+function bookedCount(art){ return entries.filter(e=>e.art===art).length; }
+function takenPlacements(){ return entries.filter(e=>e.art==='partnerstory' && e.platzierung).map(e=>e.platzierung); }
 function absenderName(e){ return e.verein || ((e.vorname||'')+' '+(e.nachname||'')).trim(); }
 const STATUS_LABEL = {
   neu:'Neu', pruefung:'In Prüfung', rueckfrage:'Rückfrage offen',
@@ -755,6 +804,45 @@ const DEMO_DATA = [
     verlauf:[
       {ts:'2026-08-25T08:30:00', who:'System', type:'system', text:'Beitrag eingereicht.'}
     ]
+  },
+  {
+    ref:'PR-2026-001', art:'partnerstory', kategorie:'betrieb', verein:'Raiffeisenbank Montafon', vorname:'Claudia', nachname:'Marent',
+    funktion:'Marketing', email:'marketing@raiba-montafon.at', telefon:'+43 5556 44444',
+    titel:'Partnerstory – 75 Jahre Raiffeisenbank im Montafon',
+    einleitung:'',
+    text:'75 Jahre Raiffeisenbank im Tal – ein Rückblick auf die Anfänge des regionalen Bankwesens und ein Ausblick auf die digitale Zukunft.\n\n(Finaler Text wird gemeinsam mit der Redaktion abgestimmt.)',
+    credit:'Text & Fotos: Raiffeisenbank Montafon',
+    preis:1100, platzierung:'U4 (Rückseite)', druckdaten:null,
+    eingereicht:'2026-08-22T14:20:00', status:'pruefung', fotos:[
+      {name:'raiba_team_montafon.jpg', w:5472, h:3648, size:6.9}
+    ],
+    verlauf:[
+      {ts:'2026-08-22T14:20:00', who:'System', type:'system', text:'Buchung eingegangen – Partnerstory 1 Seite, € 1.100, fixe Platzierung: U4 (Rückseite).'},
+      {ts:'2026-08-23T09:00:00', who:'Redaktion', type:'status', text:'Status geändert auf „In Prüfung“.'}
+    ]
+  },
+  {
+    ref:'INS-2026-001', art:'inserat1', kategorie:'betrieb', verein:'Intersport Montafon', vorname:'Jürgen', nachname:'Ganahl',
+    funktion:'Werbung', email:'werbung@intersport-montafon.at', telefon:'+43 5556 55555',
+    titel:'Inserat 1/1 Seite – Intersport Montafon',
+    einleitung:'', text:'', credit:'',
+    preis:1450, platzierung:'', druckdaten:{name:'intersport_wintereroeffnung_A4.pdf', size:14.2},
+    eingereicht:'2026-08-20T11:05:00', status:'freigegeben', fotos:[],
+    verlauf:[
+      {ts:'2026-08-20T11:05:00', who:'System', type:'system', text:'Buchung eingegangen – Inserat 1/1 Seite, € 1.450. Druckdaten hochgeladen: intersport_wintereroeffnung_A4.pdf'},
+      {ts:'2026-08-21T08:45:00', who:'Redaktion', type:'status', text:'Druckdaten geprüft und für die Agentur freigegeben.'}
+    ]
+  },
+  {
+    ref:'INS-2026-002', art:'inserat12', kategorie:'betrieb', verein:'Café Dörflinger', vorname:'Petra', nachname:'Dörflinger',
+    funktion:'Inhaberin', email:'office@cafe-doerflinger.at', telefon:'+43 664 3334455',
+    titel:'Inserat 1/2 Seite – Café Dörflinger',
+    einleitung:'', text:'', credit:'',
+    preis:850, platzierung:'', druckdaten:null,
+    eingereicht:'2026-08-24T17:30:00', status:'neu', fotos:[],
+    verlauf:[
+      {ts:'2026-08-24T17:30:00', who:'System', type:'system', text:'Buchung eingegangen – Inserat 1/2 Seite, € 850. Druckdaten werden nachgereicht.'}
+    ]
   }
 ];
 
@@ -781,7 +869,8 @@ function resetDemo(){
   document.getElementById('i-rechte').checked = false;
   document.getElementById('i-kategorie').value = '';
   freigabeRef = null;
-  showStep(1); closeDetail(); renderList(); renderFreigabe(null);
+  document.getElementById('bookarea').innerHTML = '';
+  showStep(1); closeDetail(); renderList(); renderFreigabe(null); renderOffers();
   toast('Demodaten wurden zurückgesetzt.');
 }
 
@@ -915,7 +1004,7 @@ function submitEntry(){
   document.getElementById('f-rechte').classList.toggle('invalid', !rechte);
   if(bad || !rechte){ toast(bad ? 'Bitte die markierten Pflichtfelder ausfüllen.' : 'Bitte die Rechte-Bestätigung ankreuzen.'); return; }
 
-  const nr = entries.length + 1;
+  const nr = entries.filter(x=>!x.art).length + 1;
   const ref = 'GZ-2026-' + String(nr).padStart(3,'0');
   const entry = {
     ref,
@@ -955,24 +1044,165 @@ function newEntry(){
   showStep(2);
 }
 
+/* ---------- Portal: Inserate & Partnerstories buchen ---------- */
+let bookArt = null;
+function renderOffers(){
+  const grid = document.getElementById('offergrid');
+  if(!grid) return;
+  grid.innerHTML = Object.entries(OFFERS).map(([art,o])=>{
+    const used = bookedCount(art), rest = o.max - used, full = rest <= 0;
+    return `<div class="offer${full?' full':''}">
+      <span class="o-name">${o.label}</span>
+      <span class="o-detail">${o.detail}</span>
+      <span class="o-price">${fmtEUR(o.preis)}</span>
+      <span class="o-rest">${full
+        ? '<span class="soldout">Ausgebucht</span>'
+        : 'Noch <b>'+rest+'</b> von '+o.max+' verfügbar'}
+        <span class="bar"><i style="width:${Math.round(used/o.max*100)}%"></i></span></span>
+      <button class="btn ${full?'btn-ghost':'btn-primary'} btn-sm" ${full?'disabled':''} onclick="openBooking('${art}')">
+        ${full?'Ausgebucht':'Jetzt buchen'}</button>
+    </div>`;
+  }).join('');
+}
+function openBooking(art){
+  bookArt = art;
+  const o = OFFERS[art];
+  const taken = takenPlacements();
+  const isPr = art === 'partnerstory';
+  const placOpts = ['<option value="">Keine fixe Platzierung</option>']
+    .concat(PLACEMENTS.map(p=>taken.includes(p)
+      ? `<option disabled>${p} – bereits vergeben</option>`
+      : `<option value="${p}">${p}</option>`)).join('');
+  document.getElementById('bookarea').innerHTML = `
+  <section class="card formcard" id="bookform">
+    <h2>Buchung: ${o.label}</h2>
+    <p class="sub">${o.detail} · Preis: <b>${fmtEUR(o.preis)}</b> zzgl. gesetzl. USt.</p>
+    <div class="grid2">
+      <div class="field wide" id="b-f-firma">
+        <label>Firma / Organisation <span class="req">*</span></label>
+        <input type="text" id="b-firma" placeholder="z. B. Muster GmbH">
+        <span class="err">Bitte Firma/Organisation angeben.</span>
+      </div>
+      <div class="field" id="b-f-vorname">
+        <label>Vorname <span class="req">*</span></label>
+        <input type="text" id="b-vorname"><span class="err">Bitte Vornamen angeben.</span>
+      </div>
+      <div class="field" id="b-f-nachname">
+        <label>Nachname <span class="req">*</span></label>
+        <input type="text" id="b-nachname"><span class="err">Bitte Nachnamen angeben.</span>
+      </div>
+      <div class="field" id="b-f-email">
+        <label>E-Mail-Adresse <span class="req">*</span></label>
+        <input type="email" id="b-email" placeholder="name@firma.at">
+        <span class="err">Bitte eine gültige E-Mail-Adresse angeben.</span>
+      </div>
+      <div class="field" id="b-f-telefon">
+        <label>Telefon</label>
+        <input type="tel" id="b-telefon" placeholder="+43 …">
+      </div>
+      ${isPr ? `
+      <div class="field wide" id="b-f-platz">
+        <label>Fixe Platzierung im Heft <span class="hint">(optional, solange verfügbar)</span></label>
+        <select id="b-platz">${placOpts}</select>
+        <span class="hint">Bereits vergebene Plätze sind gesperrt. Text und Fotos zur Partnerstory reichen Sie anschließend bequem über das Beitragsformular oben ein.</span>
+      </div>` : `
+      <div class="field wide" id="b-f-druck">
+        <label>Druckdaten hochladen <span class="hint">(PDF · kann auch später nachgereicht werden)</span></label>
+        <input type="file" id="b-druck" accept="application/pdf,image/*">
+        <span class="hint">Endformat ${art==='inserat1'?'1/1 Seite':'1/2 Seite'}, mind. 300 dpi, inkl. 3 mm Beschnitt.</span>
+      </div>`}
+    </div>
+    <div class="checkline" id="b-f-agb">
+      <input type="checkbox" id="b-agb">
+      <label for="b-agb">Ich buche <b>verbindlich</b> zum angegebenen Preis. Die Rechnung wird nach Erscheinen
+        der Ausgabe per E-Mail zugestellt. <span class="req">*</span></label>
+    </div>
+    <div class="formfoot">
+      <button class="btn btn-ghost" onclick="document.getElementById('bookarea').innerHTML=''">Abbrechen</button>
+      <button class="btn btn-gold" onclick="submitBooking()">Verbindlich buchen&ensp;✓</button>
+    </div>
+  </section>`;
+  document.getElementById('bookform').scrollIntoView({behavior:'smooth', block:'start'});
+}
+function submitBooking(){
+  const o = OFFERS[bookArt]; if(!o) return;
+  if(bookedCount(bookArt) >= o.max){ toast('Dieses Format ist leider soeben ausgebucht worden.'); renderOffers(); return; }
+  const inv = (fid,bad)=>{ document.getElementById(fid).classList.toggle('invalid',bad); return bad; };
+  let bad = false;
+  bad = inv('b-f-firma', !document.getElementById('b-firma').value.trim()) || bad;
+  bad = inv('b-f-vorname', !document.getElementById('b-vorname').value.trim()) || bad;
+  bad = inv('b-f-nachname', !document.getElementById('b-nachname').value.trim()) || bad;
+  bad = inv('b-f-email', !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(document.getElementById('b-email').value.trim())) || bad;
+  const agb = document.getElementById('b-agb').checked;
+  document.getElementById('b-f-agb').classList.toggle('invalid', !agb);
+  if(bad || !agb){ toast(bad ? 'Bitte die markierten Pflichtfelder ausfüllen.' : 'Bitte die verbindliche Buchung bestätigen.'); return; }
+
+  const platz = document.getElementById('b-platz') ? document.getElementById('b-platz').value : '';
+  if(platz && takenPlacements().includes(platz)){ toast('Diese Platzierung wurde soeben vergeben – bitte neu wählen.'); openBooking(bookArt); return; }
+  let druck = null;
+  const df = document.getElementById('b-druck');
+  if(df && df.files[0]) druck = {name:df.files[0].name, size:df.files[0].size/1048576};
+
+  const firma = document.getElementById('b-firma').value.trim();
+  const nr = entries.filter(x=>x.art && OFFERS[x.art].prefix===o.prefix).length + 1;
+  const ref = o.prefix + '-2026-' + String(nr).padStart(3,'0');
+  const entry = {
+    ref, art:bookArt, kategorie:'betrieb', verein:firma,
+    vorname:document.getElementById('b-vorname').value.trim(),
+    nachname:document.getElementById('b-nachname').value.trim(),
+    funktion:'', email:document.getElementById('b-email').value.trim(),
+    telefon:document.getElementById('b-telefon').value.trim(),
+    titel:o.label+' – '+firma, einleitung:'', text:'', credit:'',
+    preis:o.preis, platzierung:platz, druckdaten:druck,
+    eingereicht:new Date().toISOString(), status:'neu', fotos:[],
+    verlauf:[{ts:new Date().toISOString(), who:'System', type:'system',
+      text:'Buchung eingegangen – '+o.label+', '+fmtEUR(o.preis)+'.'
+        + (platz ? ' Fixe Platzierung: '+platz+'.' : '')
+        + (druck ? ' Druckdaten hochgeladen: '+druck.name : (bookArt!=='partnerstory' ? ' Druckdaten werden nachgereicht.' : ''))}]
+  };
+  entries.push(entry);
+  saveStore(); renderOffers();
+  document.getElementById('bookarea').innerHTML = `
+  <section class="card success">
+    <div class="okring"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m4.5 12.5 5 5 10-11"/></svg></div>
+    <h2>Vielen Dank für Ihre Buchung!</h2>
+    <div class="ref">Referenz: ${ref}</div>
+    <p>${o.label} für <b>${esc(firma)}</b> wurde verbindlich gebucht (${fmtEUR(o.preis)}).
+      ${platz ? 'Fixe Platzierung: <b>'+esc(platz)+'</b>.' : ''}</p>
+    <p class="muted small">Sie erhalten eine Buchungsbestätigung per E-Mail.
+      ${bookArt==='partnerstory'
+        ? 'Text und Fotos zu Ihrer Partnerstory reichen Sie über das Beitragsformular oben ein.'
+        : (druck ? 'Ihre Druckdaten laufen nun durch den Prüfprozess der Redaktion.' : 'Bitte reichen Sie Ihre Druckdaten zeitnah nach – Sie erhalten dazu einen Upload-Link per E-Mail.')}</p>
+    <p style="margin-top:1.2rem"><button class="btn btn-outline" onclick="document.getElementById('bookarea').innerHTML=''">Schließen</button></p>
+  </section>`;
+  toast('Buchung '+ref+' eingegangen – Bestätigung per E-Mail (Demo).');
+}
+
 /* ---------- Redaktion: Liste ---------- */
 let currentRef = null;
 function renderList(){
   const q = (document.getElementById('q').value||'').toLowerCase();
   const fs = document.getElementById('fstatus').value;
+  const fa = document.getElementById('fart').value;
   const rows = entries
     .slice().sort((a,b)=>b.eingereicht.localeCompare(a.eingereicht))
-    .filter(e=>(!fs || e.status===fs) && (!q || (absenderName(e)+' '+e.vorname+' '+e.nachname+' '+e.titel+' '+e.ref).toLowerCase().includes(q)));
+    .filter(e=>(!fs || e.status===fs)
+      && (!fa || (fa==='beitrag' ? !e.art : fa==='inserat' ? (e.art||'').startsWith('inserat') : e.art===fa))
+      && (!q || (absenderName(e)+' '+e.vorname+' '+e.nachname+' '+e.titel+' '+e.ref).toLowerCase().includes(q)));
 
-  document.getElementById('tbody').innerHTML = rows.map(e=>`
+  document.getElementById('tbody').innerHTML = rows.map(e=>{
+    const tag = e.art ? `<span class="arttag ${e.art==='partnerstory'?'at-pr':'at-ins'}">${e.art==='partnerstory'?'Partnerstory':(e.art==='inserat1'?'Inserat 1/1':'Inserat 1/2')}</span>` : '';
+    const sub = e.art ? OFFERS[e.art].label+' · '+fmtEUR(e.preis)+(e.platzierung?' · '+esc(e.platzierung):'')
+                      : esc(KATEGORIE_LABEL[e.kategorie]||'')+(e.kategorie?' · ':'')+esc(e.titel);
+    return `
     <tr onclick="openDetail('${e.ref}')">
       <td class="muted small">${e.ref}</td>
-      <td><span class="tbl-title">${esc(absenderName(e))}</span><br><span class="tbl-sub">${esc(KATEGORIE_LABEL[e.kategorie]||'')}${e.kategorie?' · ':''}${esc(e.titel)}</span></td>
+      <td>${tag}<span class="tbl-title">${esc(absenderName(e))}</span><br><span class="tbl-sub">${sub}</span></td>
       <td class="small">${fmtDate(e.eingereicht)}</td>
       <td>${e.fotos.length} <span class="muted small">(${fmtMB(e.fotos.reduce((s,f)=>s+f.size,0))})</span></td>
       <td><span class="badge b-${e.status}">${STATUS_LABEL[e.status]}</span></td>
       <td class="small" style="color:var(--c-blue);font-weight:700">Öffnen&nbsp;→</td>
-    </tr>`).join('') ||
+    </tr>`;}).join('') ||
     '<tr><td colspan="6" class="muted" style="text-align:center;padding:2rem">Keine Einreichungen gefunden.</td></tr>';
 
   document.getElementById('listcount').textContent = rows.length + ' von ' + entries.length + ' Einreichungen angezeigt.';
@@ -987,6 +1217,14 @@ function renderList(){
     <div class="card stat"><div class="v">${cnt('pdf_offen')}</div><div class="l">PDF-Freigabe läuft</div></div>
     <div class="card stat"><div class="v">${cnt('pdf_ok')}</div><div class="l">PDF freigegeben</div></div>
     <div class="card stat"><div class="v">${nFotos}</div><div class="l">Fotos · ${fmtMB(mb)}</div></div>`;
+
+  const rev = entries.filter(e=>e.art).reduce((s,e)=>s+(e.preis||0),0);
+  document.getElementById('invbar').innerHTML =
+    Object.entries(OFFERS).map(([art,o])=>{
+      const used = bookedCount(art);
+      return `<span><b>${o.label}:</b> ${used}/${o.max} gebucht${used>=o.max?' <span style="color:var(--c-red);font-weight:700">· ausgebucht</span>':''}</span>`;
+    }).join('') +
+    `<span class="rev">Inserate &amp; PR: ${fmtEUR(rev)}</span>`;
 }
 
 /* ---------- Redaktion: Detail ---------- */
@@ -1000,8 +1238,24 @@ function openDetail(ref){
   document.getElementById('d-meta').textContent = e.ref + ' · ' + absenderName(e) + ' · eingereicht am ' + fmtDate(e.eingereicht);
   document.getElementById('d-einleitung').textContent = e.einleitung || '';
   document.getElementById('d-einleitung').style.display = e.einleitung ? '' : 'none';
-  document.getElementById('d-text').innerHTML = e.text.split(/\n{2,}/).map(p=>'<p>'+esc(p).replace(/\n/g,'<br>')+'</p>').join('');
-  document.getElementById('d-credit').textContent = e.credit ? e.credit : 'Kein Texter-/Fotografen-Hinweis angegeben.';
+  const istInserat = (e.art||'').startsWith('inserat');
+  document.getElementById('d-text').innerHTML = e.text
+    ? e.text.split(/\n{2,}/).map(p=>'<p>'+esc(p).replace(/\n/g,'<br>')+'</p>').join('')
+    : (istInserat ? '<p class="small muted">Inserat mit fertigen Druckdaten – kein redaktioneller Text.</p>' : '');
+  document.getElementById('d-credit').textContent = e.credit ? e.credit : (istInserat ? '' : 'Kein Texter-/Fotografen-Hinweis angegeben.');
+
+  const bsec = document.getElementById('d-buchung-sec');
+  bsec.classList.toggle('hidden', !e.art);
+  if(e.art){
+    const o = OFFERS[e.art];
+    document.getElementById('d-buchung').innerHTML = `
+      <dt>Format</dt><dd>${o.label}</dd>
+      <dt>Preis</dt><dd>${fmtEUR(e.preis)}</dd>
+      ${e.art==='partnerstory' ? `<dt>Platzierung</dt><dd>${e.platzierung ? esc(e.platzierung) : 'Keine fixe Platzierung'}</dd>` : ''}
+      ${e.art!=='partnerstory' ? `<dt>Druckdaten</dt><dd>${e.druckdaten
+          ? esc(e.druckdaten.name)+' <span class="muted small">('+fmtMB(e.druckdaten.size)+')</span>'
+          : '<span style="color:var(--c-orange);font-weight:700">⚠ ausständig</span> <a href="#" class="small" onclick="event.preventDefault();toast(\'Erinnerung mit Upload-Link gesendet (Demo).\')">Erinnerung senden</a>'}</dd>` : ''}`;
+  }
   document.getElementById('d-kontakt').innerHTML = `
     <dt>Kategorie</dt><dd>${esc(KATEGORIE_LABEL[e.kategorie]||'–')}</dd>
     ${e.verein?`<dt>Organisation</dt><dd>${esc(e.verein)}</dd>`:''}
@@ -1169,6 +1423,7 @@ function renderKi(e, state){
       </p></div>`;
     return;
   }
+  if((e.art||'').startsWith('inserat')){ el.innerHTML=''; return; }
   el.innerHTML = `<button class="btn btn-outline btn-sm" onclick="kiCheck()">✨&ensp;KI-Korrektur starten</button>
     <div class="ki-note">Prüft ausschließlich Rechtschreibung, Grammatik und Zeichensetzung –
     keine inhaltlichen oder stilistischen Änderungen. Vorschläge werden erst nach Bestätigung übernommen.</div>`;
@@ -1331,6 +1586,7 @@ function downloadEntryPhotos(){
 loadStore();
 autoApprove();
 renderList();
+renderOffers();
 </script>
 </body>
 </html>
