@@ -88,21 +88,18 @@ input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
 .namebar{background:#fff;border-bottom:1px solid #fff}
 .namebar .wrap{display:flex;align-items:center;height:66px;position:relative}
 .namebar .ort{margin-left:170px;font-size:2.35rem;font-weight:400;color:var(--c-black);line-height:1}
-.mainnav{margin-left:auto;display:flex;gap:2.1rem;flex-wrap:wrap}
-.mainnav a{text-decoration:none;color:var(--c-black);font-weight:700;font-size:1.16rem}
-.mainnav a:hover{color:var(--c-blue)}
+.pagelabel{margin-left:auto;color:var(--c-head);font-weight:600;font-size:1.05rem}
 .wappenbox{position:absolute;left:1.25rem;top:10px;z-index:30;width:142px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.25))}
 .wappenbox img,.wappenbox svg{width:100%;height:auto;display:block}
 @media(max-width:920px){
   .topbar .mg,.namebar .ort{margin-left:120px}
   .wappenbox{width:96px}
   .namebar .ort{font-size:1.8rem}
-  .mainnav{gap:1.1rem}
-  .mainnav a{font-size:1rem}
+  .pagelabel{font-size:.9rem}
 }
 @media(max-width:640px){
   .topbar .wrap,.namebar .wrap{height:auto;min-height:54px;padding-top:.4rem;padding-bottom:.4rem;flex-wrap:wrap}
-  .mainnav{margin-left:120px;width:100%;padding-bottom:.4rem}
+  .pagelabel{display:none}
 }
 
 /* ---------- Hero-Slider ---------- */
@@ -295,12 +292,7 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
     <div class="namebar">
       <div class="wrap">
         <span class="ort">Schruns</span>
-        <nav class="mainnav">
-          <a href="#" onclick="event.preventDefault()">Bürgerservice</a>
-          <a href="#" onclick="event.preventDefault()">Verwaltung</a>
-          <a href="#" onclick="event.preventDefault()">Politik</a>
-          <a href="#" onclick="event.preventDefault()">Unsere Gemeinde</a>
-        </nav>
+        <span class="pagelabel">Gemeindezeitung · November 2026</span>
         <!-- Wappen: liegt eine Datei „wappen.png“ neben dieser HTML-Datei,
              wird automatisch das Original verwendet; sonst SVG-Nachzeichnung. -->
         <span class="wappenbox">
