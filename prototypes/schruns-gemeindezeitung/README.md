@@ -30,15 +30,15 @@ umgeschaltet werden:
    - Detailansicht: Beitragstext, Kontaktdaten, Fotos mit Auflösung/Dateigröße
    - Redaktioneller Workflow: Neu → In Prüfung → Rückfrage → **Für Agentur
      freigegeben** (Gemeinde prüft die Texte und gibt sie an die Agentur frei)
-   - Rückfragen an den Verein (simulierte E-Mail) + interne Notizen + Verlauf
+   - Rückfragen an die Ansprechperson (simulierte E-Mail) + interne Notizen + Verlauf
    - Fotos gesammelt als ZIP herunterladen (im Dummy simuliert)
    - **PDF-Freigabeprozess:** Die Agentur lädt das fertig gestaltete PDF hoch
-     und startet die Freigabe mit einstellbarer Frist (3/5/7/14 Tage). Der
-     Verein erhält eine E-Mail mit Freigabe-Link; ohne Rückmeldung innerhalb
+     und startet die Freigabe mit einstellbarer Frist (3/5/7/14 Tage). Die
+     Ansprechperson erhält eine E-Mail mit Freigabe-Link; ohne Rückmeldung innerhalb
      der Frist gilt das PDF automatisch als freigegeben. Erinnerung und
      manuelle Freigabe durch die Redaktion sind möglich.
 
-3. **PDF-Freigabe (Vereins-Ansicht)** – die Seite hinter dem E-Mail-Link:
+3. **PDF-Freigabe (Einsender-Ansicht)** – die Seite hinter dem E-Mail-Link:
    PDF-Vorschau, Frist-Hinweis mit Countdown, „Seite freigeben“ oder
    Änderungswunsch mit Freitext. Statuswechsel (PDF-Freigabe läuft →
    PDF freigegeben / Änderungswunsch) sind sofort in der Redaktionsliste
@@ -46,7 +46,7 @@ umgeschaltet werden:
 
 Im Portal abgeschickte Beiträge erscheinen sofort in der Redaktionsansicht
 (Speicherung nur lokal im Browser via `localStorage`, keine echte Übertragung).
-„Demo zurücksetzen“ in der oberen Leiste stellt die vier Beispiel-Einreichungen
+„Demo zurücksetzen“ in der oberen Leiste stellt die fünf Beispiel-Einreichungen
 wieder her.
 
 ## Design
