@@ -6,7 +6,7 @@
 <title>Gemeindezeitung Schruns – Beiträge einreichen (Klick-Dummy)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
    Design nach Vorlage www.schruns.at (Screenshot-Abgleich):
@@ -81,13 +81,13 @@ input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
 .site-head{position:relative;z-index:20}
 .topbar{background:var(--c-blue);color:#fff}
 .topbar .wrap{display:flex;align-items:center;height:64px;position:relative}
-.topbar .mg{margin-left:170px;font-family:"Oswald",var(--font);font-size:1.3rem;font-weight:500;letter-spacing:.24em;text-transform:uppercase}
+.topbar .mg{margin-left:170px;font-size:1.5rem;font-weight:400;letter-spacing:.01em}
 .topbar .icons{margin-left:auto;display:flex;gap:1.15rem;align-items:center}
 .topbar .icons a{color:#fff;display:flex;opacity:.95}
 .topbar .icons a:hover{opacity:.75}
-.namebar{background:#fff;border-bottom:1px solid #fff}
+.namebar{background:#fff;border-bottom:1px solid #e3e3e3}
 .namebar .wrap{display:flex;align-items:center;height:66px;position:relative}
-.namebar .ort{margin-left:170px;font-family:"Oswald",var(--font);font-size:2.5rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--c-black);line-height:1}
+.namebar .ort{margin-left:170px;font-size:2.35rem;font-weight:400;color:var(--c-black);line-height:1}
 .pagelabel{margin-left:auto;color:var(--c-head);font-weight:600;font-size:1.05rem}
 .wappenbox{position:absolute;left:1.25rem;top:10px;z-index:30;width:142px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.25))}
 .wappenbox img,.wappenbox svg{width:100%;height:auto;display:block}
@@ -101,18 +101,8 @@ input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
   .topbar .wrap,.namebar .wrap{height:auto;min-height:54px;padding-top:.4rem;padding-bottom:.4rem;flex-wrap:wrap}
   .pagelabel{display:none}
 }
-
-/* ---------- Hero-Slider ---------- */
-.hero{position:relative;height:min(46vw,470px);min-height:240px;overflow:hidden;background:#9db98a}
-.hero img.heroimg,.hero svg.heroimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.hero .ctrl{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);display:flex;align-items:center;gap:.7rem;color:#fff;z-index:5}
-.hero .ctrl button{background:none;border:none;color:#fff;display:flex;padding:.15rem;opacity:.95}
-.hero .ctrl .dot{width:10px;height:10px;border-radius:50%;border:2px solid #fff;background:transparent;padding:0}
-.hero .ctrl .dot.on{background:#fff}
-.hero .a11y{position:absolute;right:0;top:38%;background:#111;border:2px solid #fff;border-radius:10px 0 0 10px;color:#fff;padding:.55rem .6rem;display:flex;z-index:5}
-
 /* ---------- Zentrierte Abschnittsüberschrift ---------- */
-.sechead{text-align:center;font-size:1.3rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:#3d3d3d;margin:2.8rem 0 1rem}
+.sechead{text-align:center;font-size:1.3rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:#3d3d3d;margin:3.2rem 0 1rem}
 .secline{width:min(940px,86%);height:1px;background:var(--c-line);margin:0 auto 1.8rem}
 .introtext{max-width:46rem;margin:0 auto;text-align:center}
 .deadline-line{text-align:center;margin:1rem auto 0;font-size:1.02rem}
@@ -352,50 +342,6 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
     </div>
   </header>
 
-  <!-- Bildslider: liegt eine Datei „hero.jpg“ neben dieser HTML-Datei,
-       wird automatisch das Originalfoto verwendet; sonst SVG-Platzhalter. -->
-  <section class="hero">
-    <img class="heroimg" src="hero.jpg" alt=""
-         onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-    <svg class="heroimg" style="display:none" viewBox="0 0 1200 470" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <defs>
-        <linearGradient id="wiese" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#b9cf8f"/><stop offset=".55" stop-color="#8fb96e"/><stop offset="1" stop-color="#5e934b"/>
-        </linearGradient>
-        <filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
-      </defs>
-      <rect width="1200" height="470" fill="url(#wiese)"/>
-      <g filter="url(#soft)" opacity=".8">
-        <circle cx="150" cy="120" r="34" fill="#dce8b8"/><circle cx="960" cy="90" r="46" fill="#cfe0a6"/><circle cx="620" cy="60" r="30" fill="#dce8b8"/>
-      </g>
-      <g stroke="#4f7f3e" stroke-width="4" fill="none" opacity=".85">
-        <path d="M120 470V330M180 470V300M310 470V350M420 470V290M540 470V340M660 470V300M770 470V350M880 470V310M1000 470V350M1100 470V300"/>
-      </g>
-      <g>
-        <circle cx="180" cy="292" r="26" fill="#e2552f"/><circle cx="180" cy="292" r="8" fill="#3a2c17"/>
-        <circle cx="420" cy="282" r="30" fill="#e0492a"/><circle cx="420" cy="282" r="9" fill="#3a2c17"/>
-        <circle cx="660" cy="292" r="24" fill="#e2552f"/><circle cx="660" cy="292" r="8" fill="#3a2c17"/>
-        <circle cx="880" cy="302" r="28" fill="#df5e33"/><circle cx="880" cy="302" r="9" fill="#3a2c17"/>
-        <circle cx="1100" cy="290" r="24" fill="#e0492a"/><circle cx="1100" cy="290" r="8" fill="#3a2c17"/>
-      </g>
-      <g fill="#5b79c4">
-        <circle cx="120" cy="322" r="12"/><circle cx="310" cy="342" r="11"/><circle cx="540" cy="332" r="12"/><circle cx="770" cy="342" r="11"/><circle cx="1000" cy="342" r="12"/>
-      </g>
-      <g fill="#f4f6ee">
-        <circle cx="250" cy="360" r="9"/><circle cx="480" cy="380" r="8"/><circle cx="720" cy="370" r="9"/><circle cx="950" cy="385" r="8"/>
-      </g>
-    </svg>
-    <div class="ctrl">
-      <button title="Weiter" onclick="toast('Bildslider – im Dummy Platzhalter.')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 5 7 7-7 7"/></svg></button>
-      <button class="dot on" onclick="toast('Bildslider – im Dummy Platzhalter.')"></button>
-      <button class="dot" onclick="toast('Bildslider – im Dummy Platzhalter.')"></button>
-      <button class="dot" onclick="toast('Bildslider – im Dummy Platzhalter.')"></button>
-      <button title="Pause" onclick="toast('Bildslider – im Dummy Platzhalter.')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg></button>
-    </div>
-    <button class="a11y" title="Barrierefreiheit" onclick="toast('Barrierefreiheits-Werkzeug – im Dummy Platzhalter.')">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="5" r="2.2"/><path d="M4 9h16M12 9v6l-4 6M12 15l4 6"/></svg>
-    </button>
-  </section>
 
   <main class="wrap">
 
