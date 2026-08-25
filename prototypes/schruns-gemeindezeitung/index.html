@@ -73,6 +73,9 @@ input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
 .b-pruefung{background:#fdf6d8;color:#8a6d00}
 .b-rueckfrage{background:var(--c-orange-soft);color:var(--c-orange)}
 .b-freigegeben{background:var(--c-green-soft);color:var(--c-green)}
+.b-pdf_offen{background:#ece9f8;color:#5d4a9c}
+.b-pdf_aenderung{background:var(--c-orange-soft);color:var(--c-orange)}
+.b-pdf_ok{background:#cdeeda;color:#14683a}
 .muted{color:var(--c-muted)}
 .small{font-size:.88rem}
 .hidden{display:none!important}
@@ -240,10 +243,27 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
 .timeline li.t-rueckfrage{border-color:var(--c-orange)}
 .timeline li.t-antwort{border-color:var(--c-green)}
 .timeline li.t-notiz{border-color:#d6b94a}
+.timeline li.t-pdf{border-color:#5d4a9c}
 .timeline .tw{font-weight:700}
 .timeline .tt{color:var(--c-muted);font-size:.78rem}
 .askbox textarea{width:100%;border:1px solid #c6c6c6;border-radius:var(--radius);padding:.6rem .8rem;min-height:5rem;resize:vertical}
 .askbox textarea:focus{outline:3px solid var(--c-blue-soft);border-color:var(--c-blue)}
+
+/* ---------- PDF-Freigabe ---------- */
+.pdfwrap{display:flex;gap:1.8rem;flex-wrap:wrap;align-items:flex-start;margin-top:.6rem}
+.pdfpage{width:250px;aspect-ratio:1/1.414;background:#fff;border:1px solid var(--c-line);box-shadow:0 4px 16px rgba(0,0,0,.14);padding:14px;display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.pdfpage .ph-head{height:16px;background:var(--c-blue)}
+.pdfpage .ph-title{height:10px;background:#333;width:70%}
+.pdfpage .ph-img{height:64px;background:linear-gradient(135deg,#35719f,#7aa3c4)}
+.pdfpage .ph-cols{display:flex;gap:8px;flex:1}
+.pdfpage .ph-col{flex:1;display:flex;flex-direction:column;gap:4px}
+.pdfpage .ph-line{height:4px;background:#d8d8d8}
+.fristbox{display:flex;gap:.7rem;align-items:flex-start;background:#fdf6d8;border:1px solid #e3d189;border-radius:var(--radius);padding:.9rem 1.1rem;font-size:.93rem;margin:1.1rem 0}
+.fristbox svg{flex-shrink:0;margin-top:.15rem}
+.fg-ok{background:var(--c-green-soft);border:1px solid #bfe0cc;color:var(--c-green);border-radius:var(--radius);padding:1rem 1.2rem;font-weight:600}
+.fg-warn{background:var(--c-orange-soft);border:1px solid #ecd0a4;color:var(--c-orange);border-radius:var(--radius);padding:1rem 1.2rem;font-weight:600}
+.pdfmeta{font-size:.92rem;line-height:1.5}
+.pdfmeta b{display:inline-block}
 
 /* ---------- Toast ---------- */
 #toast{position:fixed;bottom:1.4rem;left:50%;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;padding:.7rem 1.3rem;border-radius:4px;font-size:.92rem;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:100;max-width:min(92vw,540px);text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.35)}
@@ -259,6 +279,7 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
   <span class="spacer"></span>
   <button id="btnViewPortal" class="active" onclick="switchView('portal')">Vereinsportal</button>
   <button id="btnViewAdmin" onclick="switchView('admin')">Redaktion (Backend)</button>
+  <button id="btnViewFreigabe" onclick="switchView('freigabe')">PDF-Freigabe (Verein)</button>
   <button class="ghost" onclick="resetDemo()" title="Demodaten zurücksetzen">↺ Demo zurücksetzen</button>
 </div>
 
@@ -292,7 +313,7 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
   </header>
 
 
-  <main class="wrap">
+  <main class="wrap" id="portal-main">
 
     <h1 class="sechead">Gemeindezeitung – Beiträge einreichen</h1>
     <div class="secline"></div>
@@ -430,6 +451,13 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
 
   </main>
 
+  <!-- Ansicht, die der Verein über den Freigabe-Link aus der E-Mail sieht -->
+  <main class="wrap hidden" id="freigabe-main">
+    <h1 class="sechead">PDF-Freigabe</h1>
+    <div class="secline"></div>
+    <div id="fg-content"></div>
+  </main>
+
   <footer class="site-foot">
     <div class="wrap">
       <div>
@@ -488,7 +516,10 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
           <option value="neu">Neu</option>
           <option value="pruefung">In Prüfung</option>
           <option value="rueckfrage">Rückfrage offen</option>
-          <option value="freigegeben">Freigegeben</option>
+          <option value="freigegeben">Für Agentur freigegeben</option>
+          <option value="pdf_offen">PDF-Freigabe läuft</option>
+          <option value="pdf_aenderung">PDF: Änderungswunsch</option>
+          <option value="pdf_ok">PDF freigegeben</option>
         </select>
         <span class="spacer"></span>
         <button class="btn btn-primary btn-sm" onclick="downloadAll()">
@@ -540,6 +571,11 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
               <span class="small muted" id="d-fotosum" style="margin-left:.6rem"></span>
             </p>
           </section>
+
+          <section class="card det-sec">
+            <h3>Gestaltetes PDF &amp; Freigabe</h3>
+            <div id="d-pdf"></div>
+          </section>
         </div>
 
         <div>
@@ -556,6 +592,7 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
               <button class="s-rueckfrage" onclick="setStatus('rueckfrage')">Rückfrage</button>
               <button class="s-freigegeben" onclick="setStatus('freigegeben')">Freigegeben</button>
             </div>
+            <div id="d-agentur" style="margin-top:.9rem"></div>
           </section>
 
           <section class="card det-sec askbox">
@@ -589,7 +626,11 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
 'use strict';
 
 const STORE_KEY = 'gz-schruns-dummy-v1';
-const STATUS_LABEL = {neu:'Neu', pruefung:'In Prüfung', rueckfrage:'Rückfrage offen', freigegeben:'Freigegeben'};
+const STATUS_LABEL = {
+  neu:'Neu', pruefung:'In Prüfung', rueckfrage:'Rückfrage offen',
+  freigegeben:'Für Agentur freigegeben',
+  pdf_offen:'PDF-Freigabe läuft', pdf_aenderung:'PDF: Änderungswunsch', pdf_ok:'PDF freigegeben'
+};
 
 const DEMO_DATA = [
   {
@@ -599,7 +640,8 @@ const DEMO_DATA = [
     einleitung:'Von der Platzkonzert-Saison am Kirchplatz bis zum Bezirksmusikfest – der Musikverein Schruns blickt auf einen klingenden Sommer zurück.',
     text:'Die Sommermonate standen für den Musikverein Schruns ganz im Zeichen der Blasmusik. Bei insgesamt acht Platzkonzerten am Kirchplatz durften wir zahlreiche Gäste aus nah und fern begrüßen.\n\nEin besonderer Höhepunkt war die Teilnahme am Bezirksmusikfest in Vandans, bei dem unsere Jungmusikantinnen und Jungmusikanten erstmals in Tracht aufmarschierten. Im Herbst starten wir mit den Proben für das Jahreskonzert – wir freuen uns schon jetzt auf Ihren Besuch!',
     credit:'Text: Elisabeth Bitschnau · Fotos: Werner Ganahl',
-    eingereicht:'2026-08-19T09:24:00', status:'freigegeben',
+    eingereicht:'2026-08-19T09:24:00', status:'pdf_offen',
+    pdf:{name:'GZ2026_Musikverein_Schruns.pdf', sent:'2026-08-22T10:15:00', frist:'2026-08-29T23:59:00', tage:7},
     fotos:[
       {name:'platzkonzert_kirchplatz_01.jpg', w:6000, h:4000, size:8.4},
       {name:'platzkonzert_kirchplatz_02.jpg', w:6000, h:4000, size:7.9},
@@ -610,7 +652,8 @@ const DEMO_DATA = [
     verlauf:[
       {ts:'2026-08-19T09:24:00', who:'System', type:'system', text:'Beitrag eingereicht.'},
       {ts:'2026-08-20T08:10:00', who:'Redaktion', type:'status', text:'Status geändert auf „In Prüfung“.'},
-      {ts:'2026-08-21T14:32:00', who:'Redaktion', type:'status', text:'Status geändert auf „Freigegeben“.'}
+      {ts:'2026-08-21T14:32:00', who:'Redaktion', type:'status', text:'Beitrag geprüft und für die Agentur freigegeben – Agentur benachrichtigt.'},
+      {ts:'2026-08-22T10:15:00', who:'Agentur', type:'pdf', text:'Gestaltetes PDF „GZ2026_Musikverein_Schruns.pdf“ zur Freigabe an den Verein gesendet. Frist: 29.08.2026 (7 Tage, danach automatische Freigabe).'}
     ]
   },
   {
@@ -656,7 +699,7 @@ const DEMO_DATA = [
     einleitung:'Von der Seilbahn-Evakuierung bis zur nächtlichen Suchaktion – die Bergrettung Schruns trainierte den Ernstfall.',
     text:'Auch heuer nutzte die Ortsstelle Schruns die Sommermonate für ein intensives Übungsprogramm. Gemeinsam mit der Ortsstelle Tschagguns wurde unter anderem die Evakuierung einer Seilbahn geprobt.\n\nErfreulich: Drei neue Anwärterinnen und Anwärter haben ihre Ausbildung begonnen. Wir bedanken uns bei der Bevölkerung für die laufende Unterstützung.',
     credit:'Text und Fotos: Bergrettung Schruns',
-    eingereicht:'2026-08-24T07:58:00', status:'pruefung',
+    eingereicht:'2026-08-24T07:58:00', status:'freigegeben',
     fotos:[
       {name:'seilbahn_evakuierung_uebung.jpg', w:6240, h:4160, size:10.5},
       {name:'nachtuebung_suchkette.jpg', w:6240, h:4160, size:9.7}
@@ -664,7 +707,8 @@ const DEMO_DATA = [
     verlauf:[
       {ts:'2026-08-24T07:58:00', who:'System', type:'system', text:'Beitrag eingereicht.'},
       {ts:'2026-08-24T11:20:00', who:'Redaktion', type:'status', text:'Status geändert auf „In Prüfung“.'},
-      {ts:'2026-08-24T11:22:00', who:'Redaktion', type:'notiz', text:'Interne Notiz: Evtl. mit Beitrag der Feuerwehr auf einer Doppelseite „Sicherheit“ bündeln.'}
+      {ts:'2026-08-24T11:22:00', who:'Redaktion', type:'notiz', text:'Interne Notiz: Evtl. mit Beitrag der Feuerwehr auf einer Doppelseite „Sicherheit“ bündeln.'},
+      {ts:'2026-08-24T15:40:00', who:'Redaktion', type:'status', text:'Beitrag geprüft und für die Agentur freigegeben – Agentur benachrichtigt.'}
     ]
   }
 ];
@@ -690,7 +734,8 @@ function resetDemo(){
   renderFilelist();
   document.querySelectorAll('#view-portal input[type=text],#view-portal input[type=email],#view-portal input[type=tel],#view-portal textarea').forEach(i=>i.value='');
   document.getElementById('i-rechte').checked = false;
-  showStep(1); closeDetail(); renderList();
+  freigabeRef = null;
+  showStep(1); closeDetail(); renderList(); renderFreigabe(null);
   toast('Demodaten wurden zurückgesetzt.');
 }
 
@@ -709,12 +754,18 @@ function toast(msg){
 }
 
 /* ---------- Ansichten ---------- */
+let freigabeRef = null;
 function switchView(v){
-  document.getElementById('view-portal').classList.toggle('hidden', v!=='portal');
+  const portalSeite = (v==='portal' || v==='freigabe');
+  document.getElementById('view-portal').classList.toggle('hidden', !portalSeite);
   document.getElementById('view-admin').classList.toggle('hidden', v!=='admin');
+  document.getElementById('portal-main').classList.toggle('hidden', v!=='portal');
+  document.getElementById('freigabe-main').classList.toggle('hidden', v!=='freigabe');
   document.getElementById('btnViewPortal').classList.toggle('active', v==='portal');
   document.getElementById('btnViewAdmin').classList.toggle('active', v==='admin');
+  document.getElementById('btnViewFreigabe').classList.toggle('active', v==='freigabe');
   if(v==='admin'){ closeDetail(); renderList(); }
+  if(v==='freigabe'){ renderFreigabe(freigabeRef); }
   window.scrollTo({top:0});
 }
 
@@ -882,9 +933,10 @@ function renderList(){
   const cnt = st=>entries.filter(e=>e.status===st).length;
   document.getElementById('statgrid').innerHTML = `
     <div class="card stat"><div class="v">${entries.length}</div><div class="l">Einreichungen gesamt</div></div>
-    <div class="card stat"><div class="v">${cnt('neu')+cnt('pruefung')}</div><div class="l">Offen / in Prüfung</div></div>
-    <div class="card stat"><div class="v">${cnt('rueckfrage')}</div><div class="l">Rückfragen offen</div></div>
-    <div class="card stat"><div class="v">${cnt('freigegeben')}</div><div class="l">Freigegeben</div></div>
+    <div class="card stat"><div class="v">${cnt('neu')+cnt('pruefung')+cnt('rueckfrage')}</div><div class="l">In Prüfung / Rückfrage</div></div>
+    <div class="card stat"><div class="v">${cnt('freigegeben')+cnt('pdf_aenderung')}</div><div class="l">Bei Agentur</div></div>
+    <div class="card stat"><div class="v">${cnt('pdf_offen')}</div><div class="l">PDF-Freigabe läuft</div></div>
+    <div class="card stat"><div class="v">${cnt('pdf_ok')}</div><div class="l">PDF freigegeben</div></div>
     <div class="card stat"><div class="v">${nFotos}</div><div class="l">Fotos · ${fmtMB(mb)}</div></div>`;
 }
 
@@ -925,6 +977,159 @@ function renderDetailStatus(e){
   document.querySelectorAll('#d-status button').forEach(b=>{
     b.classList.toggle('on', b.classList.contains('s-'+e.status));
   });
+  const ag = document.getElementById('d-agentur');
+  if(['neu','pruefung','rueckfrage'].includes(e.status)){
+    ag.innerHTML = '<button class="btn btn-primary btn-sm" onclick="freigebenAgentur()">✓&ensp;Prüfung abschließen &amp; für Agentur freigeben</button>';
+  }else{
+    ag.innerHTML = '<span class="small muted">Redaktionelle Prüfung abgeschlossen – Beitrag liegt bei der Agentur bzw. im Freigabeprozess.</span>';
+  }
+  renderPdf(e);
+}
+function fmtDateOnly(iso){ return new Date(iso).toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit',year:'numeric'}); }
+function daysLeft(iso){ return Math.max(0, Math.ceil((new Date(iso) - new Date())/86400000)); }
+function freigebenAgentur(){
+  const e = entries.find(x=>x.ref===currentRef); if(!e) return;
+  e.status = 'freigegeben';
+  e.verlauf.push({ts:new Date().toISOString(), who:'Redaktion', type:'status', text:'Beitrag geprüft und für die Agentur freigegeben – Agentur per E-Mail benachrichtigt.'});
+  saveStore(); renderDetailStatus(e); renderVerlauf(e);
+  toast('Beitrag für die Agentur freigegeben – Benachrichtigung gesendet (Demo).');
+}
+function renderPdf(e){
+  const el = document.getElementById('d-pdf');
+  if(['neu','pruefung','rueckfrage'].includes(e.status)){
+    el.innerHTML = '<p class="small muted">Verfügbar, sobald der Beitrag geprüft und für die Agentur freigegeben wurde.</p>';
+  }else if(e.status==='freigegeben' || e.status==='pdf_aenderung'){
+    el.innerHTML = `
+      <p class="small muted" style="margin-bottom:.7rem">${e.status==='pdf_aenderung'
+        ? 'Änderungswunsch des Vereins liegt vor (siehe Verlauf) – bitte korrigierte Version senden.'
+        : 'Beitrag liegt bei der Agentur. Sobald das gestaltete PDF vorliegt, hier hochladen und die Freigabe starten.'}</p>
+      <input type="file" id="pdfFile" accept="application/pdf" style="font-size:.85rem;max-width:100%">
+      <p style="margin-top:.8rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+        <span class="small">Frist:</span>
+        <select id="pdfTage" style="border:1px solid #c6c6c6;border-radius:2px;padding:.3rem">
+          <option>3</option><option>5</option><option selected>7</option><option>14</option>
+        </select><span class="small">Tage</span>
+        <button class="btn btn-primary btn-sm" onclick="sendPdf()">Zur Freigabe an Verein senden</button>
+      </p>
+      <p class="small muted" style="margin-top:.5rem">Der Verein erhält eine E-Mail mit Freigabe-Link. Ohne Rückmeldung innerhalb der Frist gilt das PDF automatisch als freigegeben.</p>`;
+  }else if(e.status==='pdf_offen'){
+    el.innerHTML = `
+      <div class="pdfmeta"><b>${esc(e.pdf.name)}</b><br>
+        gesendet am ${fmtDateOnly(e.pdf.sent)} an ${esc(e.email)}<br>
+        Frist: <b>${fmtDateOnly(e.pdf.frist)}</b> (noch ${daysLeft(e.pdf.frist)} Tage) – danach automatische Freigabe</div>
+      <p style="margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap">
+        <button class="btn btn-outline btn-sm" onclick="openFreigabe('${e.ref}')">Vereins-Ansicht öffnen</button>
+        <button class="btn btn-ghost btn-sm" onclick="remindVerein()">Erinnerung senden</button>
+        <button class="btn btn-ghost btn-sm" onclick="manualPdfOk()">Manuell freigeben</button>
+      </p>`;
+  }else if(e.status==='pdf_ok'){
+    el.innerHTML = `<div class="fg-ok">„${esc(e.pdf ? e.pdf.name : 'PDF')}“ ist freigegeben – bereit für den Druck.</div>`;
+  }
+}
+function sendPdf(){
+  const e = entries.find(x=>x.ref===currentRef); if(!e) return;
+  const f = document.getElementById('pdfFile').files[0];
+  if(!f){ toast('Bitte zuerst eine PDF-Datei auswählen.'); return; }
+  if(f.type!=='application/pdf' && !/\.pdf$/i.test(f.name)){ toast('Bitte eine PDF-Datei auswählen.'); return; }
+  const tage = parseInt(document.getElementById('pdfTage').value, 10);
+  const frist = new Date(Date.now() + tage*86400000);
+  e.pdf = {name:f.name, sent:new Date().toISOString(), frist:frist.toISOString(), tage};
+  e.status = 'pdf_offen';
+  e.verlauf.push({ts:new Date().toISOString(), who:'Agentur', type:'pdf',
+    text:'Gestaltetes PDF „'+f.name+'“ zur Freigabe an '+e.email+' gesendet. Frist: '+fmtDateOnly(frist.toISOString())+' ('+tage+' Tage, danach automatische Freigabe).'});
+  saveStore(); renderDetailStatus(e); renderVerlauf(e);
+  toast('Freigabe-E-Mail an '+e.email+' gesendet (Demo).');
+}
+function remindVerein(){
+  const e = entries.find(x=>x.ref===currentRef); if(!e) return;
+  e.verlauf.push({ts:new Date().toISOString(), who:'System', type:'system', text:'Erinnerung an den Verein gesendet (Frist: '+fmtDateOnly(e.pdf.frist)+').'});
+  saveStore(); renderVerlauf(e);
+  toast('Erinnerung per E-Mail gesendet (Demo).');
+}
+function manualPdfOk(){
+  const e = entries.find(x=>x.ref===currentRef); if(!e) return;
+  e.status = 'pdf_ok';
+  e.verlauf.push({ts:new Date().toISOString(), who:'Redaktion', type:'status', text:'PDF manuell als freigegeben markiert.'});
+  saveStore(); renderDetailStatus(e); renderVerlauf(e);
+  toast('PDF als freigegeben markiert.');
+}
+function openFreigabe(ref){ freigabeRef = ref; switchView('freigabe'); }
+function renderFreigabe(ref){
+  const el = document.getElementById('fg-content');
+  const e = (ref && entries.find(x=>x.ref===ref)) || entries.find(x=>x.status==='pdf_offen');
+  if(!e){
+    el.innerHTML = `<section class="card formcard" style="text-align:center">
+      <p>Derzeit liegt keine offene PDF-Freigabe vor.</p>
+      <p class="small muted" style="margin-top:.5rem">In der Redaktionsansicht kann bei einem für die Agentur freigegebenen Beitrag ein gestaltetes PDF zur Freigabe an den Verein gesendet werden.</p></section>`;
+    return;
+  }
+  freigabeRef = e.ref;
+  let actions = '';
+  if(e.status==='pdf_offen'){
+    actions = `
+      <div class="fristbox">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8a6d00" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <span>Bitte um Rückmeldung bis <b>${fmtDateOnly(e.pdf.frist)}</b> (noch ${daysLeft(e.pdf.frist)} Tage).
+        Erfolgt bis dahin keine Rückmeldung, gilt die Seite automatisch als freigegeben.</span>
+      </div>
+      <p><button class="btn btn-primary" onclick="vereinOk()">Seite freigeben&ensp;✓</button></p>
+      <div class="field" style="margin-top:1.3rem">
+        <label>Oder: Änderungswunsch mitteilen</label>
+        <textarea id="fgText" style="border:1px solid #c6c6c6;border-radius:2px;padding:.6rem .8rem;min-height:5rem" placeholder="Was sollen wir ändern? (z. B. Tippfehler, andere Bildauswahl …)"></textarea>
+      </div>
+      <p style="margin-top:.7rem"><button class="btn btn-ghost" onclick="vereinChange()">Änderungswunsch senden</button></p>`;
+  }else if(e.status==='pdf_ok'){
+    actions = '<div class="fg-ok">Vielen Dank! Die Seite wurde freigegeben.</div>';
+  }else if(e.status==='pdf_aenderung'){
+    actions = '<div class="fg-warn">Ihr Änderungswunsch wurde an die Redaktion übermittelt. Sie erhalten in Kürze eine neue Version zur Freigabe.</div>';
+  }else{
+    actions = '<p class="small muted">Für diesen Beitrag liegt aktuell kein PDF zur Freigabe vor.</p>';
+  }
+  const cols = '<div class="ph-line"></div>'.repeat(10);
+  el.innerHTML = `
+  <section class="card formcard">
+    <h2>Freigabe Ihrer Seite in der Gemeindezeitung</h2>
+    <p class="sub">Grüß Gott, ${esc(e.vorname)} ${esc(e.nachname)}! Der Beitrag „${esc(e.titel)}“ (${esc(e.verein)}, ${e.ref})
+      wurde für die Ausgabe <b>November 2026</b> gestaltet. Bitte prüfen Sie die Vorschau.</p>
+    <div class="pdfwrap">
+      <div class="pdfpage" title="PDF-Vorschau (im Dummy schematisch)">
+        <div class="ph-head"></div><div class="ph-title"></div><div class="ph-img"></div>
+        <div class="ph-cols"><div class="ph-col">${cols}</div><div class="ph-col">${cols}</div></div>
+      </div>
+      <div style="flex:1;min-width:260px">
+        <div class="pdfmeta"><b>${e.pdf ? esc(e.pdf.name) : ''}</b> ·
+          <a href="#" onclick="event.preventDefault();toast('PDF-Download – im Dummy simuliert.')">PDF herunterladen</a></div>
+        ${actions}
+      </div>
+    </div>
+  </section>`;
+}
+function vereinOk(){
+  const e = entries.find(x=>x.ref===freigabeRef); if(!e) return;
+  e.status = 'pdf_ok';
+  e.verlauf.push({ts:new Date().toISOString(), who:'Verein', type:'antwort', text:'PDF durch den Verein freigegeben.'});
+  saveStore(); renderFreigabe(e.ref);
+  toast('Freigabe übermittelt – vielen Dank!');
+}
+function vereinChange(){
+  const e = entries.find(x=>x.ref===freigabeRef); if(!e) return;
+  const t = document.getElementById('fgText').value.trim();
+  if(!t){ toast('Bitte zuerst den Änderungswunsch beschreiben.'); return; }
+  e.status = 'pdf_aenderung';
+  e.verlauf.push({ts:new Date().toISOString(), who:'Verein', type:'antwort', text:'Änderungswunsch zum PDF: „'+t+'“'});
+  saveStore(); renderFreigabe(e.ref);
+  toast('Änderungswunsch an die Redaktion gesendet (Demo).');
+}
+function autoApprove(){
+  const now = new Date(); let changed = false;
+  entries.forEach(e=>{
+    if(e.status==='pdf_offen' && e.pdf && new Date(e.pdf.frist) < now){
+      e.status = 'pdf_ok';
+      e.verlauf.push({ts:new Date().toISOString(), who:'System', type:'system', text:'Frist abgelaufen – PDF gilt automatisch als freigegeben.'});
+      changed = true;
+    }
+  });
+  if(changed) saveStore();
 }
 function renderFotos(e){
   document.getElementById('d-fotocount').textContent = 'Fotos ('+e.fotos.length+')';
@@ -989,6 +1194,7 @@ function downloadEntryPhotos(){
 
 /* ---------- Start ---------- */
 loadStore();
+autoApprove();
 renderList();
 </script>
 </body>
