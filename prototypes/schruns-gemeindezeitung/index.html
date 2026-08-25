@@ -6,127 +6,148 @@
 <title>Gemeindezeitung Schruns – Beiträge einreichen (Klick-Dummy)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   Design-Tokens – alle Farben zentral.
-   Sobald die exakten CI-Werte von schruns.at vorliegen,
-   genügt es, diese Variablen anzupassen.
+   Design nach Vorlage www.schruns.at (Screenshot-Abgleich):
+   - blaue Topbar, weiße Namensleiste mit großem „Schruns“
+   - überlappendes Gemeindewappen links
+   - fette schwarze Hauptnavigation
+   - zentrierte Versal-Überschriften mit Trennlinie
+   - weiße Karten mit grauem Rahmen, stahlblaue Titel
+   Farbwerte zentral – bei Bedarf exakt nachjustierbar.
    ========================================================= */
 :root{
-  --c-primary:      #1b3a56;   /* dunkles Alpen-Blau (Header, Buttons) */
-  --c-primary-dark: #12293e;
-  --c-primary-soft: #e8eef4;
-  --c-gold:         #c19a3d;   /* Wappen-Gold (Akzent, Schlüssel) */
-  --c-gold-soft:    #f7f0de;
-  --c-ink:          #22303c;   /* Fließtext */
-  --c-muted:        #63727f;
-  --c-line:         #dde3e8;
-  --c-bg:           #f4f6f8;
-  --c-card:         #ffffff;
-  --c-green:        #2e7d4f;
-  --c-green-soft:   #e3f2e9;
-  --c-red:          #b3382e;
-  --c-red-soft:     #fbe9e7;
-  --c-orange:       #b26a00;
-  --c-orange-soft:  #fdf1dc;
-  --radius: 10px;
-  --shadow: 0 1px 3px rgba(18,41,62,.08), 0 8px 24px rgba(18,41,62,.07);
-  --font-sans: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
-  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --c-blue:      #1063b6;   /* Topbar, Buttons, Links */
+  --c-blue-dark: #0b4d8f;
+  --c-blue-soft: #e8f1fa;
+  --c-head:      #3a5a78;   /* Kartentitel (stahlblau) */
+  --c-black:     #1a1a1a;   /* „Schruns“, Navigation */
+  --c-ink:       #444444;   /* Fließtext */
+  --c-muted:     #767676;
+  --c-line:      #dcdcdc;
+  --c-bg:        #ffffff;
+  --c-card:      #ffffff;
+  --c-green:     #2e7d4f;
+  --c-green-soft:#e3f2e9;
+  --c-red:       #b3382e;
+  --c-red-soft:  #fbe9e7;
+  --c-orange:    #b26a00;
+  --c-orange-soft:#fdf1dc;
+  --c-yellow:    #ffe014;   /* Wappengelb */
+  --c-gold:      #f2c200;   /* Sonne/Schlüssel */
+  --radius: 2px;
+  --font: "Open Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:var(--font-sans);color:var(--c-ink);background:var(--c-bg);font-size:16.5px;line-height:1.55}
+body{font-family:var(--font);color:var(--c-ink);background:var(--c-bg);font-size:16px;line-height:1.6}
 img{max-width:100%}
-a{color:var(--c-primary)}
+a{color:var(--c-blue)}
 button{font-family:inherit;font-size:inherit;cursor:pointer}
 input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
 
 /* ---------- Demo-Leiste (nur für den Dummy) ---------- */
 .demobar{background:#111827;color:#d1d5db;font-size:.82rem;padding:.45rem 1rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;position:sticky;top:0;z-index:60}
-.demobar .tag{background:var(--c-gold);color:#111827;font-weight:700;border-radius:4px;padding:.05rem .5rem;letter-spacing:.03em}
+.demobar .tag{background:#f2c200;color:#111827;font-weight:700;border-radius:4px;padding:.05rem .5rem;letter-spacing:.03em}
 .demobar .spacer{flex:1}
 .demobar button{background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:6px;padding:.3rem .8rem;font-size:.82rem}
-.demobar button.active{background:var(--c-gold);border-color:var(--c-gold);color:#111827;font-weight:700}
+.demobar button.active{background:#f2c200;border-color:#f2c200;color:#111827;font-weight:700}
 .demobar button.ghost{background:transparent;border-color:#374151;color:#9ca3af}
 
 /* ---------- Gemeinsame Bausteine ---------- */
-.wrap{max-width:1120px;margin:0 auto;padding:0 1.25rem}
-.card{background:var(--c-card);border:1px solid var(--c-line);border-radius:var(--radius);box-shadow:var(--shadow)}
-.btn{display:inline-flex;align-items:center;gap:.5rem;border-radius:8px;padding:.62rem 1.4rem;font-weight:700;border:1px solid transparent;text-decoration:none;transition:background .15s,box-shadow .15s}
-.btn-primary{background:var(--c-primary);color:#fff}
-.btn-primary:hover{background:var(--c-primary-dark)}
-.btn-gold{background:var(--c-gold);color:#2b2306}
-.btn-gold:hover{filter:brightness(1.06)}
-.btn-outline{background:#fff;color:var(--c-primary);border-color:var(--c-primary)}
-.btn-outline:hover{background:var(--c-primary-soft)}
-.btn-ghost{background:transparent;color:var(--c-muted);border-color:var(--c-line)}
-.btn-ghost:hover{background:#fff}
-.btn-sm{padding:.35rem .85rem;font-size:.88rem;border-radius:7px}
-.badge{display:inline-block;font-size:.78rem;font-weight:700;border-radius:999px;padding:.14rem .7rem;white-space:nowrap}
-.b-neu{background:var(--c-primary-soft);color:var(--c-primary)}
-.b-pruefung{background:var(--c-gold-soft);color:#8a6d1f}
+.wrap{max-width:1240px;margin:0 auto;padding:0 1.25rem}
+.card{background:var(--c-card);border:1px solid var(--c-line);border-radius:var(--radius)}
+.btn{display:inline-flex;align-items:center;gap:.5rem;border-radius:var(--radius);padding:.62rem 1.5rem;font-weight:700;border:1px solid transparent;text-decoration:none;transition:background .15s}
+.btn-primary{background:var(--c-blue);color:#fff}
+.btn-primary:hover{background:var(--c-blue-dark)}
+.btn-gold{background:var(--c-blue);color:#fff}
+.btn-gold:hover{background:var(--c-blue-dark)}
+.btn-outline{background:#fff;color:var(--c-blue);border-color:var(--c-blue)}
+.btn-outline:hover{background:var(--c-blue-soft)}
+.btn-ghost{background:#fff;color:var(--c-muted);border-color:var(--c-line)}
+.btn-ghost:hover{background:#f4f4f4}
+.btn-sm{padding:.35rem .95rem;font-size:.88rem}
+.badge{display:inline-block;font-size:.78rem;font-weight:700;border-radius:3px;padding:.14rem .7rem;white-space:nowrap}
+.b-neu{background:var(--c-blue-soft);color:var(--c-blue)}
+.b-pruefung{background:#fdf6d8;color:#8a6d00}
 .b-rueckfrage{background:var(--c-orange-soft);color:var(--c-orange)}
 .b-freigegeben{background:var(--c-green-soft);color:var(--c-green)}
 .muted{color:var(--c-muted)}
 .small{font-size:.88rem}
 .hidden{display:none!important}
 
-/* ---------- Portal: Header im Stil eines Gemeinde-Portals ---------- */
-.site-top{background:var(--c-primary);color:#cfdce8;font-size:.85rem}
-.site-top .wrap{display:flex;gap:1.5rem;padding:.4rem 1.25rem;justify-content:flex-end}
-.site-top a{color:#cfdce8;text-decoration:none}
-.site-top a:hover{color:#fff}
-.site-head{background:#fff;border-bottom:3px solid var(--c-gold)}
-.site-head .wrap{display:flex;align-items:center;gap:1.1rem;padding-top:.9rem;padding-bottom:.9rem;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:.9rem;text-decoration:none;color:inherit}
-.brand-name{font-family:var(--font-serif);font-size:1.45rem;font-weight:700;color:var(--c-primary);line-height:1.15}
-.brand-sub{font-size:.85rem;color:var(--c-muted);letter-spacing:.12em;text-transform:uppercase}
-.mainnav{margin-left:auto;display:flex;gap:.25rem;flex-wrap:wrap}
-.mainnav a{text-decoration:none;color:var(--c-ink);font-weight:600;padding:.5rem .85rem;border-radius:6px;font-size:.97rem}
-.mainnav a:hover{background:var(--c-primary-soft);color:var(--c-primary)}
-.mainnav a.here{background:var(--c-primary);color:#fff}
+/* ---------- Header nach schruns.at ---------- */
+.site-head{position:relative;z-index:20}
+.topbar{background:var(--c-blue);color:#fff}
+.topbar .wrap{display:flex;align-items:center;height:64px;position:relative}
+.topbar .mg{margin-left:170px;font-size:1.5rem;font-weight:400;letter-spacing:.01em}
+.topbar .icons{margin-left:auto;display:flex;gap:1.15rem;align-items:center}
+.topbar .icons a{color:#fff;display:flex;opacity:.95}
+.topbar .icons a:hover{opacity:.75}
+.namebar{background:#fff;border-bottom:1px solid #fff}
+.namebar .wrap{display:flex;align-items:center;height:66px;position:relative}
+.namebar .ort{margin-left:170px;font-size:2.35rem;font-weight:400;color:var(--c-black);line-height:1}
+.mainnav{margin-left:auto;display:flex;gap:2.1rem;flex-wrap:wrap}
+.mainnav a{text-decoration:none;color:var(--c-black);font-weight:700;font-size:1.16rem}
+.mainnav a:hover{color:var(--c-blue)}
+.wappenbox{position:absolute;left:1.25rem;top:10px;z-index:30;width:142px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.25))}
+.wappenbox img,.wappenbox svg{width:100%;height:auto;display:block}
+@media(max-width:920px){
+  .topbar .mg,.namebar .ort{margin-left:120px}
+  .wappenbox{width:96px}
+  .namebar .ort{font-size:1.8rem}
+  .mainnav{gap:1.1rem}
+  .mainnav a{font-size:1rem}
+}
+@media(max-width:640px){
+  .topbar .wrap,.namebar .wrap{height:auto;min-height:54px;padding-top:.4rem;padding-bottom:.4rem;flex-wrap:wrap}
+  .mainnav{margin-left:120px;width:100%;padding-bottom:.4rem}
+}
 
-/* ---------- Hero ---------- */
-.hero{background:linear-gradient(135deg,var(--c-primary-dark) 0%,var(--c-primary) 55%,#2a567c 100%);color:#fff;position:relative;overflow:hidden}
-.hero svg.mtn{position:absolute;bottom:-2px;left:0;width:100%;height:90px;opacity:.35}
-.hero .wrap{position:relative;padding-top:2.6rem;padding-bottom:3.4rem}
-.hero .crumb{font-size:.85rem;color:#b8cadb;margin-bottom:.9rem}
-.hero h1{font-family:var(--font-serif);font-size:clamp(1.7rem,3.4vw,2.5rem);line-height:1.2;max-width:44rem}
-.hero p.lead{margin-top:.8rem;max-width:42rem;color:#dbe6ef;font-size:1.08rem}
-.hero .deadline{display:inline-flex;align-items:center;gap:.55rem;margin-top:1.3rem;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:.4rem 1.1rem;font-size:.95rem}
-.hero .deadline b{color:var(--c-gold)}
+/* ---------- Hero-Slider ---------- */
+.hero{position:relative;height:min(46vw,470px);min-height:240px;overflow:hidden;background:#9db98a}
+.hero img.heroimg,.hero svg.heroimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero .ctrl{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);display:flex;align-items:center;gap:.7rem;color:#fff;z-index:5}
+.hero .ctrl button{background:none;border:none;color:#fff;display:flex;padding:.15rem;opacity:.95}
+.hero .ctrl .dot{width:10px;height:10px;border-radius:50%;border:2px solid #fff;background:transparent;padding:0}
+.hero .ctrl .dot.on{background:#fff}
+.hero .a11y{position:absolute;right:0;top:38%;background:#111;border:2px solid #fff;border-radius:10px 0 0 10px;color:#fff;padding:.55rem .6rem;display:flex;z-index:5}
+
+/* ---------- Zentrierte Abschnittsüberschrift ---------- */
+.sechead{text-align:center;font-size:1.3rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:#3d3d3d;margin:2.8rem 0 1rem}
+.secline{width:min(940px,86%);height:1px;background:var(--c-line);margin:0 auto 1.8rem}
+.introtext{max-width:46rem;margin:0 auto;text-align:center}
+.deadline-line{text-align:center;margin:1rem auto 0;font-size:1.02rem}
+.deadline-line b{color:var(--c-blue)}
 
 /* ---------- Stepper ---------- */
-.stepper{display:flex;gap:0;margin:-1.9rem auto 2rem;position:relative;z-index:5}
+.stepper{display:flex;margin:2.2rem auto 1.6rem}
 .step{flex:1;display:flex;align-items:center;gap:.7rem;background:#fff;border:1px solid var(--c-line);padding:.85rem 1.1rem}
-.step:first-child{border-radius:var(--radius) 0 0 var(--radius)}
-.step:last-child{border-radius:0 var(--radius) var(--radius) 0}
 .step+.step{border-left:none}
-.step .num{width:2rem;height:2rem;border-radius:50%;background:var(--c-bg);color:var(--c-muted);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;border:2px solid var(--c-line)}
+.step .num{width:2rem;height:2rem;border-radius:50%;background:#f0f0f0;color:var(--c-muted);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;border:2px solid var(--c-line)}
 .step .lbl{font-size:.92rem;font-weight:600;color:var(--c-muted);line-height:1.25}
-.step.active{box-shadow:var(--shadow)}
-.step.active .num{background:var(--c-primary);border-color:var(--c-primary);color:#fff}
-.step.active .lbl{color:var(--c-primary)}
+.step.active{border-bottom:3px solid var(--c-blue)}
+.step.active .num{background:var(--c-blue);border-color:var(--c-blue);color:#fff}
+.step.active .lbl{color:var(--c-blue)}
 .step.done .num{background:var(--c-green);border-color:var(--c-green);color:#fff}
 .step.done .lbl{color:var(--c-green)}
 
 /* ---------- Formulare ---------- */
 .formcard{padding:2rem 2.2rem;margin-bottom:2.5rem}
-.formcard h2{font-family:var(--font-serif);color:var(--c-primary);font-size:1.45rem;margin-bottom:.35rem}
+.formcard h2{color:var(--c-head);font-size:1.5rem;font-weight:600;margin-bottom:.35rem}
 .formcard .sub{color:var(--c-muted);margin-bottom:1.6rem}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem 1.4rem}
 @media(max-width:720px){.grid2{grid-template-columns:1fr}.formcard{padding:1.4rem}}
 .field{display:flex;flex-direction:column;gap:.3rem}
 .field.wide{grid-column:1/-1}
-.field label{font-weight:700;font-size:.93rem}
+.field label{font-weight:700;font-size:.93rem;color:#333}
 .field label .req{color:var(--c-red)}
 .field .hint{font-size:.82rem;color:var(--c-muted)}
 .field input[type=text],.field input[type=email],.field input[type=tel],.field textarea,.field select{
-  border:1px solid var(--c-line);border-radius:8px;padding:.6rem .8rem;background:#fff;width:100%}
+  border:1px solid #c6c6c6;border-radius:var(--radius);padding:.6rem .8rem;background:#fff;width:100%}
 .field textarea{resize:vertical;min-height:6.5rem;line-height:1.5}
-.field input:focus,.field textarea:focus,.field select:focus{outline:3px solid var(--c-gold-soft);border-color:var(--c-gold)}
+.field input:focus,.field textarea:focus,.field select:focus{outline:3px solid var(--c-blue-soft);border-color:var(--c-blue)}
 .field.invalid input,.field.invalid textarea{border-color:var(--c-red);background:#fff8f7}
 .field .err{display:none;color:var(--c-red);font-size:.82rem}
 .field.invalid .err{display:block}
@@ -134,110 +155,111 @@ input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
 .counter.warn{color:var(--c-orange);font-weight:700}
 .formfoot{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-top:1.8rem;flex-wrap:wrap}
 .checkline{display:flex;gap:.6rem;align-items:flex-start;font-size:.92rem;margin-top:.6rem}
-.checkline input{margin-top:.28rem;width:1.05rem;height:1.05rem;accent-color:var(--c-primary)}
+.checkline input{margin-top:.28rem;width:1.05rem;height:1.05rem;accent-color:var(--c-blue)}
 .checkline.invalid{color:var(--c-red)}
 
 /* Infobox Druckqualität */
-.infobox{display:flex;gap:.9rem;background:var(--c-gold-soft);border:1px solid #e7d9ad;border-radius:var(--radius);padding:1rem 1.1rem;margin:1.2rem 0;font-size:.93rem}
+.infobox{display:flex;gap:.9rem;background:var(--c-blue-soft);border:1px solid #b9d4ec;border-radius:var(--radius);padding:1rem 1.1rem;margin:1.2rem 0;font-size:.93rem}
 .infobox svg{flex-shrink:0;margin-top:.15rem}
-.infobox b{color:#7a601c}
+.infobox b{color:var(--c-blue-dark)}
 
 /* ---------- Upload ---------- */
-.dropzone{border:2px dashed var(--c-line);border-radius:var(--radius);background:#fafbfc;padding:2rem 1.5rem;text-align:center;color:var(--c-muted);transition:border-color .15s,background .15s;cursor:pointer}
-.dropzone.drag{border-color:var(--c-gold);background:var(--c-gold-soft)}
-.dropzone .ico{color:var(--c-primary);margin-bottom:.4rem}
+.dropzone{border:2px dashed #c6c6c6;border-radius:var(--radius);background:#fafafa;padding:2rem 1.5rem;text-align:center;color:var(--c-muted);transition:border-color .15s,background .15s;cursor:pointer}
+.dropzone.drag{border-color:var(--c-blue);background:var(--c-blue-soft)}
+.dropzone .ico{color:var(--c-blue);margin-bottom:.4rem}
 .filelist{list-style:none;margin-top:1rem;display:flex;flex-direction:column;gap:.55rem}
-.filelist li{display:flex;align-items:center;gap:.9rem;border:1px solid var(--c-line);border-radius:8px;padding:.55rem .8rem;background:#fff}
-.filelist .thumb{width:52px;height:52px;border-radius:6px;object-fit:cover;background:var(--c-primary-soft);flex-shrink:0}
+.filelist li{display:flex;align-items:center;gap:.9rem;border:1px solid var(--c-line);border-radius:var(--radius);padding:.55rem .8rem;background:#fff}
+.filelist .thumb{width:52px;height:52px;border-radius:2px;object-fit:cover;background:var(--c-blue-soft);flex-shrink:0}
 .filelist .fmeta{flex:1;min-width:0}
 .filelist .fname{font-weight:600;font-size:.93rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .filelist .fdim{font-size:.8rem;color:var(--c-muted)}
-.filelist .warn{font-size:.75rem;font-weight:700;color:var(--c-orange);background:var(--c-orange-soft);border-radius:4px;padding:.1rem .45rem}
-.filelist .ok{font-size:.75rem;font-weight:700;color:var(--c-green);background:var(--c-green-soft);border-radius:4px;padding:.1rem .45rem}
-.filelist .del{background:none;border:none;color:var(--c-muted);font-size:1.1rem;padding:.2rem .4rem;border-radius:5px}
+.filelist .warn{font-size:.75rem;font-weight:700;color:var(--c-orange);background:var(--c-orange-soft);border-radius:3px;padding:.1rem .45rem}
+.filelist .ok{font-size:.75rem;font-weight:700;color:var(--c-green);background:var(--c-green-soft);border-radius:3px;padding:.1rem .45rem}
+.filelist .del{background:none;border:none;color:var(--c-muted);font-size:1.1rem;padding:.2rem .4rem;border-radius:3px}
 .filelist .del:hover{color:var(--c-red);background:var(--c-red-soft)}
 
 /* ---------- Erfolg ---------- */
 .success{padding:2.6rem 2.2rem;text-align:center;margin-bottom:2.5rem}
 .success .okring{width:72px;height:72px;border-radius:50%;background:var(--c-green-soft);color:var(--c-green);display:flex;align-items:center;justify-content:center;margin:0 auto 1.1rem}
-.success h2{font-family:var(--font-serif);color:var(--c-primary);font-size:1.6rem}
-.success .ref{display:inline-block;margin:1rem 0;background:var(--c-primary-soft);color:var(--c-primary);font-weight:700;border-radius:8px;padding:.5rem 1.2rem;font-size:1.05rem;letter-spacing:.04em}
+.success h2{color:var(--c-head);font-size:1.6rem;font-weight:600}
+.success .ref{display:inline-block;margin:1rem 0;background:var(--c-blue-soft);color:var(--c-blue);font-weight:700;border-radius:var(--radius);padding:.5rem 1.2rem;font-size:1.05rem;letter-spacing:.04em}
 .success p{max-width:34rem;margin:.4rem auto}
 
 /* ---------- Footer ---------- */
-.site-foot{background:var(--c-primary-dark);color:#b8cadb;margin-top:1rem;font-size:.92rem}
+.site-foot{background:var(--c-blue);color:#dbe9f7;margin-top:2.5rem;font-size:.92rem}
 .site-foot .wrap{display:grid;grid-template-columns:2fr 1fr 1fr;gap:2rem;padding-top:2.2rem;padding-bottom:2.2rem}
 @media(max-width:720px){.site-foot .wrap{grid-template-columns:1fr}}
 .site-foot h4{color:#fff;font-size:1rem;margin-bottom:.6rem}
-.site-foot a{color:#b8cadb;text-decoration:none}
-.site-foot a:hover{color:#fff}
-.site-foot .legal{border-top:1px solid rgba(255,255,255,.12);padding:.8rem 1.25rem;text-align:center;font-size:.8rem;color:#7e93a5}
+.site-foot a{color:#dbe9f7;text-decoration:none}
+.site-foot a:hover{color:#fff;text-decoration:underline}
+.site-foot .legal{background:var(--c-blue-dark);padding:.8rem 1.25rem;text-align:center;font-size:.8rem;color:#bcd6ee}
 
 /* ---------- Redaktion (Backend) ---------- */
-.adm-head{background:var(--c-primary-dark);color:#fff;border-bottom:3px solid var(--c-gold)}
-.adm-head .wrap{display:flex;align-items:center;gap:1rem;padding-top:.8rem;padding-bottom:.8rem}
-.adm-head .ttl{font-family:var(--font-serif);font-size:1.2rem;font-weight:700}
-.adm-head .ttl small{display:block;font-family:var(--font-sans);font-size:.78rem;font-weight:400;color:#9db3c4;letter-spacing:.08em;text-transform:uppercase}
-.adm-user{margin-left:auto;display:flex;align-items:center;gap:.6rem;font-size:.9rem;color:#cfdce8}
-.adm-user .avatar{width:34px;height:34px;border-radius:50%;background:var(--c-gold);color:#2b2306;font-weight:700;display:flex;align-items:center;justify-content:center}
-.adm-main{padding:1.8rem 0 3rem}
+.adm-head{background:var(--c-blue);color:#fff}
+.adm-head .wrap{display:flex;align-items:center;gap:1rem;padding-top:.7rem;padding-bottom:.7rem}
+.adm-head .wsmall{width:42px;flex-shrink:0}
+.adm-head .ttl{font-size:1.2rem;font-weight:700}
+.adm-head .ttl small{display:block;font-size:.76rem;font-weight:400;color:#cfe2f4;letter-spacing:.08em;text-transform:uppercase}
+.adm-user{margin-left:auto;display:flex;align-items:center;gap:.6rem;font-size:.9rem;color:#dbe9f7}
+.adm-user .avatar{width:34px;height:34px;border-radius:50%;background:#fff;color:var(--c-blue);font-weight:700;display:flex;align-items:center;justify-content:center}
+.adm-main{padding:1.8rem 0 3rem;background:#fff}
 .statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.4rem}
 .stat{padding:1rem 1.2rem}
-.stat .v{font-size:1.7rem;font-weight:700;color:var(--c-primary);font-family:var(--font-serif)}
+.stat .v{font-size:1.7rem;font-weight:700;color:var(--c-blue)}
 .stat .l{font-size:.85rem;color:var(--c-muted)}
-.deadlinebar{display:flex;align-items:center;gap:.8rem;padding:.8rem 1.2rem;margin-bottom:1.4rem;background:var(--c-gold-soft);border:1px solid #e7d9ad;border-radius:var(--radius);font-size:.93rem}
+.deadlinebar{display:flex;align-items:center;gap:.8rem;padding:.8rem 1.2rem;margin-bottom:1.4rem;background:var(--c-blue-soft);border:1px solid #b9d4ec;border-radius:var(--radius);font-size:.93rem;color:#333}
 .toolbar{display:flex;gap:.8rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap}
-.toolbar input[type=search]{border:1px solid var(--c-line);border-radius:8px;padding:.5rem .8rem;min-width:220px;background:#fff}
-.toolbar select{border:1px solid var(--c-line);border-radius:8px;padding:.5rem .6rem;background:#fff}
+.toolbar input[type=search]{border:1px solid #c6c6c6;border-radius:var(--radius);padding:.5rem .8rem;min-width:220px;background:#fff}
+.toolbar select{border:1px solid #c6c6c6;border-radius:var(--radius);padding:.5rem .6rem;background:#fff}
 .toolbar .spacer{flex:1}
-table.list{width:100%;border-collapse:collapse;background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);font-size:.95rem}
-table.list th{background:var(--c-primary);color:#fff;text-align:left;font-size:.82rem;letter-spacing:.05em;text-transform:uppercase;padding:.7rem .9rem}
+table.list{width:100%;border-collapse:collapse;background:#fff;font-size:.95rem;border:1px solid var(--c-line)}
+table.list th{background:var(--c-blue);color:#fff;text-align:left;font-size:.82rem;letter-spacing:.05em;text-transform:uppercase;padding:.7rem .9rem}
 table.list td{padding:.75rem .9rem;border-top:1px solid var(--c-line);vertical-align:middle}
 table.list tbody tr{cursor:pointer}
-table.list tbody tr:hover{background:var(--c-primary-soft)}
-.listwrap{overflow-x:auto;border-radius:var(--radius)}
-.tbl-title{font-weight:700;color:var(--c-primary)}
+table.list tbody tr:hover{background:var(--c-blue-soft)}
+.listwrap{overflow-x:auto}
+.tbl-title{font-weight:700;color:var(--c-head)}
 .tbl-sub{font-size:.8rem;color:var(--c-muted)}
 
 /* Detail */
 .det-top{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap}
-.det-top h2{font-family:var(--font-serif);color:var(--c-primary);font-size:1.5rem;line-height:1.25}
+.det-top h2{color:var(--c-head);font-size:1.5rem;font-weight:600;line-height:1.25}
 .det-cols{display:grid;grid-template-columns:1.9fr 1fr;gap:1.4rem;align-items:start}
 @media(max-width:900px){.det-cols{grid-template-columns:1fr}}
 .det-sec{padding:1.4rem 1.6rem;margin-bottom:1.4rem}
 .det-sec h3{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--c-muted);margin-bottom:.8rem}
-.det-sec .lede{font-weight:600;font-style:italic;color:#3d4c59;margin-bottom:.8rem}
+.det-sec .lede{font-weight:600;font-style:italic;color:var(--c-head);margin-bottom:.8rem}
 .det-sec p+p{margin-top:.7rem}
 .credit{margin-top:1rem;padding-top:.8rem;border-top:1px dashed var(--c-line);font-size:.88rem;color:var(--c-muted)}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:.35rem .9rem;font-size:.93rem}
 .kv dt{color:var(--c-muted)}
 .kv dd{font-weight:600}
 .fotogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.8rem}
-.foto{border:1px solid var(--c-line);border-radius:8px;overflow:hidden;background:#fff}
-.foto .ph{aspect-ratio:4/3;background:linear-gradient(135deg,#31536f,#5b7f9a);display:flex;align-items:center;justify-content:center;color:#cfdce8}
+.foto{border:1px solid var(--c-line);border-radius:var(--radius);overflow:hidden;background:#fff}
+.foto .ph{aspect-ratio:4/3;background:linear-gradient(135deg,#35719f,#7aa3c4);display:flex;align-items:center;justify-content:center;color:#e8f1fa}
 .foto img.ph{object-fit:cover;width:100%;display:block}
 .foto .fm{padding:.4rem .55rem;font-size:.74rem;color:var(--c-muted);line-height:1.35}
 .foto .fm b{display:block;color:var(--c-ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.78rem}
-.foto .dl{display:block;text-align:center;font-size:.78rem;font-weight:700;color:var(--c-primary);padding:.35rem;border-top:1px solid var(--c-line);text-decoration:none}
-.foto .dl:hover{background:var(--c-primary-soft)}
+.foto .dl{display:block;text-align:center;font-size:.78rem;font-weight:700;color:var(--c-blue);padding:.35rem;border-top:1px solid var(--c-line);text-decoration:none}
+.foto .dl:hover{background:var(--c-blue-soft)}
 .statusrow{display:flex;gap:.5rem;flex-wrap:wrap}
-.statusrow button{border:1px solid var(--c-line);background:#fff;border-radius:999px;padding:.3rem .9rem;font-size:.85rem;font-weight:600;color:var(--c-muted)}
-.statusrow button.on.s-neu{background:var(--c-primary-soft);color:var(--c-primary);border-color:var(--c-primary)}
-.statusrow button.on.s-pruefung{background:var(--c-gold-soft);color:#8a6d1f;border-color:var(--c-gold)}
+.statusrow button{border:1px solid var(--c-line);background:#fff;border-radius:3px;padding:.3rem .9rem;font-size:.85rem;font-weight:600;color:var(--c-muted)}
+.statusrow button.on.s-neu{background:var(--c-blue-soft);color:var(--c-blue);border-color:var(--c-blue)}
+.statusrow button.on.s-pruefung{background:#fdf6d8;color:#8a6d00;border-color:#d6b94a}
 .statusrow button.on.s-rueckfrage{background:var(--c-orange-soft);color:var(--c-orange);border-color:var(--c-orange)}
 .statusrow button.on.s-freigegeben{background:var(--c-green-soft);color:var(--c-green);border-color:var(--c-green)}
 .timeline{list-style:none;display:flex;flex-direction:column;gap:.7rem;font-size:.88rem}
 .timeline li{border-left:3px solid var(--c-line);padding:.1rem 0 .1rem .8rem}
 .timeline li.t-rueckfrage{border-color:var(--c-orange)}
 .timeline li.t-antwort{border-color:var(--c-green)}
-.timeline li.t-notiz{border-color:var(--c-gold)}
+.timeline li.t-notiz{border-color:#d6b94a}
 .timeline .tw{font-weight:700}
 .timeline .tt{color:var(--c-muted);font-size:.78rem}
-.askbox textarea{width:100%;border:1px solid var(--c-line);border-radius:8px;padding:.6rem .8rem;min-height:5rem;resize:vertical}
-.askbox textarea:focus{outline:3px solid var(--c-gold-soft);border-color:var(--c-gold)}
+.askbox textarea{width:100%;border:1px solid #c6c6c6;border-radius:var(--radius);padding:.6rem .8rem;min-height:5rem;resize:vertical}
+.askbox textarea:focus{outline:3px solid var(--c-blue-soft);border-color:var(--c-blue)}
 
 /* ---------- Toast ---------- */
-#toast{position:fixed;bottom:1.4rem;left:50%;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;padding:.7rem 1.3rem;border-radius:8px;font-size:.92rem;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:100;max-width:min(92vw,540px);text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+#toast{position:fixed;bottom:1.4rem;left:50%;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;padding:.7rem 1.3rem;border-radius:4px;font-size:.92rem;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:100;max-width:min(92vw,540px);text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.35)}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
@@ -254,60 +276,136 @@ table.list tbody tr:hover{background:var(--c-primary-soft)}
 </div>
 
 <!-- ============================================================
-     ANSICHT 1: VEREINSPORTAL
+     ANSICHT 1: VEREINSPORTAL (Design nach www.schruns.at)
      ============================================================ -->
 <div id="view-portal">
 
-  <div class="site-top">
-    <div class="wrap">
-      <a href="#">Kontakt</a><a href="#">Amtstafel</a><a href="#">A&nbsp;A&nbsp;A</a>
-    </div>
-  </div>
-
   <header class="site-head">
-    <div class="wrap">
-      <a class="brand" href="#">
-        <!-- Wappen-Platzhalter (gekreuzte Schlüssel / Montafon) – wird durch das echte Gemeindewappen ersetzt -->
-        <svg width="52" height="60" viewBox="0 0 52 60" aria-label="Wappen (Platzhalter)">
-          <path d="M2 2h48v34c0 12-10 19-24 22C12 55 2 48 2 36Z" fill="#f2e9d0" stroke="#1b3a56" stroke-width="3" stroke-linejoin="round"/>
-          <g stroke="#1b3a56" stroke-width="3.4" stroke-linecap="round">
-            <line x1="15" y1="16" x2="37" y2="42"/>
-            <line x1="37" y1="16" x2="15" y2="42"/>
-          </g>
-          <circle cx="15" cy="16" r="5" fill="none" stroke="#c19a3d" stroke-width="3"/>
-          <circle cx="37" cy="16" r="5" fill="none" stroke="#c19a3d" stroke-width="3"/>
-          <path d="M33 38l4 4M19 38l-4 4" stroke="#c19a3d" stroke-width="3.4" stroke-linecap="round"/>
-        </svg>
-        <span>
-          <span class="brand-name">Marktgemeinde Schruns</span><br>
-          <span class="brand-sub">Im Montafon · Vorarlberg</span>
+    <div class="topbar">
+      <div class="wrap">
+        <span class="mg">Marktgemeinde</span>
+        <span class="icons">
+          <a href="#" title="Startseite" onclick="event.preventDefault()"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 11 12 3l9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></a>
+          <a href="#" title="Facebook" onclick="event.preventDefault()"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9.5"/><path d="M13.5 8.5h2v-2.4h-2c-1.7 0-3 1.3-3 3v1.9H8.6v2.4h1.9V19h2.5v-5.6h2l.4-2.4h-2.4V9.5c0-.6.4-1 1-1z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" title="Instagram" onclick="event.preventDefault()"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" title="Suche" onclick="event.preventDefault()"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg></a>
         </span>
-      </a>
-      <nav class="mainnav">
-        <a href="#">Unsere Gemeinde</a>
-        <a href="#">Bürgerservice</a>
-        <a href="#">Verwaltung</a>
-        <a href="#">Freizeit</a>
-        <a href="#" class="here">Gemeindezeitung</a>
-      </nav>
+      </div>
+    </div>
+    <div class="namebar">
+      <div class="wrap">
+        <span class="ort">Schruns</span>
+        <nav class="mainnav">
+          <a href="#" onclick="event.preventDefault()">Bürgerservice</a>
+          <a href="#" onclick="event.preventDefault()">Verwaltung</a>
+          <a href="#" onclick="event.preventDefault()">Politik</a>
+          <a href="#" onclick="event.preventDefault()">Unsere Gemeinde</a>
+        </nav>
+        <!-- Wappen: liegt eine Datei „wappen.png“ neben dieser HTML-Datei,
+             wird automatisch das Original verwendet; sonst SVG-Nachzeichnung. -->
+        <span class="wappenbox">
+          <img src="wappen.png" alt="Wappen der Marktgemeinde Schruns"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <svg style="display:none" viewBox="0 0 140 176" role="img" aria-label="Wappen der Marktgemeinde Schruns (Nachzeichnung)">
+            <defs>
+              <clipPath id="shieldclip"><path d="M12 8h116v84c0 34-25 53-58 74-33-21-58-40-58-74Z"/></clipPath>
+            </defs>
+            <g clip-path="url(#shieldclip)">
+              <rect x="0" y="0" width="140" height="98" fill="#ffe014"/>
+              <rect x="0" y="98" width="140" height="80" fill="#1063b6"/>
+              <!-- Stier -->
+              <g fill="#111">
+                <path d="M42 40 Q54 31 70 32 Q90 31 99 39 Q106 45 104 55 Q102 63 94 65 L50 65 Q42 63 39 55 Q37 46 42 40 Z"/>
+                <path d="M42 40 Q31 39 27 47 Q23 53 27 59 Q30 64 37 63 Q43 62 45 55 Q47 45 42 40 Z"/>
+                <path d="M31 40 Q21 36 20 25 Q27 32 35 34 Z"/>
+                <path d="M43 38 Q44 27 53 23 Q48 31 48 38 Z"/>
+                <rect x="47" y="63" width="6" height="23"/>
+                <rect x="59" y="64" width="6" height="22"/>
+                <rect x="81" y="64" width="6" height="22"/>
+                <rect x="93" y="61" width="6" height="25"/>
+                <path d="M101 43 Q113 37 114 25 Q119 36 112 46 Q107 50 101 48 Z"/>
+              </g>
+              <!-- Sonne -->
+              <g>
+                <circle cx="70" cy="115" r="9.5" fill="#f2c200"/>
+                <g stroke="#f2c200" stroke-width="4" stroke-linecap="round">
+                  <line x1="70" y1="102" x2="70" y2="96"/>
+                  <line x1="61" y1="106" x2="56" y2="101"/>
+                  <line x1="79" y1="106" x2="84" y2="101"/>
+                  <line x1="57" y1="115" x2="50" y2="115"/>
+                  <line x1="83" y1="115" x2="90" y2="115"/>
+                  <line x1="61" y1="124" x2="56" y2="128"/>
+                  <line x1="79" y1="124" x2="84" y2="128"/>
+                </g>
+              </g>
+              <!-- gekreuzte Schlüssel -->
+              <g stroke="#f2c200" stroke-linecap="round" fill="none">
+                <line x1="55" y1="134" x2="88" y2="158" stroke-width="5.5"/>
+                <line x1="85" y1="134" x2="52" y2="158" stroke-width="5.5"/>
+                <circle cx="54" cy="133" r="6.5" stroke-width="4.5"/>
+                <circle cx="86" cy="133" r="6.5" stroke-width="4.5"/>
+                <path d="M84 155l7-3M81 159l6 3M56 155l-7-3M59 159l-6 3" stroke-width="4.5"/>
+              </g>
+            </g>
+            <path d="M12 8h116v84c0 34-25 53-58 74-33-21-58-40-58-74Z" fill="none" stroke="#111" stroke-width="7"/>
+          </svg>
+        </span>
+      </div>
     </div>
   </header>
 
+  <!-- Bildslider: liegt eine Datei „hero.jpg“ neben dieser HTML-Datei,
+       wird automatisch das Originalfoto verwendet; sonst SVG-Platzhalter. -->
   <section class="hero">
-    <div class="wrap">
-      <div class="crumb">Startseite&nbsp;›&nbsp;Aktuelles&nbsp;›&nbsp;Gemeindezeitung</div>
-      <h1>Ihr Beitrag für die Gemeindezeitung<br>Ausgabe November 2026</h1>
-      <p class="lead">Liebe Vereine und Institutionen! Hier können Sie Ihre Texte und Fotos
-        für die kommende Ausgabe der Schrunser Gemeindezeitung bequem online einreichen.</p>
-      <span class="deadline">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-        Einsendeschluss: <b>Freitag, 2. Oktober 2026</b>
-      </span>
+    <img class="heroimg" src="hero.jpg" alt=""
+         onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <svg class="heroimg" style="display:none" viewBox="0 0 1200 470" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="wiese" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#b9cf8f"/><stop offset=".55" stop-color="#8fb96e"/><stop offset="1" stop-color="#5e934b"/>
+        </linearGradient>
+        <filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+      </defs>
+      <rect width="1200" height="470" fill="url(#wiese)"/>
+      <g filter="url(#soft)" opacity=".8">
+        <circle cx="150" cy="120" r="34" fill="#dce8b8"/><circle cx="960" cy="90" r="46" fill="#cfe0a6"/><circle cx="620" cy="60" r="30" fill="#dce8b8"/>
+      </g>
+      <g stroke="#4f7f3e" stroke-width="4" fill="none" opacity=".85">
+        <path d="M120 470V330M180 470V300M310 470V350M420 470V290M540 470V340M660 470V300M770 470V350M880 470V310M1000 470V350M1100 470V300"/>
+      </g>
+      <g>
+        <circle cx="180" cy="292" r="26" fill="#e2552f"/><circle cx="180" cy="292" r="8" fill="#3a2c17"/>
+        <circle cx="420" cy="282" r="30" fill="#e0492a"/><circle cx="420" cy="282" r="9" fill="#3a2c17"/>
+        <circle cx="660" cy="292" r="24" fill="#e2552f"/><circle cx="660" cy="292" r="8" fill="#3a2c17"/>
+        <circle cx="880" cy="302" r="28" fill="#df5e33"/><circle cx="880" cy="302" r="9" fill="#3a2c17"/>
+        <circle cx="1100" cy="290" r="24" fill="#e0492a"/><circle cx="1100" cy="290" r="8" fill="#3a2c17"/>
+      </g>
+      <g fill="#5b79c4">
+        <circle cx="120" cy="322" r="12"/><circle cx="310" cy="342" r="11"/><circle cx="540" cy="332" r="12"/><circle cx="770" cy="342" r="11"/><circle cx="1000" cy="342" r="12"/>
+      </g>
+      <g fill="#f4f6ee">
+        <circle cx="250" cy="360" r="9"/><circle cx="480" cy="380" r="8"/><circle cx="720" cy="370" r="9"/><circle cx="950" cy="385" r="8"/>
+      </g>
+    </svg>
+    <div class="ctrl">
+      <button title="Weiter" onclick="toast('Bildslider – im Dummy Platzhalter.')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 5 7 7-7 7"/></svg></button>
+      <button class="dot on" onclick="toast('Bildslider – im Dummy Platzhalter.')"></button>
+      <button class="dot" onclick="toast('Bildslider – im Dummy Platzhalter.')"></button>
+      <button class="dot" onclick="toast('Bildslider – im Dummy Platzhalter.')"></button>
+      <button title="Pause" onclick="toast('Bildslider – im Dummy Platzhalter.')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg></button>
     </div>
-    <svg class="mtn" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 120 90 60 180 95 320 30 430 85 560 15 700 90 820 45 950 100 1060 55 1200 90V120Z" fill="#fff"/></svg>
+    <button class="a11y" title="Barrierefreiheit" onclick="toast('Barrierefreiheits-Werkzeug – im Dummy Platzhalter.')">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="5" r="2.2"/><path d="M4 9h16M12 9v6l-4 6M12 15l4 6"/></svg>
+    </button>
   </section>
 
   <main class="wrap">
+
+    <h1 class="sechead">Gemeindezeitung – Beiträge einreichen</h1>
+    <div class="secline"></div>
+    <p class="introtext">Liebe Vereine und Institutionen! Hier können Sie Ihre Texte und Fotos für die
+      Ausgabe <b>November 2026</b> der Schrunser Gemeindezeitung bequem online einreichen.</p>
+    <p class="deadline-line">Einsendeschluss: <b>Freitag, 2. Oktober 2026</b></p>
 
     <div class="stepper" id="stepper">
       <div class="step active" data-step="1"><span class="num">1</span><span class="lbl">Verein &amp; Ansprechperson</span></div>
@@ -386,7 +484,7 @@ table.list tbody tr:hover{background:var(--c-primary-soft)}
       </div>
 
       <div class="infobox">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b26a00" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16.5v.5"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0b4d8f" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16.5v.5"/></svg>
         <div>
           <b>Wichtig für die Druckqualität:</b> Bitte laden Sie Ihre Fotos <b>unbearbeitet in Originalgröße</b> hoch
           (direkt von der Kamera bzw. vom Handy in Originalauflösung) – <u>keine</u> verkleinerten Bilder aus
@@ -454,9 +552,9 @@ table.list tbody tr:hover{background:var(--c-primary-soft)}
       </div>
       <div>
         <h4>Rechtliches</h4>
-        <a href="#">Impressum</a><br>
-        <a href="#">Datenschutz</a><br>
-        <a href="#">Barrierefreiheit</a>
+        <a href="#" onclick="event.preventDefault()">Impressum</a><br>
+        <a href="#" onclick="event.preventDefault()">Datenschutz</a><br>
+        <a href="#" onclick="event.preventDefault()">Barrierefreiheit</a>
       </div>
     </div>
     <div class="legal">© 2026 Marktgemeinde Schruns · Klick-Dummy, keine echte Datenübermittlung</div>
@@ -470,11 +568,27 @@ table.list tbody tr:hover{background:var(--c-primary-soft)}
 
   <header class="adm-head">
     <div class="wrap">
-      <svg width="38" height="44" viewBox="0 0 52 60" aria-hidden="true">
-        <path d="M2 2h48v34c0 12-10 19-24 22C12 55 2 48 2 36Z" fill="#f2e9d0" stroke="#c19a3d" stroke-width="3" stroke-linejoin="round"/>
-        <g stroke="#1b3a56" stroke-width="3.4" stroke-linecap="round"><line x1="15" y1="16" x2="37" y2="42"/><line x1="37" y1="16" x2="15" y2="42"/></g>
-        <circle cx="15" cy="16" r="5" fill="none" stroke="#c19a3d" stroke-width="3"/>
-        <circle cx="37" cy="16" r="5" fill="none" stroke="#c19a3d" stroke-width="3"/>
+      <svg class="wsmall" viewBox="0 0 140 176" aria-hidden="true">
+        <defs><clipPath id="shieldclip2"><path d="M12 8h116v84c0 34-25 53-58 74-33-21-58-40-58-74Z"/></clipPath></defs>
+        <g clip-path="url(#shieldclip2)">
+          <rect x="0" y="0" width="140" height="98" fill="#ffe014"/>
+          <rect x="0" y="98" width="140" height="80" fill="#1063b6"/>
+          <g fill="#111">
+            <path d="M42 40 Q54 31 70 32 Q90 31 99 39 Q106 45 104 55 Q102 63 94 65 L50 65 Q42 63 39 55 Q37 46 42 40 Z"/>
+            <path d="M42 40 Q31 39 27 47 Q23 53 27 59 Q30 64 37 63 Q43 62 45 55 Q47 45 42 40 Z"/>
+            <path d="M31 40 Q21 36 20 25 Q27 32 35 34 Z"/>
+            <path d="M43 38 Q44 27 53 23 Q48 31 48 38 Z"/>
+            <rect x="47" y="63" width="6" height="23"/><rect x="59" y="64" width="6" height="22"/>
+            <rect x="81" y="64" width="6" height="22"/><rect x="93" y="61" width="6" height="25"/>
+            <path d="M101 43 Q113 37 114 25 Q119 36 112 46 Q107 50 101 48 Z"/>
+          </g>
+          <g fill="#f2c200"><circle cx="70" cy="115" r="9.5"/></g>
+          <g stroke="#f2c200" stroke-linecap="round" fill="none">
+            <line x1="55" y1="134" x2="88" y2="158" stroke-width="5.5"/><line x1="85" y1="134" x2="52" y2="158" stroke-width="5.5"/>
+            <circle cx="54" cy="133" r="6.5" stroke-width="4.5"/><circle cx="86" cy="133" r="6.5" stroke-width="4.5"/>
+          </g>
+        </g>
+        <path d="M12 8h116v84c0 34-25 53-58 74-33-21-58-40-58-74Z" fill="none" stroke="#111" stroke-width="7"/>
       </svg>
       <div class="ttl">Gemeindezeitung · Redaktion<small>Ausgabe November 2026</small></div>
       <div class="adm-user">
@@ -491,7 +605,7 @@ table.list tbody tr:hover{background:var(--c-primary-soft)}
       <div class="statgrid" id="statgrid"></div>
 
       <div class="deadlinebar">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8a6d1f" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0b4d8f" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
         <span>Einsendeschluss <b>2. Oktober 2026</b> · Druckfreigabe geplant für <b>23. Oktober 2026</b> · Erscheinung <b>November 2026</b></span>
       </div>
 
@@ -885,7 +999,7 @@ function renderList(){
       <td class="small">${fmtDate(e.eingereicht)}</td>
       <td>${e.fotos.length} <span class="muted small">(${fmtMB(e.fotos.reduce((s,f)=>s+f.size,0))})</span></td>
       <td><span class="badge b-${e.status}">${STATUS_LABEL[e.status]}</span></td>
-      <td class="small" style="color:var(--c-primary);font-weight:700">Öffnen&nbsp;→</td>
+      <td class="small" style="color:var(--c-blue);font-weight:700">Öffnen&nbsp;→</td>
     </tr>`).join('') ||
     '<tr><td colspan="6" class="muted" style="text-align:center;padding:2rem">Keine Einreichungen gefunden.</td></tr>';
 
