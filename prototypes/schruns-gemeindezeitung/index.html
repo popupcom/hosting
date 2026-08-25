@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="de-AT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gemeindezeitung Schruns – Beiträge einreichen (Klick-Dummy)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   Design-Tokens – alle Farben zentral.
+   Sobald die exakten CI-Werte von schruns.at vorliegen,
+   genügt es, diese Variablen anzupassen.
+   ========================================================= */
+:root{
+  --c-primary:      #1b3a56;   /* dunkles Alpen-Blau (Header, Buttons) */
+  --c-primary-dark: #12293e;
+  --c-primary-soft: #e8eef4;
+  --c-gold:         #c19a3d;   /* Wappen-Gold (Akzent, Schlüssel) */
+  --c-gold-soft:    #f7f0de;
+  --c-ink:          #22303c;   /* Fließtext */
+  --c-muted:        #63727f;
+  --c-line:         #dde3e8;
+  --c-bg:           #f4f6f8;
+  --c-card:         #ffffff;
+  --c-green:        #2e7d4f;
+  --c-green-soft:   #e3f2e9;
+  --c-red:          #b3382e;
+  --c-red-soft:     #fbe9e7;
+  --c-orange:       #b26a00;
+  --c-orange-soft:  #fdf1dc;
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(18,41,62,.08), 0 8px 24px rgba(18,41,62,.07);
+  --font-sans: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-sans);color:var(--c-ink);background:var(--c-bg);font-size:16.5px;line-height:1.55}
+img{max-width:100%}
+a{color:var(--c-primary)}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
+
+/* ---------- Demo-Leiste (nur für den Dummy) ---------- */
+.demobar{background:#111827;color:#d1d5db;font-size:.82rem;padding:.45rem 1rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;position:sticky;top:0;z-index:60}
+.demobar .tag{background:var(--c-gold);color:#111827;font-weight:700;border-radius:4px;padding:.05rem .5rem;letter-spacing:.03em}
+.demobar .spacer{flex:1}
+.demobar button{background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:6px;padding:.3rem .8rem;font-size:.82rem}
+.demobar button.active{background:var(--c-gold);border-color:var(--c-gold);color:#111827;font-weight:700}
+.demobar button.ghost{background:transparent;border-color:#374151;color:#9ca3af}
+
+/* ---------- Gemeinsame Bausteine ---------- */
+.wrap{max-width:1120px;margin:0 auto;padding:0 1.25rem}
+.card{background:var(--c-card);border:1px solid var(--c-line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.btn{display:inline-flex;align-items:center;gap:.5rem;border-radius:8px;padding:.62rem 1.4rem;font-weight:700;border:1px solid transparent;text-decoration:none;transition:background .15s,box-shadow .15s}
+.btn-primary{background:var(--c-primary);color:#fff}
+.btn-primary:hover{background:var(--c-primary-dark)}
+.btn-gold{background:var(--c-gold);color:#2b2306}
+.btn-gold:hover{filter:brightness(1.06)}
+.btn-outline{background:#fff;color:var(--c-primary);border-color:var(--c-primary)}
+.btn-outline:hover{background:var(--c-primary-soft)}
+.btn-ghost{background:transparent;color:var(--c-muted);border-color:var(--c-line)}
+.btn-ghost:hover{background:#fff}
+.btn-sm{padding:.35rem .85rem;font-size:.88rem;border-radius:7px}
+.badge{display:inline-block;font-size:.78rem;font-weight:700;border-radius:999px;padding:.14rem .7rem;white-space:nowrap}
+.b-neu{background:var(--c-primary-soft);color:var(--c-primary)}
+.b-pruefung{background:var(--c-gold-soft);color:#8a6d1f}
+.b-rueckfrage{background:var(--c-orange-soft);color:var(--c-orange)}
+.b-freigegeben{background:var(--c-green-soft);color:var(--c-green)}
+.muted{color:var(--c-muted)}
+.small{font-size:.88rem}
+.hidden{display:none!important}
+
+/* ---------- Portal: Header im Stil eines Gemeinde-Portals ---------- */
+.site-top{background:var(--c-primary);color:#cfdce8;font-size:.85rem}
+.site-top .wrap{display:flex;gap:1.5rem;padding:.4rem 1.25rem;justify-content:flex-end}
+.site-top a{color:#cfdce8;text-decoration:none}
+.site-top a:hover{color:#fff}
+.site-head{background:#fff;border-bottom:3px solid var(--c-gold)}
+.site-head .wrap{display:flex;align-items:center;gap:1.1rem;padding-top:.9rem;padding-bottom:.9rem;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.9rem;text-decoration:none;color:inherit}
+.brand-name{font-family:var(--font-serif);font-size:1.45rem;font-weight:700;color:var(--c-primary);line-height:1.15}
+.brand-sub{font-size:.85rem;color:var(--c-muted);letter-spacing:.12em;text-transform:uppercase}
+.mainnav{margin-left:auto;display:flex;gap:.25rem;flex-wrap:wrap}
+.mainnav a{text-decoration:none;color:var(--c-ink);font-weight:600;padding:.5rem .85rem;border-radius:6px;font-size:.97rem}
+.mainnav a:hover{background:var(--c-primary-soft);color:var(--c-primary)}
+.mainnav a.here{background:var(--c-primary);color:#fff}
+
+/* ---------- Hero ---------- */
+.hero{background:linear-gradient(135deg,var(--c-primary-dark) 0%,var(--c-primary) 55%,#2a567c 100%);color:#fff;position:relative;overflow:hidden}
+.hero svg.mtn{position:absolute;bottom:-2px;left:0;width:100%;height:90px;opacity:.35}
+.hero .wrap{position:relative;padding-top:2.6rem;padding-bottom:3.4rem}
+.hero .crumb{font-size:.85rem;color:#b8cadb;margin-bottom:.9rem}
+.hero h1{font-family:var(--font-serif);font-size:clamp(1.7rem,3.4vw,2.5rem);line-height:1.2;max-width:44rem}
+.hero p.lead{margin-top:.8rem;max-width:42rem;color:#dbe6ef;font-size:1.08rem}
+.hero .deadline{display:inline-flex;align-items:center;gap:.55rem;margin-top:1.3rem;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:.4rem 1.1rem;font-size:.95rem}
+.hero .deadline b{color:var(--c-gold)}
+
+/* ---------- Stepper ---------- */
+.stepper{display:flex;gap:0;margin:-1.9rem auto 2rem;position:relative;z-index:5}
+.step{flex:1;display:flex;align-items:center;gap:.7rem;background:#fff;border:1px solid var(--c-line);padding:.85rem 1.1rem}
+.step:first-child{border-radius:var(--radius) 0 0 var(--radius)}
+.step:last-child{border-radius:0 var(--radius) var(--radius) 0}
+.step+.step{border-left:none}
+.step .num{width:2rem;height:2rem;border-radius:50%;background:var(--c-bg);color:var(--c-muted);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;border:2px solid var(--c-line)}
+.step .lbl{font-size:.92rem;font-weight:600;color:var(--c-muted);line-height:1.25}
+.step.active{box-shadow:var(--shadow)}
+.step.active .num{background:var(--c-primary);border-color:var(--c-primary);color:#fff}
+.step.active .lbl{color:var(--c-primary)}
+.step.done .num{background:var(--c-green);border-color:var(--c-green);color:#fff}
+.step.done .lbl{color:var(--c-green)}
+
+/* ---------- Formulare ---------- */
+.formcard{padding:2rem 2.2rem;margin-bottom:2.5rem}
+.formcard h2{font-family:var(--font-serif);color:var(--c-primary);font-size:1.45rem;margin-bottom:.35rem}
+.formcard .sub{color:var(--c-muted);margin-bottom:1.6rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem 1.4rem}
+@media(max-width:720px){.grid2{grid-template-columns:1fr}.formcard{padding:1.4rem}}
+.field{display:flex;flex-direction:column;gap:.3rem}
+.field.wide{grid-column:1/-1}
+.field label{font-weight:700;font-size:.93rem}
+.field label .req{color:var(--c-red)}
+.field .hint{font-size:.82rem;color:var(--c-muted)}
+.field input[type=text],.field input[type=email],.field input[type=tel],.field textarea,.field select{
+  border:1px solid var(--c-line);border-radius:8px;padding:.6rem .8rem;background:#fff;width:100%}
+.field textarea{resize:vertical;min-height:6.5rem;line-height:1.5}
+.field input:focus,.field textarea:focus,.field select:focus{outline:3px solid var(--c-gold-soft);border-color:var(--c-gold)}
+.field.invalid input,.field.invalid textarea{border-color:var(--c-red);background:#fff8f7}
+.field .err{display:none;color:var(--c-red);font-size:.82rem}
+.field.invalid .err{display:block}
+.counter{font-size:.78rem;color:var(--c-muted);text-align:right}
+.counter.warn{color:var(--c-orange);font-weight:700}
+.formfoot{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-top:1.8rem;flex-wrap:wrap}
+.checkline{display:flex;gap:.6rem;align-items:flex-start;font-size:.92rem;margin-top:.6rem}
+.checkline input{margin-top:.28rem;width:1.05rem;height:1.05rem;accent-color:var(--c-primary)}
+.checkline.invalid{color:var(--c-red)}
+
+/* Infobox Druckqualität */
+.infobox{display:flex;gap:.9rem;background:var(--c-gold-soft);border:1px solid #e7d9ad;border-radius:var(--radius);padding:1rem 1.1rem;margin:1.2rem 0;font-size:.93rem}
+.infobox svg{flex-shrink:0;margin-top:.15rem}
+.infobox b{color:#7a601c}
+
+/* ---------- Upload ---------- */
+.dropzone{border:2px dashed var(--c-line);border-radius:var(--radius);background:#fafbfc;padding:2rem 1.5rem;text-align:center;color:var(--c-muted);transition:border-color .15s,background .15s;cursor:pointer}
+.dropzone.drag{border-color:var(--c-gold);background:var(--c-gold-soft)}
+.dropzone .ico{color:var(--c-primary);margin-bottom:.4rem}
+.filelist{list-style:none;margin-top:1rem;display:flex;flex-direction:column;gap:.55rem}
+.filelist li{display:flex;align-items:center;gap:.9rem;border:1px solid var(--c-line);border-radius:8px;padding:.55rem .8rem;background:#fff}
+.filelist .thumb{width:52px;height:52px;border-radius:6px;object-fit:cover;background:var(--c-primary-soft);flex-shrink:0}
+.filelist .fmeta{flex:1;min-width:0}
+.filelist .fname{font-weight:600;font-size:.93rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.filelist .fdim{font-size:.8rem;color:var(--c-muted)}
+.filelist .warn{font-size:.75rem;font-weight:700;color:var(--c-orange);background:var(--c-orange-soft);border-radius:4px;padding:.1rem .45rem}
+.filelist .ok{font-size:.75rem;font-weight:700;color:var(--c-green);background:var(--c-green-soft);border-radius:4px;padding:.1rem .45rem}
+.filelist .del{background:none;border:none;color:var(--c-muted);font-size:1.1rem;padding:.2rem .4rem;border-radius:5px}
+.filelist .del:hover{color:var(--c-red);background:var(--c-red-soft)}
+
+/* ---------- Erfolg ---------- */
+.success{padding:2.6rem 2.2rem;text-align:center;margin-bottom:2.5rem}
+.success .okring{width:72px;height:72px;border-radius:50%;background:var(--c-green-soft);color:var(--c-green);display:flex;align-items:center;justify-content:center;margin:0 auto 1.1rem}
+.success h2{font-family:var(--font-serif);color:var(--c-primary);font-size:1.6rem}
+.success .ref{display:inline-block;margin:1rem 0;background:var(--c-primary-soft);color:var(--c-primary);font-weight:700;border-radius:8px;padding:.5rem 1.2rem;font-size:1.05rem;letter-spacing:.04em}
+.success p{max-width:34rem;margin:.4rem auto}
+
+/* ---------- Footer ---------- */
+.site-foot{background:var(--c-primary-dark);color:#b8cadb;margin-top:1rem;font-size:.92rem}
+.site-foot .wrap{display:grid;grid-template-columns:2fr 1fr 1fr;gap:2rem;padding-top:2.2rem;padding-bottom:2.2rem}
+@media(max-width:720px){.site-foot .wrap{grid-template-columns:1fr}}
+.site-foot h4{color:#fff;font-size:1rem;margin-bottom:.6rem}
+.site-foot a{color:#b8cadb;text-decoration:none}
+.site-foot a:hover{color:#fff}
+.site-foot .legal{border-top:1px solid rgba(255,255,255,.12);padding:.8rem 1.25rem;text-align:center;font-size:.8rem;color:#7e93a5}
+
+/* ---------- Redaktion (Backend) ---------- */
+.adm-head{background:var(--c-primary-dark);color:#fff;border-bottom:3px solid var(--c-gold)}
+.adm-head .wrap{display:flex;align-items:center;gap:1rem;padding-top:.8rem;padding-bottom:.8rem}
+.adm-head .ttl{font-family:var(--font-serif);font-size:1.2rem;font-weight:700}
+.adm-head .ttl small{display:block;font-family:var(--font-sans);font-size:.78rem;font-weight:400;color:#9db3c4;letter-spacing:.08em;text-transform:uppercase}
+.adm-user{margin-left:auto;display:flex;align-items:center;gap:.6rem;font-size:.9rem;color:#cfdce8}
+.adm-user .avatar{width:34px;height:34px;border-radius:50%;background:var(--c-gold);color:#2b2306;font-weight:700;display:flex;align-items:center;justify-content:center}
+.adm-main{padding:1.8rem 0 3rem}
+.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.4rem}
+.stat{padding:1rem 1.2rem}
+.stat .v{font-size:1.7rem;font-weight:700;color:var(--c-primary);font-family:var(--font-serif)}
+.stat .l{font-size:.85rem;color:var(--c-muted)}
+.deadlinebar{display:flex;align-items:center;gap:.8rem;padding:.8rem 1.2rem;margin-bottom:1.4rem;background:var(--c-gold-soft);border:1px solid #e7d9ad;border-radius:var(--radius);font-size:.93rem}
+.toolbar{display:flex;gap:.8rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap}
+.toolbar input[type=search]{border:1px solid var(--c-line);border-radius:8px;padding:.5rem .8rem;min-width:220px;background:#fff}
+.toolbar select{border:1px solid var(--c-line);border-radius:8px;padding:.5rem .6rem;background:#fff}
+.toolbar .spacer{flex:1}
+table.list{width:100%;border-collapse:collapse;background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);font-size:.95rem}
+table.list th{background:var(--c-primary);color:#fff;text-align:left;font-size:.82rem;letter-spacing:.05em;text-transform:uppercase;padding:.7rem .9rem}
+table.list td{padding:.75rem .9rem;border-top:1px solid var(--c-line);vertical-align:middle}
+table.list tbody tr{cursor:pointer}
+table.list tbody tr:hover{background:var(--c-primary-soft)}
+.listwrap{overflow-x:auto;border-radius:var(--radius)}
+.tbl-title{font-weight:700;color:var(--c-primary)}
+.tbl-sub{font-size:.8rem;color:var(--c-muted)}
+
+/* Detail */
+.det-top{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.det-top h2{font-family:var(--font-serif);color:var(--c-primary);font-size:1.5rem;line-height:1.25}
+.det-cols{display:grid;grid-template-columns:1.9fr 1fr;gap:1.4rem;align-items:start}
+@media(max-width:900px){.det-cols{grid-template-columns:1fr}}
+.det-sec{padding:1.4rem 1.6rem;margin-bottom:1.4rem}
+.det-sec h3{font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--c-muted);margin-bottom:.8rem}
+.det-sec .lede{font-weight:600;font-style:italic;color:#3d4c59;margin-bottom:.8rem}
+.det-sec p+p{margin-top:.7rem}
+.credit{margin-top:1rem;padding-top:.8rem;border-top:1px dashed var(--c-line);font-size:.88rem;color:var(--c-muted)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:.35rem .9rem;font-size:.93rem}
+.kv dt{color:var(--c-muted)}
+.kv dd{font-weight:600}
+.fotogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.8rem}
+.foto{border:1px solid var(--c-line);border-radius:8px;overflow:hidden;background:#fff}
+.foto .ph{aspect-ratio:4/3;background:linear-gradient(135deg,#31536f,#5b7f9a);display:flex;align-items:center;justify-content:center;color:#cfdce8}
+.foto img.ph{object-fit:cover;width:100%;display:block}
+.foto .fm{padding:.4rem .55rem;font-size:.74rem;color:var(--c-muted);line-height:1.35}
+.foto .fm b{display:block;color:var(--c-ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.78rem}
+.foto .dl{display:block;text-align:center;font-size:.78rem;font-weight:700;color:var(--c-primary);padding:.35rem;border-top:1px solid var(--c-line);text-decoration:none}
+.foto .dl:hover{background:var(--c-primary-soft)}
+.statusrow{display:flex;gap:.5rem;flex-wrap:wrap}
+.statusrow button{border:1px solid var(--c-line);background:#fff;border-radius:999px;padding:.3rem .9rem;font-size:.85rem;font-weight:600;color:var(--c-muted)}
+.statusrow button.on.s-neu{background:var(--c-primary-soft);color:var(--c-primary);border-color:var(--c-primary)}
+.statusrow button.on.s-pruefung{background:var(--c-gold-soft);color:#8a6d1f;border-color:var(--c-gold)}
+.statusrow button.on.s-rueckfrage{background:var(--c-orange-soft);color:var(--c-orange);border-color:var(--c-orange)}
+.statusrow button.on.s-freigegeben{background:var(--c-green-soft);color:var(--c-green);border-color:var(--c-green)}
+.timeline{list-style:none;display:flex;flex-direction:column;gap:.7rem;font-size:.88rem}
+.timeline li{border-left:3px solid var(--c-line);padding:.1rem 0 .1rem .8rem}
+.timeline li.t-rueckfrage{border-color:var(--c-orange)}
+.timeline li.t-antwort{border-color:var(--c-green)}
+.timeline li.t-notiz{border-color:var(--c-gold)}
+.timeline .tw{font-weight:700}
+.timeline .tt{color:var(--c-muted);font-size:.78rem}
+.askbox textarea{width:100%;border:1px solid var(--c-line);border-radius:8px;padding:.6rem .8rem;min-height:5rem;resize:vertical}
+.askbox textarea:focus{outline:3px solid var(--c-gold-soft);border-color:var(--c-gold)}
+
+/* ---------- Toast ---------- */
+#toast{position:fixed;bottom:1.4rem;left:50%;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;padding:.7rem 1.3rem;border-radius:8px;font-size:.92rem;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:100;max-width:min(92vw,540px);text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- ================= Demo-Leiste ================= -->
+<div class="demobar">
+  <span class="tag">KLICK-DUMMY</span>
+  <span>Gemeindezeitung Schruns · Beitragsportal &amp; Redaktion</span>
+  <span class="spacer"></span>
+  <button id="btnViewPortal" class="active" onclick="switchView('portal')">Vereinsportal</button>
+  <button id="btnViewAdmin" onclick="switchView('admin')">Redaktion (Backend)</button>
+  <button class="ghost" onclick="resetDemo()" title="Demodaten zurücksetzen">↺ Demo zurücksetzen</button>
+</div>
+
+<!-- ============================================================
+     ANSICHT 1: VEREINSPORTAL
+     ============================================================ -->
+<div id="view-portal">
+
+  <div class="site-top">
+    <div class="wrap">
+      <a href="#">Kontakt</a><a href="#">Amtstafel</a><a href="#">A&nbsp;A&nbsp;A</a>
+    </div>
+  </div>
+
+  <header class="site-head">
+    <div class="wrap">
+      <a class="brand" href="#">
+        <!-- Wappen-Platzhalter (gekreuzte Schlüssel / Montafon) – wird durch das echte Gemeindewappen ersetzt -->
+        <svg width="52" height="60" viewBox="0 0 52 60" aria-label="Wappen (Platzhalter)">
+          <path d="M2 2h48v34c0 12-10 19-24 22C12 55 2 48 2 36Z" fill="#f2e9d0" stroke="#1b3a56" stroke-width="3" stroke-linejoin="round"/>
+          <g stroke="#1b3a56" stroke-width="3.4" stroke-linecap="round">
+            <line x1="15" y1="16" x2="37" y2="42"/>
+            <line x1="37" y1="16" x2="15" y2="42"/>
+          </g>
+          <circle cx="15" cy="16" r="5" fill="none" stroke="#c19a3d" stroke-width="3"/>
+          <circle cx="37" cy="16" r="5" fill="none" stroke="#c19a3d" stroke-width="3"/>
+          <path d="M33 38l4 4M19 38l-4 4" stroke="#c19a3d" stroke-width="3.4" stroke-linecap="round"/>
+        </svg>
+        <span>
+          <span class="brand-name">Marktgemeinde Schruns</span><br>
+          <span class="brand-sub">Im Montafon · Vorarlberg</span>
+        </span>
+      </a>
+      <nav class="mainnav">
+        <a href="#">Unsere Gemeinde</a>
+        <a href="#">Bürgerservice</a>
+        <a href="#">Verwaltung</a>
+        <a href="#">Freizeit</a>
+        <a href="#" class="here">Gemeindezeitung</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap">
+      <div class="crumb">Startseite&nbsp;›&nbsp;Aktuelles&nbsp;›&nbsp;Gemeindezeitung</div>
+      <h1>Ihr Beitrag für die Gemeindezeitung<br>Ausgabe November 2026</h1>
+      <p class="lead">Liebe Vereine und Institutionen! Hier können Sie Ihre Texte und Fotos
+        für die kommende Ausgabe der Schrunser Gemeindezeitung bequem online einreichen.</p>
+      <span class="deadline">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        Einsendeschluss: <b>Freitag, 2. Oktober 2026</b>
+      </span>
+    </div>
+    <svg class="mtn" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 120 90 60 180 95 320 30 430 85 560 15 700 90 820 45 950 100 1060 55 1200 90V120Z" fill="#fff"/></svg>
+  </section>
+
+  <main class="wrap">
+
+    <div class="stepper" id="stepper">
+      <div class="step active" data-step="1"><span class="num">1</span><span class="lbl">Verein &amp; Ansprechperson</span></div>
+      <div class="step" data-step="2"><span class="num">2</span><span class="lbl">Beitrag &amp; Fotos</span></div>
+      <div class="step" data-step="3"><span class="num">3</span><span class="lbl">Fertig</span></div>
+    </div>
+
+    <!-- ---------- Schritt 1 ---------- -->
+    <section class="card formcard" id="step1">
+      <h2>Verein &amp; Ansprechperson</h2>
+      <p class="sub">Damit wir bei Rückfragen wissen, an wen wir uns wenden dürfen.</p>
+      <div class="grid2">
+        <div class="field wide" id="f-verein">
+          <label>Verein / Organisation <span class="req">*</span></label>
+          <input type="text" id="i-verein" placeholder="z. B. Musikverein Schruns">
+          <span class="err">Bitte den Namen des Vereins angeben.</span>
+        </div>
+        <div class="field" id="f-vorname">
+          <label>Vorname <span class="req">*</span></label>
+          <input type="text" id="i-vorname" placeholder="Vorname">
+          <span class="err">Bitte Vornamen angeben.</span>
+        </div>
+        <div class="field" id="f-nachname">
+          <label>Nachname <span class="req">*</span></label>
+          <input type="text" id="i-nachname" placeholder="Nachname">
+          <span class="err">Bitte Nachnamen angeben.</span>
+        </div>
+        <div class="field" id="f-funktion">
+          <label>Funktion im Verein</label>
+          <input type="text" id="i-funktion" placeholder="z. B. Schriftführerin, Obmann …">
+        </div>
+        <div class="field" id="f-telefon">
+          <label>Telefon</label>
+          <input type="tel" id="i-telefon" placeholder="+43 …">
+        </div>
+        <div class="field wide" id="f-email">
+          <label>E-Mail-Adresse <span class="req">*</span></label>
+          <input type="email" id="i-email" placeholder="name@verein.at">
+          <span class="hint">An diese Adresse senden wir die Eingangsbestätigung und allfällige Rückfragen der Redaktion.</span>
+          <span class="err">Bitte eine gültige E-Mail-Adresse angeben.</span>
+        </div>
+      </div>
+      <div class="formfoot">
+        <span class="small muted"><span class="req">*</span> Pflichtfelder</span>
+        <button class="btn btn-primary" onclick="gotoStep2()">Weiter zu Beitrag &amp; Fotos&ensp;→</button>
+      </div>
+    </section>
+
+    <!-- ---------- Schritt 2 ---------- -->
+    <section class="card formcard hidden" id="step2">
+      <h2>Ihr Beitrag</h2>
+      <p class="sub">Titel, Einleitung und Text – die Redaktion behält sich Kürzungen vor.</p>
+      <div class="grid2">
+        <div class="field wide" id="f-titel">
+          <label>Titel / Überschrift <span class="req">*</span></label>
+          <input type="text" id="i-titel" maxlength="90" placeholder="z. B. Ein Sommer voller Blasmusik" oninput="count(this,'c-titel',90)">
+          <div class="counter" id="c-titel">0 / 90 Zeichen</div>
+          <span class="err">Bitte einen Titel angeben.</span>
+        </div>
+        <div class="field wide" id="f-einleitung">
+          <label>Einleitung / Kurzzusammenfassung</label>
+          <textarea id="i-einleitung" maxlength="300" placeholder="2–3 Sätze, die Lust auf den Beitrag machen …" oninput="count(this,'c-einleitung',300)"></textarea>
+          <div class="counter" id="c-einleitung">0 / 300 Zeichen</div>
+        </div>
+        <div class="field wide" id="f-text">
+          <label>Text <span class="req">*</span></label>
+          <textarea id="i-text" rows="9" placeholder="Ihr Beitrag für die Gemeindezeitung …" oninput="countText(this)"></textarea>
+          <div class="counter" id="c-text">0 Zeichen · Richtwert: max. 2.500 Zeichen</div>
+          <span class="err">Bitte einen Text eingeben.</span>
+        </div>
+        <div class="field wide" id="f-credit">
+          <label>Hinweis zu Texter:in / Fotograf:in</label>
+          <input type="text" id="i-credit" placeholder="z. B. Text: Maria Muster · Fotos: Hans Beispiel">
+          <span class="hint">Wird als Namensnennung beim Beitrag abgedruckt.</span>
+        </div>
+      </div>
+
+      <div class="infobox">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b26a00" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16.5v.5"/></svg>
+        <div>
+          <b>Wichtig für die Druckqualität:</b> Bitte laden Sie Ihre Fotos <b>unbearbeitet in Originalgröße</b> hoch
+          (direkt von der Kamera bzw. vom Handy in Originalauflösung) – <u>keine</u> verkleinerten Bilder aus
+          WhatsApp oder E-Mail-Anhängen. Nur so erreichen wir die beste Qualität für den Druck.
+        </div>
+      </div>
+
+      <div class="field wide">
+        <label>Fotos hochladen <span class="hint">(JPG, PNG, HEIC · max. 10 Fotos · je max. 25 MB)</span></label>
+        <div class="dropzone" id="dropzone" onclick="document.getElementById('i-fotos').click()">
+          <div class="ico">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M12 3v12"/><path d="m7 8 5-5 5 5"/></svg>
+          </div>
+          <b>Fotos hierher ziehen</b> oder klicken, um Dateien auszuwählen
+          <div class="small" style="margin-top:.3rem">Die Originaldatei wird unverändert übertragen.</div>
+        </div>
+        <input type="file" id="i-fotos" accept="image/*" multiple class="hidden">
+        <ul class="filelist" id="filelist"></ul>
+      </div>
+
+      <div class="checkline" id="f-rechte">
+        <input type="checkbox" id="i-rechte">
+        <label for="i-rechte">Ich bestätige, dass der Verein über die erforderlichen <b>Bild- und Textrechte</b> verfügt, die
+          abgebildeten Personen mit einer Veröffentlichung einverstanden sind und der Beitrag in der
+          Gemeindezeitung sowie auf schruns.at veröffentlicht werden darf. <span class="req">*</span></label>
+      </div>
+
+      <div class="formfoot">
+        <button class="btn btn-ghost" onclick="showStep(1)">←&ensp;Zurück</button>
+        <button class="btn btn-gold" onclick="submitEntry()">Beitrag absenden&ensp;✓</button>
+      </div>
+    </section>
+
+    <!-- ---------- Schritt 3 ---------- -->
+    <section class="card success hidden" id="step3">
+      <div class="okring">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m4.5 12.5 5 5 10-11"/></svg>
+      </div>
+      <h2>Vielen Dank für Ihren Beitrag!</h2>
+      <div class="ref" id="refnr">Referenz: GZ-2026-000</div>
+      <p id="successSummary">Ihr Beitrag wurde an die Redaktion der Gemeindezeitung übermittelt.</p>
+      <p class="muted small">Sie erhalten in Kürze eine Bestätigung per E-Mail. Bei Rückfragen meldet sich die
+        Redaktion direkt bei Ihrer angegebenen Ansprechperson.</p>
+      <p style="margin-top:1.4rem">
+        <button class="btn btn-outline" onclick="newEntry()">Weiteren Beitrag einreichen</button>
+        &nbsp;
+        <button class="btn btn-primary" onclick="switchView('admin')">Zur Redaktionsansicht (Demo)</button>
+      </p>
+    </section>
+
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <div>
+        <h4>Marktgemeinde Schruns</h4>
+        Kirchplatz 2, 6780 Schruns<br>
+        T <a href="tel:+43555672435">+43 5556 72435</a><br>
+        <a href="mailto:gemeinde@schruns.at">gemeinde@schruns.at</a>
+      </div>
+      <div>
+        <h4>Amtszeiten</h4>
+        Mo – Fr: 8.00 – 12.00 Uhr<br>
+        Do zusätzlich: 14.00 – 18.00 Uhr
+      </div>
+      <div>
+        <h4>Rechtliches</h4>
+        <a href="#">Impressum</a><br>
+        <a href="#">Datenschutz</a><br>
+        <a href="#">Barrierefreiheit</a>
+      </div>
+    </div>
+    <div class="legal">© 2026 Marktgemeinde Schruns · Klick-Dummy, keine echte Datenübermittlung</div>
+  </footer>
+</div>
+
+<!-- ============================================================
+     ANSICHT 2: REDAKTION (BACKEND)
+     ============================================================ -->
+<div id="view-admin" class="hidden">
+
+  <header class="adm-head">
+    <div class="wrap">
+      <svg width="38" height="44" viewBox="0 0 52 60" aria-hidden="true">
+        <path d="M2 2h48v34c0 12-10 19-24 22C12 55 2 48 2 36Z" fill="#f2e9d0" stroke="#c19a3d" stroke-width="3" stroke-linejoin="round"/>
+        <g stroke="#1b3a56" stroke-width="3.4" stroke-linecap="round"><line x1="15" y1="16" x2="37" y2="42"/><line x1="37" y1="16" x2="15" y2="42"/></g>
+        <circle cx="15" cy="16" r="5" fill="none" stroke="#c19a3d" stroke-width="3"/>
+        <circle cx="37" cy="16" r="5" fill="none" stroke="#c19a3d" stroke-width="3"/>
+      </svg>
+      <div class="ttl">Gemeindezeitung · Redaktion<small>Ausgabe November 2026</small></div>
+      <div class="adm-user">
+        <span>Redaktionsteam</span>
+        <span class="avatar">MS</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="adm-main wrap">
+
+    <!-- Liste -->
+    <div id="adm-list">
+      <div class="statgrid" id="statgrid"></div>
+
+      <div class="deadlinebar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8a6d1f" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <span>Einsendeschluss <b>2. Oktober 2026</b> · Druckfreigabe geplant für <b>23. Oktober 2026</b> · Erscheinung <b>November 2026</b></span>
+      </div>
+
+      <div class="toolbar">
+        <input type="search" id="q" placeholder="Suchen (Verein, Titel …)" oninput="renderList()">
+        <select id="fstatus" onchange="renderList()">
+          <option value="">Alle Status</option>
+          <option value="neu">Neu</option>
+          <option value="pruefung">In Prüfung</option>
+          <option value="rueckfrage">Rückfrage offen</option>
+          <option value="freigegeben">Freigegeben</option>
+        </select>
+        <span class="spacer"></span>
+        <button class="btn btn-primary btn-sm" onclick="downloadAll()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/></svg>
+          Alle Fotos als ZIP
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="toast('Export als Word/PDF – im Dummy simuliert.')">Texte exportieren</button>
+      </div>
+
+      <div class="listwrap">
+        <table class="list">
+          <thead><tr>
+            <th>Ref.</th><th>Verein / Titel</th><th>Eingereicht</th><th>Fotos</th><th>Status</th><th></th>
+          </tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <p class="small muted" style="margin-top:.7rem" id="listcount"></p>
+    </div>
+
+    <!-- Detail -->
+    <div id="adm-detail" class="hidden">
+      <div class="det-top">
+        <button class="btn btn-ghost btn-sm" onclick="closeDetail()">←&ensp;Zur Übersicht</button>
+        <div style="flex:1">
+          <h2 id="d-titel"></h2>
+          <div class="muted small" id="d-meta"></div>
+        </div>
+        <span class="badge" id="d-badge"></span>
+      </div>
+
+      <div class="det-cols">
+        <div>
+          <section class="card det-sec">
+            <h3>Beitragstext</h3>
+            <p class="lede" id="d-einleitung"></p>
+            <div id="d-text"></div>
+            <div class="credit" id="d-credit"></div>
+          </section>
+
+          <section class="card det-sec">
+            <h3 id="d-fotocount">Fotos</h3>
+            <div class="fotogrid" id="d-fotos"></div>
+            <p style="margin-top:1rem">
+              <button class="btn btn-primary btn-sm" onclick="downloadEntryPhotos()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/></svg>
+                Fotos dieses Beitrags als ZIP
+              </button>
+              <span class="small muted" id="d-fotosum" style="margin-left:.6rem"></span>
+            </p>
+          </section>
+        </div>
+
+        <div>
+          <section class="card det-sec">
+            <h3>Einsender:in</h3>
+            <dl class="kv" id="d-kontakt"></dl>
+          </section>
+
+          <section class="card det-sec">
+            <h3>Status</h3>
+            <div class="statusrow" id="d-status">
+              <button class="s-neu" onclick="setStatus('neu')">Neu</button>
+              <button class="s-pruefung" onclick="setStatus('pruefung')">In Prüfung</button>
+              <button class="s-rueckfrage" onclick="setStatus('rueckfrage')">Rückfrage</button>
+              <button class="s-freigegeben" onclick="setStatus('freigegeben')">Freigegeben</button>
+            </div>
+          </section>
+
+          <section class="card det-sec askbox">
+            <h3>Rückfrage an den Verein</h3>
+            <textarea id="askText" placeholder="Ihre Rückfrage … (wird per E-Mail an die Ansprechperson gesendet)"></textarea>
+            <p style="margin-top:.7rem;display:flex;gap:.6rem;flex-wrap:wrap">
+              <button class="btn btn-gold btn-sm" onclick="sendAsk()">Rückfrage senden</button>
+              <button class="btn btn-ghost btn-sm" onclick="addNote()">Als interne Notiz speichern</button>
+            </p>
+          </section>
+
+          <section class="card det-sec">
+            <h3>Verlauf</h3>
+            <ul class="timeline" id="d-verlauf"></ul>
+          </section>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* =========================================================
+   Klick-Dummy – reine Frontend-Simulation, keine Server-Calls.
+   Einreichungen werden in localStorage gehalten, damit neu
+   abgeschickte Beiträge in der Redaktionsansicht auftauchen.
+   ========================================================= */
+'use strict';
+
+const STORE_KEY = 'gz-schruns-dummy-v1';
+const STATUS_LABEL = {neu:'Neu', pruefung:'In Prüfung', rueckfrage:'Rückfrage offen', freigegeben:'Freigegeben'};
+
+const DEMO_DATA = [
+  {
+    ref:'GZ-2026-001', verein:'Musikverein Schruns', vorname:'Elisabeth', nachname:'Bitschnau',
+    funktion:'Schriftführerin', email:'schriftfuehrung@mv-schruns.at', telefon:'+43 664 1234567',
+    titel:'Ein Sommer voller Blasmusik',
+    einleitung:'Von der Platzkonzert-Saison am Kirchplatz bis zum Bezirksmusikfest – der Musikverein Schruns blickt auf einen klingenden Sommer zurück.',
+    text:'Die Sommermonate standen für den Musikverein Schruns ganz im Zeichen der Blasmusik. Bei insgesamt acht Platzkonzerten am Kirchplatz durften wir zahlreiche Gäste aus nah und fern begrüßen.\n\nEin besonderer Höhepunkt war die Teilnahme am Bezirksmusikfest in Vandans, bei dem unsere Jungmusikantinnen und Jungmusikanten erstmals in Tracht aufmarschierten. Im Herbst starten wir mit den Proben für das Jahreskonzert – wir freuen uns schon jetzt auf Ihren Besuch!',
+    credit:'Text: Elisabeth Bitschnau · Fotos: Werner Ganahl',
+    eingereicht:'2026-08-19T09:24:00', status:'freigegeben',
+    fotos:[
+      {name:'platzkonzert_kirchplatz_01.jpg', w:6000, h:4000, size:8.4},
+      {name:'platzkonzert_kirchplatz_02.jpg', w:6000, h:4000, size:7.9},
+      {name:'bezirksmusikfest_aufmarsch.jpg', w:5472, h:3648, size:6.2},
+      {name:'jungmusikanten_gruppenfoto.jpg', w:6000, h:4000, size:9.1},
+      {name:'dirigent_interview.jpg', w:4032, h:3024, size:4.8}
+    ],
+    verlauf:[
+      {ts:'2026-08-19T09:24:00', who:'System', type:'system', text:'Beitrag eingereicht.'},
+      {ts:'2026-08-20T08:10:00', who:'Redaktion', type:'status', text:'Status geändert auf „In Prüfung“.'},
+      {ts:'2026-08-21T14:32:00', who:'Redaktion', type:'status', text:'Status geändert auf „Freigegeben“.'}
+    ]
+  },
+  {
+    ref:'GZ-2026-002', verein:'Trachtengruppe Schruns', vorname:'Marlene', nachname:'Tschofen',
+    funktion:'Obfrau', email:'obfrau@trachtengruppe-schruns.at', telefon:'+43 650 9876543',
+    titel:'50 Jahre Trachtengruppe – ein Jubiläum für ganz Schruns',
+    einleitung:'Ein halbes Jahrhundert gelebtes Brauchtum: Die Trachtengruppe Schruns feierte ihr 50-Jahr-Jubiläum mit einem großen Fest.',
+    text:'Was 1976 mit einer Handvoll begeisterter Trachtlerinnen und Trachtler begann, ist heute ein fester Bestandteil des Schrunser Vereinslebens. Beim Jubiläumsfest im Juli durften wir befreundete Gruppen aus dem gesamten Montafon sowie aus unserer Partnergemeinde begrüßen.\n\nBesonders stolz sind wir auf unsere Kindergruppe, die mit ihrem Auftritt die Herzen des Publikums im Sturm eroberte. Ein herzliches Vergelt’s Gott allen Helferinnen und Helfern!',
+    credit:'Text: Marlene Tschofen',
+    eingereicht:'2026-08-21T16:45:00', status:'rueckfrage',
+    fotos:[
+      {name:'jubilaeumsfest_festumzug.jpg', w:6720, h:4480, size:11.2},
+      {name:'kindergruppe_auftritt.jpg', w:1280, h:960, size:0.4},
+      {name:'ehrengaeste_buehne.jpg', w:5184, h:3456, size:5.7}
+    ],
+    verlauf:[
+      {ts:'2026-08-21T16:45:00', who:'System', type:'system', text:'Beitrag eingereicht.'},
+      {ts:'2026-08-22T10:05:00', who:'Redaktion', type:'rueckfrage', text:'Rückfrage gesendet: „Liebe Frau Tschofen, das Foto ‚kindergruppe_auftritt.jpg‘ ist leider zu klein für den Druck (nur 1280 px). Könnten Sie uns das Original in voller Auflösung schicken? Außerdem fehlt der Fotografen-Hinweis. Danke!“'}
+    ]
+  },
+  {
+    ref:'GZ-2026-003', verein:'FC Schruns', vorname:'Michael', nachname:'Salzgeber',
+    funktion:'Jugendleiter', email:'jugend@fc-schruns.at', telefon:'',
+    titel:'Erfolgreicher Saisonstart unserer Jugendmannschaften',
+    einleitung:'Über 120 Kinder und Jugendliche jagen beim FC Schruns dem runden Leder nach – und das mit beachtlichem Erfolg.',
+    text:'Mit dem Ende der Sommerpause sind unsere sieben Jugendmannschaften wieder voll im Trainings- und Spielbetrieb. Die U12 konnte ihre ersten drei Meisterschaftsspiele allesamt gewinnen.\n\nEin großes Dankeschön gilt unseren ehrenamtlichen Trainerinnen und Trainern sowie allen Eltern, die unsere jungen Kicker Woche für Woche unterstützen. Kinder, die Lust auf Fußball haben, sind jederzeit herzlich zum Schnuppertraining eingeladen – einfach dienstags um 17 Uhr auf der Sportanlage vorbeischauen!',
+    credit:'Text: Michael Salzgeber · Fotos: Petra Netzer',
+    eingereicht:'2026-08-23T20:12:00', status:'neu',
+    fotos:[
+      {name:'u12_meisterschaft_torjubel.jpg', w:6000, h:4000, size:7.6},
+      {name:'u10_training.jpg', w:6000, h:4000, size:8.8},
+      {name:'trainerteam_2026.jpg', w:5472, h:3648, size:6.4},
+      {name:'schnuppertraining_flyerfoto.jpg', w:4000, h:6000, size:9.3}
+    ],
+    verlauf:[
+      {ts:'2026-08-23T20:12:00', who:'System', type:'system', text:'Beitrag eingereicht.'}
+    ]
+  },
+  {
+    ref:'GZ-2026-004', verein:'Bergrettung Schruns', vorname:'Thomas', nachname:'Vallaster',
+    funktion:'Ortsstellenleiter', email:'schruns@bergrettung-vbg.at', telefon:'+43 664 5551234',
+    titel:'Übungssommer der Bergrettung: bereit für den Ernstfall',
+    einleitung:'Von der Seilbahn-Evakuierung bis zur nächtlichen Suchaktion – die Bergrettung Schruns trainierte den Ernstfall.',
+    text:'Auch heuer nutzte die Ortsstelle Schruns die Sommermonate für ein intensives Übungsprogramm. Gemeinsam mit der Ortsstelle Tschagguns wurde unter anderem die Evakuierung einer Seilbahn geprobt.\n\nErfreulich: Drei neue Anwärterinnen und Anwärter haben ihre Ausbildung begonnen. Wir bedanken uns bei der Bevölkerung für die laufende Unterstützung.',
+    credit:'Text und Fotos: Bergrettung Schruns',
+    eingereicht:'2026-08-24T07:58:00', status:'pruefung',
+    fotos:[
+      {name:'seilbahn_evakuierung_uebung.jpg', w:6240, h:4160, size:10.5},
+      {name:'nachtuebung_suchkette.jpg', w:6240, h:4160, size:9.7}
+    ],
+    verlauf:[
+      {ts:'2026-08-24T07:58:00', who:'System', type:'system', text:'Beitrag eingereicht.'},
+      {ts:'2026-08-24T11:20:00', who:'Redaktion', type:'status', text:'Status geändert auf „In Prüfung“.'},
+      {ts:'2026-08-24T11:22:00', who:'Redaktion', type:'notiz', text:'Interne Notiz: Evtl. mit Beitrag der Feuerwehr auf einer Doppelseite „Sicherheit“ bündeln.'}
+    ]
+  }
+];
+
+/* ---------- Datenhaltung ---------- */
+let entries = [];
+function loadStore(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw){ entries = JSON.parse(raw); return; }
+  }catch(e){}
+  entries = JSON.parse(JSON.stringify(DEMO_DATA));
+  saveStore();
+}
+function saveStore(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(entries)); }catch(e){}
+}
+function resetDemo(){
+  try{ localStorage.removeItem(STORE_KEY); }catch(e){}
+  entries = JSON.parse(JSON.stringify(DEMO_DATA));
+  saveStore();
+  uploads = [];
+  renderFilelist();
+  document.querySelectorAll('#view-portal input[type=text],#view-portal input[type=email],#view-portal input[type=tel],#view-portal textarea').forEach(i=>i.value='');
+  document.getElementById('i-rechte').checked = false;
+  showStep(1); closeDetail(); renderList();
+  toast('Demodaten wurden zurückgesetzt.');
+}
+
+/* ---------- Hilfen ---------- */
+function fmtMB(mb){ return mb.toLocaleString('de-AT',{minimumFractionDigits:1, maximumFractionDigits:1}) + ' MB'; }
+function fmtDate(iso){
+  const d = new Date(iso);
+  return d.toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit',year:'numeric'}) + ', ' +
+         d.toLocaleTimeString('de-AT',{hour:'2-digit',minute:'2-digit'}) + ' Uhr';
+}
+function esc(s){ return String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 3600);
+}
+
+/* ---------- Ansichten ---------- */
+function switchView(v){
+  document.getElementById('view-portal').classList.toggle('hidden', v!=='portal');
+  document.getElementById('view-admin').classList.toggle('hidden', v!=='admin');
+  document.getElementById('btnViewPortal').classList.toggle('active', v==='portal');
+  document.getElementById('btnViewAdmin').classList.toggle('active', v==='admin');
+  if(v==='admin'){ closeDetail(); renderList(); }
+  window.scrollTo({top:0});
+}
+
+/* ---------- Portal: Stepper & Validierung ---------- */
+function showStep(n){
+  [1,2,3].forEach(i=>{
+    document.getElementById('step'+i).classList.toggle('hidden', i!==n);
+    const s = document.querySelector('.step[data-step="'+i+'"]');
+    s.classList.toggle('active', i===n);
+    s.classList.toggle('done', i<n);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function invalid(fid, bad){
+  document.getElementById(fid).classList.toggle('invalid', bad);
+  return bad;
+}
+function gotoStep2(){
+  let bad = false;
+  bad = invalid('f-verein', !document.getElementById('i-verein').value.trim()) || bad;
+  bad = invalid('f-vorname', !document.getElementById('i-vorname').value.trim()) || bad;
+  bad = invalid('f-nachname', !document.getElementById('i-nachname').value.trim()) || bad;
+  const em = document.getElementById('i-email').value.trim();
+  bad = invalid('f-email', !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)) || bad;
+  if(bad){ toast('Bitte die markierten Pflichtfelder ausfüllen.'); return; }
+  showStep(2);
+}
+function count(el, cid, max){
+  const c = document.getElementById(cid);
+  c.textContent = el.value.length + ' / ' + max + ' Zeichen';
+  c.classList.toggle('warn', el.value.length >= max);
+}
+function countText(el){
+  const c = document.getElementById('c-text');
+  const n = el.value.length;
+  c.textContent = n.toLocaleString('de-AT') + ' Zeichen · Richtwert: max. 2.500 Zeichen';
+  c.classList.toggle('warn', n > 2500);
+}
+
+/* ---------- Portal: Foto-Upload ---------- */
+let uploads = []; // {name, size(MB), w, h, thumb(dataURL)}
+const dz = document.getElementById('dropzone');
+const fi = document.getElementById('i-fotos');
+['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev, e=>{e.preventDefault(); dz.classList.add('drag');}));
+['dragleave','drop'].forEach(ev=>dz.addEventListener(ev, e=>{e.preventDefault(); dz.classList.remove('drag');}));
+dz.addEventListener('drop', e=>handleFiles(e.dataTransfer.files));
+fi.addEventListener('change', ()=>{ handleFiles(fi.files); fi.value=''; });
+
+function handleFiles(list){
+  const files = Array.from(list).filter(f=>f.type.startsWith('image/'));
+  if(!files.length){ toast('Bitte nur Bilddateien hochladen.'); return; }
+  if(uploads.length + files.length > 10){ toast('Maximal 10 Fotos pro Beitrag.'); return; }
+  files.forEach(f=>{
+    if(f.size > 25*1024*1024){ toast('„'+f.name+'“ ist größer als 25 MB.'); return; }
+    const url = URL.createObjectURL(f);
+    const img = new Image();
+    img.onload = ()=>{
+      // kleines Vorschaubild für die Redaktionsansicht erzeugen (Original bleibt unverändert)
+      let thumb = '';
+      try{
+        const cv = document.createElement('canvas');
+        const sc = Math.min(1, 420/img.width);
+        cv.width = Math.round(img.width*sc); cv.height = Math.round(img.height*sc);
+        cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+        thumb = cv.toDataURL('image/jpeg', .7);
+      }catch(e){}
+      uploads.push({name:f.name, size:f.size/1048576, w:img.naturalWidth, h:img.naturalHeight, thumb});
+      URL.revokeObjectURL(url);
+      renderFilelist();
+    };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); toast('„'+f.name+'“ konnte nicht gelesen werden.'); };
+    img.src = url;
+  });
+}
+function removeUpload(i){ uploads.splice(i,1); renderFilelist(); }
+function renderFilelist(){
+  const ul = document.getElementById('filelist');
+  ul.innerHTML = uploads.map((u,i)=>{
+    const small = u.w < 2000 && u.h < 2000;
+    return `<li>
+      ${u.thumb ? `<img class="thumb" src="${u.thumb}" alt="">` : `<span class="thumb"></span>`}
+      <span class="fmeta">
+        <span class="fname">${esc(u.name)}</span>
+        <span class="fdim">${u.w.toLocaleString('de-AT')} × ${u.h.toLocaleString('de-AT')} px · ${fmtMB(u.size)}</span>
+      </span>
+      ${small ? '<span class="warn" title="Unter 2000 px – für den Druck möglicherweise zu klein">⚠ evtl. zu klein für Druck</span>'
+              : '<span class="ok" title="Auflösung ausreichend für den Druck">✓ druckfähig</span>'}
+      <button class="del" title="Entfernen" onclick="removeUpload(${i})">✕</button>
+    </li>`;
+  }).join('');
+}
+
+/* ---------- Portal: Absenden ---------- */
+function submitEntry(){
+  let bad = false;
+  bad = invalid('f-titel', !document.getElementById('i-titel').value.trim()) || bad;
+  bad = invalid('f-text', !document.getElementById('i-text').value.trim()) || bad;
+  const rechte = document.getElementById('i-rechte').checked;
+  document.getElementById('f-rechte').classList.toggle('invalid', !rechte);
+  if(bad || !rechte){ toast(bad ? 'Bitte die markierten Pflichtfelder ausfüllen.' : 'Bitte die Rechte-Bestätigung ankreuzen.'); return; }
+
+  const nr = entries.length + 1;
+  const ref = 'GZ-2026-' + String(nr).padStart(3,'0');
+  const entry = {
+    ref,
+    verein: document.getElementById('i-verein').value.trim(),
+    vorname: document.getElementById('i-vorname').value.trim(),
+    nachname: document.getElementById('i-nachname').value.trim(),
+    funktion: document.getElementById('i-funktion').value.trim(),
+    email: document.getElementById('i-email').value.trim(),
+    telefon: document.getElementById('i-telefon').value.trim(),
+    titel: document.getElementById('i-titel').value.trim(),
+    einleitung: document.getElementById('i-einleitung').value.trim(),
+    text: document.getElementById('i-text').value.trim(),
+    credit: document.getElementById('i-credit').value.trim(),
+    eingereicht: new Date().toISOString(),
+    status: 'neu',
+    fotos: uploads.map(u=>({name:u.name, w:u.w, h:u.h, size:u.size, thumb:u.thumb})),
+    verlauf: [{ts:new Date().toISOString(), who:'System', type:'system', text:'Beitrag eingereicht.'}]
+  };
+  entries.push(entry);
+  saveStore();
+
+  document.getElementById('refnr').textContent = 'Referenz: ' + ref;
+  document.getElementById('successSummary').textContent =
+    '„' + entry.titel + '“ (' + entry.verein + ') wurde mit ' + entry.fotos.length +
+    (entry.fotos.length===1?' Foto':' Fotos') + ' an die Redaktion übermittelt.';
+  showStep(3);
+  toast('Beitrag erfolgreich übermittelt (Demo).');
+}
+function newEntry(){
+  ['i-titel','i-einleitung','i-text','i-credit'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('i-rechte').checked = false;
+  uploads = []; renderFilelist();
+  count(document.getElementById('i-titel'),'c-titel',90);
+  count(document.getElementById('i-einleitung'),'c-einleitung',300);
+  countText(document.getElementById('i-text'));
+  showStep(2);
+}
+
+/* ---------- Redaktion: Liste ---------- */
+let currentRef = null;
+function renderList(){
+  const q = (document.getElementById('q').value||'').toLowerCase();
+  const fs = document.getElementById('fstatus').value;
+  const rows = entries
+    .slice().sort((a,b)=>b.eingereicht.localeCompare(a.eingereicht))
+    .filter(e=>(!fs || e.status===fs) && (!q || (e.verein+' '+e.titel+' '+e.ref).toLowerCase().includes(q)));
+
+  document.getElementById('tbody').innerHTML = rows.map(e=>`
+    <tr onclick="openDetail('${e.ref}')">
+      <td class="muted small">${e.ref}</td>
+      <td><span class="tbl-title">${esc(e.verein)}</span><br><span class="tbl-sub">${esc(e.titel)}</span></td>
+      <td class="small">${fmtDate(e.eingereicht)}</td>
+      <td>${e.fotos.length} <span class="muted small">(${fmtMB(e.fotos.reduce((s,f)=>s+f.size,0))})</span></td>
+      <td><span class="badge b-${e.status}">${STATUS_LABEL[e.status]}</span></td>
+      <td class="small" style="color:var(--c-primary);font-weight:700">Öffnen&nbsp;→</td>
+    </tr>`).join('') ||
+    '<tr><td colspan="6" class="muted" style="text-align:center;padding:2rem">Keine Einreichungen gefunden.</td></tr>';
+
+  document.getElementById('listcount').textContent = rows.length + ' von ' + entries.length + ' Einreichungen angezeigt.';
+
+  const nFotos = entries.reduce((s,e)=>s+e.fotos.length,0);
+  const mb = entries.reduce((s,e)=>s+e.fotos.reduce((x,f)=>x+f.size,0),0);
+  const cnt = st=>entries.filter(e=>e.status===st).length;
+  document.getElementById('statgrid').innerHTML = `
+    <div class="card stat"><div class="v">${entries.length}</div><div class="l">Einreichungen gesamt</div></div>
+    <div class="card stat"><div class="v">${cnt('neu')+cnt('pruefung')}</div><div class="l">Offen / in Prüfung</div></div>
+    <div class="card stat"><div class="v">${cnt('rueckfrage')}</div><div class="l">Rückfragen offen</div></div>
+    <div class="card stat"><div class="v">${cnt('freigegeben')}</div><div class="l">Freigegeben</div></div>
+    <div class="card stat"><div class="v">${nFotos}</div><div class="l">Fotos · ${fmtMB(mb)}</div></div>`;
+}
+
+/* ---------- Redaktion: Detail ---------- */
+function openDetail(ref){
+  currentRef = ref;
+  const e = entries.find(x=>x.ref===ref); if(!e) return;
+  document.getElementById('adm-list').classList.add('hidden');
+  document.getElementById('adm-detail').classList.remove('hidden');
+
+  document.getElementById('d-titel').textContent = e.titel;
+  document.getElementById('d-meta').textContent = e.ref + ' · ' + e.verein + ' · eingereicht am ' + fmtDate(e.eingereicht);
+  document.getElementById('d-einleitung').textContent = e.einleitung || '';
+  document.getElementById('d-einleitung').style.display = e.einleitung ? '' : 'none';
+  document.getElementById('d-text').innerHTML = e.text.split(/\n{2,}/).map(p=>'<p>'+esc(p).replace(/\n/g,'<br>')+'</p>').join('');
+  document.getElementById('d-credit').textContent = e.credit ? e.credit : 'Kein Texter-/Fotografen-Hinweis angegeben.';
+  document.getElementById('d-kontakt').innerHTML = `
+    <dt>Verein</dt><dd>${esc(e.verein)}</dd>
+    <dt>Name</dt><dd>${esc(e.vorname)} ${esc(e.nachname)}</dd>
+    ${e.funktion?`<dt>Funktion</dt><dd>${esc(e.funktion)}</dd>`:''}
+    <dt>E-Mail</dt><dd><a href="mailto:${esc(e.email)}">${esc(e.email)}</a></dd>
+    ${e.telefon?`<dt>Telefon</dt><dd>${esc(e.telefon)}</dd>`:''}`;
+  renderDetailStatus(e);
+  renderFotos(e);
+  renderVerlauf(e);
+  document.getElementById('askText').value='';
+  window.scrollTo({top:0});
+}
+function closeDetail(){
+  currentRef = null;
+  document.getElementById('adm-detail').classList.add('hidden');
+  document.getElementById('adm-list').classList.remove('hidden');
+  renderList();
+}
+function renderDetailStatus(e){
+  document.getElementById('d-badge').className = 'badge b-'+e.status;
+  document.getElementById('d-badge').textContent = STATUS_LABEL[e.status];
+  document.querySelectorAll('#d-status button').forEach(b=>{
+    b.classList.toggle('on', b.classList.contains('s-'+e.status));
+  });
+}
+function renderFotos(e){
+  document.getElementById('d-fotocount').textContent = 'Fotos ('+e.fotos.length+')';
+  document.getElementById('d-fotos').innerHTML = e.fotos.map(f=>{
+    const small = f.w < 2000 && f.h < 2000;
+    const ph = f.thumb
+      ? `<img class="ph" src="${f.thumb}" alt="">`
+      : `<div class="ph"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3.5"/><path d="M8 5l1.2-2h5.6L16 5"/></svg></div>`;
+    return `<div class="foto">${ph}
+      <div class="fm"><b title="${esc(f.name)}">${esc(f.name)}</b>
+        ${f.w.toLocaleString('de-AT')} × ${f.h.toLocaleString('de-AT')} px · ${fmtMB(f.size)}
+        ${small?'<br><span style="color:var(--c-orange);font-weight:700">⚠ evtl. zu klein für Druck</span>':''}
+      </div>
+      <a class="dl" href="#" onclick="event.preventDefault();toast('Download der Originaldatei – im Dummy simuliert.')">Original laden</a>
+    </div>`;
+  }).join('') || '<p class="muted small">Keine Fotos hochgeladen.</p>';
+  const mb = e.fotos.reduce((s,f)=>s+f.size,0);
+  document.getElementById('d-fotosum').textContent = e.fotos.length ? 'Gesamt: '+fmtMB(mb)+' (Originaldateien)' : '';
+}
+function renderVerlauf(e){
+  document.getElementById('d-verlauf').innerHTML = e.verlauf.slice().reverse().map(v=>`
+    <li class="t-${v.type}">
+      <span class="tw">${esc(v.who)}</span> <span class="tt">· ${fmtDate(v.ts)}</span><br>${esc(v.text)}
+    </li>`).join('');
+}
+function setStatus(st){
+  const e = entries.find(x=>x.ref===currentRef); if(!e || e.status===st) return;
+  e.status = st;
+  e.verlauf.push({ts:new Date().toISOString(), who:'Redaktion', type:'status', text:'Status geändert auf „'+STATUS_LABEL[st]+'“.'});
+  saveStore(); renderDetailStatus(e); renderVerlauf(e);
+  toast('Status: '+STATUS_LABEL[st]);
+}
+function sendAsk(){
+  const e = entries.find(x=>x.ref===currentRef); if(!e) return;
+  const t = document.getElementById('askText').value.trim();
+  if(!t){ toast('Bitte zuerst eine Rückfrage formulieren.'); return; }
+  e.verlauf.push({ts:new Date().toISOString(), who:'Redaktion', type:'rueckfrage', text:'Rückfrage gesendet: „'+t+'“'});
+  e.status = 'rueckfrage';
+  saveStore(); renderDetailStatus(e); renderVerlauf(e);
+  document.getElementById('askText').value='';
+  toast('Rückfrage per E-Mail an '+e.email+' gesendet (Demo).');
+}
+function addNote(){
+  const e = entries.find(x=>x.ref===currentRef); if(!e) return;
+  const t = document.getElementById('askText').value.trim();
+  if(!t){ toast('Bitte zuerst einen Notiztext eingeben.'); return; }
+  e.verlauf.push({ts:new Date().toISOString(), who:'Redaktion', type:'notiz', text:'Interne Notiz: '+t});
+  saveStore(); renderVerlauf(e);
+  document.getElementById('askText').value='';
+  toast('Interne Notiz gespeichert.');
+}
+function downloadAll(){
+  const n = entries.reduce((s,e)=>s+e.fotos.length,0);
+  const mb = entries.reduce((s,e)=>s+e.fotos.reduce((x,f)=>x+f.size,0),0);
+  toast('ZIP-Download gestartet: '+n+' Fotos ('+fmtMB(mb)+'), sortiert nach Verein – im Dummy simuliert.');
+}
+function downloadEntryPhotos(){
+  const e = entries.find(x=>x.ref===currentRef); if(!e) return;
+  const mb = e.fotos.reduce((s,f)=>s+f.size,0);
+  toast('ZIP-Download: '+e.fotos.length+' Fotos von „'+e.verein+'“ ('+fmtMB(mb)+') – im Dummy simuliert.');
+}
+
+/* ---------- Start ---------- */
+loadStore();
+renderList();
+</script>
+</body>
+</html>
