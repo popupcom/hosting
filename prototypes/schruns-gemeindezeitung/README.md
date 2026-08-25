@@ -16,9 +16,15 @@ Der Dummy ist eine einzelne, in sich geschlossene HTML-Datei.
 umgeschaltet werden:
 
 1. **Einreichportal** (öffentliche Seite)
+   - **Konto für wiederkehrende Einsender (Demo-Login):** Stammdaten werden
+     vorausgefüllt, „Meine Beiträge“ zeigt eigene Einreichungen samt Status,
+     Entwürfe können gespeichert, weiterbearbeitet und später abgesendet werden.
    - Schritt 1: Absender:in & Kontakt (Kategorie, Organisation, Name, Funktion, E-Mail, Telefon)
-   - Schritt 2: Beitrag (Titel, Einleitung, Text mit Zeichenzähler,
-     Texter-/Fotografen-Hinweis) + Foto-Upload per Drag & Drop
+   - Schritt 2: Beitrag mit **Ausgabe-Auswahl** (inkl. Redaktionsschluss-Anzeige)
+     und **Rubrik** (Amtliches, Vereine, Veranstaltungen, Wirtschaft …), Titel,
+     Einleitung, Text mit Zeichenzähler und **Live-Umfangsschätzung**
+     („entspricht ca. X Seiten“), Texter-/Fotografen-Hinweis + Foto-Upload per
+     Drag & Drop
      - Hinweisbox: Fotos unbearbeitet in Originalgröße hochladen (Druckqualität)
      - Automatische Prüfung der Bildauflösung („druckfähig“ / „evtl. zu klein“)
      - Rechte-/DSGVO-Bestätigung als Pflicht-Checkbox
@@ -30,8 +36,15 @@ umgeschaltet werden:
      nachreichen), bei Partnerstories optional fixe Platzierung im Heft
      (U2, Seite 5, Heftmitte, U3, U4) – vergebene Plätze sind gesperrt.
      Referenzen PR-/INS-2026-xxx.
+   - **Veranstaltung melden:** strukturierte Terminerfassung (Datum, Uhrzeit,
+     Ort, Veranstalter, Kurzbeschreibung); nach Freigabe durch die Redaktion
+     erscheinen die Termine automatisch in der Terminvorschau.
 
 2. **Redaktion (Backend)**
+   - **Ausgabenverwaltung:** Umschalter zwischen Ausgaben (z. B. November 2026 /
+     März 2027) mit eigenem Redaktionsschluss; Liste, Kennzahlen, Kontingente
+     und Heftspiegel beziehen sich immer auf die gewählte Ausgabe. Button
+     „Erinnerung an Einsender senden“ (simulierte Redaktionsschluss-Mail).
    - Dashboard-Kennzahlen, Termin-Leiste (Einsendeschluss, Druckfreigabe)
    - Liste aller Einreichungen mit Suche, Status- und Art-Filter
      (redaktionelle Beiträge / Partnerstories / Inserate); Buchungen mit
@@ -45,6 +58,16 @@ umgeschaltet werden:
      freigegeben** (Gemeinde prüft die Texte und gibt sie an die Agentur frei)
    - Rückfragen an die Ansprechperson (simulierte E-Mail) + interne Notizen + Verlauf
    - Fotos gesammelt als ZIP herunterladen (im Dummy simuliert)
+   - **Heftspiegel:** Beiträge nach Rubriken gruppiert mit geschätzten Seiten
+     (Richtwert 3.500 Zeichen/Seite + Fotoanteil), Summen je Rubrik, Inserate/
+     PR, Terminseite und fixe Seiten; Gesamtumfang mit Hinweis auf den
+     nächsten druckbaren 4er-Bogen.
+   - **Terminkalender:** gemeldete Veranstaltungen prüfen/freigeben/entfernen,
+     automatische Vorschau der Terminseite.
+   - **Layout-Export (funktioniert echt):** erzeugt eine Word-Datei mit allen
+     Beiträgen der Ausgabe, nach Rubriken gegliedert und mit Formatvorlagen
+     (Titel/Einleitung/Fließtext/Credit) ausgezeichnet – inkl. Partnerstories
+     und Terminseite. In der echten Umsetzung analog als InDesign-ICML.
    - **KI-Korrektur** beim Beitragstext: prüft ausschließlich Rechtschreibung,
      Grammatik und Zeichensetzung (keine inhaltlichen oder stilistischen
      Änderungen), zeigt die Vorschläge als Vorher/Nachher-Markierung und
