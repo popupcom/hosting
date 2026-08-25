@@ -36,24 +36,18 @@ wieder her.
 
 ## Design
 
-Das Design ist der Startseite von www.schruns.at nachempfunden (Abgleich per
-Screenshot): blaue Topbar mit weißem Schriftzug „Marktgemeinde“ und
-Social-/Such-Icons, weiße Namensleiste mit großem „Schruns“-Schriftzug und
-fetter schwarzer Hauptnavigation (Bürgerservice, Verwaltung, Politik, Unsere
-Gemeinde), links das überlappende Gemeindewappen, darunter der Bildslider mit
-Steuerung und Barrierefreiheits-Button, zentrierte Versal-Überschriften mit
+Das Design ist der Website www.schruns.at nachempfunden (Abgleich per
+Screenshot), als eigenständige Landing Page ohne Hauptnavigation und ohne
+Bildslider: blaue Topbar mit weißem Schriftzug „Marktgemeinde“ und
+Social-/Such-Icons, weiße Namensleiste mit großem „Schruns“-Schriftzug,
+links das überlappende Gemeindewappen, zentrierte Versal-Überschriften mit
 Trennlinie sowie weiße Karten mit grauem Rahmen und stahlblauen Titeln.
 Schrift: Open Sans. **Alle Farben liegen als CSS-Variablen im `:root`-Block
 am Dateianfang** und können bei Bedarf exakt nachjustiert werden.
 
-Zwei Grafiken sind bewusst austauschbar gehalten:
-
-- **Wappen:** Im Dummy ist das Gemeindewappen als SVG nachgezeichnet
-  (kein eigenes Logo, sondern eine Annäherung an das Original). Wird eine
-  Datei **`wappen.png`** (das echte Wappen) neben die `index.html` gelegt,
-  verwendet die Seite automatisch das Original.
-- **Sliderbild:** Analog ersetzt eine Datei **`hero.jpg`** (z. B. das
-  Blumenwiesen-Foto der Startseite) automatisch den SVG-Platzhalter.
+**Wappen:** Das Original-Wappen der Marktgemeinde Schruns liegt als
+`wappen.svg` im Ordner und ist unverändert (1:1) in die Seite eingebettet –
+im großen Portal-Header ebenso wie im kleinen Redaktions-Header.
 
 Termine (Einsendeschluss 2. Oktober 2026 usw.), Amtszeiten und Kontaktdaten
 im Footer sind Platzhalter.
