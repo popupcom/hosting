@@ -24,8 +24,8 @@ umgeschaltet werden:
      - Rechte-/DSGVO-Bestätigung als Pflicht-Checkbox
    - Schritt 3: Bestätigung mit Referenznummer
    - **Inserate & Partnerstories buchen:** Angebotskarten mit Live-Kontingent
-     (5 Partnerstories à € 1.100, 4 Inserate 1/1 à € 1.450, 8 Inserate 1/2 à
-     € 850). Ausgebuchte Formate sind gesperrt. Buchungsformular mit
+     (5 Partnerstories à € 850, 4 Inserate 1/1 à € 950, 8 Inserate 1/2 à
+     € 550, jeweils netto). Ausgebuchte Formate sind gesperrt. Buchungsformular mit
      verbindlicher Bestätigung; bei Inseraten Druckdaten-Upload (oder später
      nachreichen), bei Partnerstories optional fixe Platzierung im Heft
      (U2, Seite 5, Heftmitte, U3, U4) – vergebene Plätze sind gesperrt.

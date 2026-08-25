@@ -692,12 +692,12 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
    ========================================================= */
 'use strict';
 
-const STORE_KEY = 'gz-schruns-dummy-v1';
+const STORE_KEY = 'gz-schruns-dummy-v2';
 const KATEGORIE_LABEL = {verein:'Verein', betrieb:'Betrieb / Wirtschaft', institution:'Institution / Organisation', gemeinde:'Gemeinde', privat:'Privatperson'};
 const OFFERS = {
-  partnerstory: {label:'Partnerstory · 1 Seite', detail:'Redaktionell gestaltete PR-Seite mit Text & Fotos – auf Wunsch mit fixer Platzierung im Heft.', preis:1100, max:5, prefix:'PR'},
-  inserat1:     {label:'Inserat · 1/1 Seite',   detail:'Ganzseitiges Inserat mit fertigen Druckdaten (PDF).', preis:1450, max:4, prefix:'INS'},
-  inserat12:    {label:'Inserat · 1/2 Seite',   detail:'Halbseitiges Inserat mit fertigen Druckdaten (PDF).', preis:850,  max:8, prefix:'INS'}
+  partnerstory: {label:'Partnerstory · 1 Seite', detail:'Redaktionell gestaltete PR-Seite mit Text & Fotos – auf Wunsch mit fixer Platzierung im Heft.', preis:850, max:5, prefix:'PR'},
+  inserat1:     {label:'Inserat · 1/1 Seite',   detail:'Ganzseitiges Inserat mit fertigen Druckdaten (PDF).', preis:950, max:4, prefix:'INS'},
+  inserat12:    {label:'Inserat · 1/2 Seite',   detail:'Halbseitiges Inserat mit fertigen Druckdaten (PDF).', preis:550,  max:8, prefix:'INS'}
 };
 const PLACEMENTS = ['U2 (innere Titelseite)','Seite 5','Heftmitte','U3 (vorletzte Seite)','U4 (Rückseite)'];
 function fmtEUR(n){ return '€ ' + n.toLocaleString('de-AT'); }
@@ -812,12 +812,12 @@ const DEMO_DATA = [
     einleitung:'',
     text:'75 Jahre Raiffeisenbank im Tal – ein Rückblick auf die Anfänge des regionalen Bankwesens und ein Ausblick auf die digitale Zukunft.\n\n(Finaler Text wird gemeinsam mit der Redaktion abgestimmt.)',
     credit:'Text & Fotos: Raiffeisenbank Montafon',
-    preis:1100, platzierung:'U4 (Rückseite)', druckdaten:null,
+    preis:850, platzierung:'U4 (Rückseite)', druckdaten:null,
     eingereicht:'2026-08-22T14:20:00', status:'pruefung', fotos:[
       {name:'raiba_team_montafon.jpg', w:5472, h:3648, size:6.9}
     ],
     verlauf:[
-      {ts:'2026-08-22T14:20:00', who:'System', type:'system', text:'Buchung eingegangen – Partnerstory 1 Seite, € 1.100, fixe Platzierung: U4 (Rückseite).'},
+      {ts:'2026-08-22T14:20:00', who:'System', type:'system', text:'Buchung eingegangen – Partnerstory 1 Seite, € 850, fixe Platzierung: U4 (Rückseite).'},
       {ts:'2026-08-23T09:00:00', who:'Redaktion', type:'status', text:'Status geändert auf „In Prüfung“.'}
     ]
   },
@@ -826,10 +826,10 @@ const DEMO_DATA = [
     funktion:'Werbung', email:'werbung@intersport-montafon.at', telefon:'+43 5556 55555',
     titel:'Inserat 1/1 Seite – Intersport Montafon',
     einleitung:'', text:'', credit:'',
-    preis:1450, platzierung:'', druckdaten:{name:'intersport_wintereroeffnung_A4.pdf', size:14.2},
+    preis:950, platzierung:'', druckdaten:{name:'intersport_wintereroeffnung_A4.pdf', size:14.2},
     eingereicht:'2026-08-20T11:05:00', status:'freigegeben', fotos:[],
     verlauf:[
-      {ts:'2026-08-20T11:05:00', who:'System', type:'system', text:'Buchung eingegangen – Inserat 1/1 Seite, € 1.450. Druckdaten hochgeladen: intersport_wintereroeffnung_A4.pdf'},
+      {ts:'2026-08-20T11:05:00', who:'System', type:'system', text:'Buchung eingegangen – Inserat 1/1 Seite, € 950. Druckdaten hochgeladen: intersport_wintereroeffnung_A4.pdf'},
       {ts:'2026-08-21T08:45:00', who:'Redaktion', type:'status', text:'Druckdaten geprüft und für die Agentur freigegeben.'}
     ]
   },
@@ -838,10 +838,10 @@ const DEMO_DATA = [
     funktion:'Inhaberin', email:'office@cafe-doerflinger.at', telefon:'+43 664 3334455',
     titel:'Inserat 1/2 Seite – Café Dörflinger',
     einleitung:'', text:'', credit:'',
-    preis:850, platzierung:'', druckdaten:null,
+    preis:550, platzierung:'', druckdaten:null,
     eingereicht:'2026-08-24T17:30:00', status:'neu', fotos:[],
     verlauf:[
-      {ts:'2026-08-24T17:30:00', who:'System', type:'system', text:'Buchung eingegangen – Inserat 1/2 Seite, € 850. Druckdaten werden nachgereicht.'}
+      {ts:'2026-08-24T17:30:00', who:'System', type:'system', text:'Buchung eingegangen – Inserat 1/2 Seite, € 550. Druckdaten werden nachgereicht.'}
     ]
   }
 ];
@@ -1054,7 +1054,7 @@ function renderOffers(){
     return `<div class="offer${full?' full':''}">
       <span class="o-name">${o.label}</span>
       <span class="o-detail">${o.detail}</span>
-      <span class="o-price">${fmtEUR(o.preis)}</span>
+      <span class="o-price">${fmtEUR(o.preis)} <span style="font-size:.85rem;font-weight:400;color:var(--c-muted)">netto</span></span>
       <span class="o-rest">${full
         ? '<span class="soldout">Ausgebucht</span>'
         : 'Noch <b>'+rest+'</b> von '+o.max+' verfügbar'}
