@@ -32,6 +32,13 @@ umgeschaltet werden:
      freigegeben** (Gemeinde prüft die Texte und gibt sie an die Agentur frei)
    - Rückfragen an die Ansprechperson (simulierte E-Mail) + interne Notizen + Verlauf
    - Fotos gesammelt als ZIP herunterladen (im Dummy simuliert)
+   - **KI-Korrektur** beim Beitragstext: prüft ausschließlich Rechtschreibung,
+     Grammatik und Zeichensetzung (keine inhaltlichen oder stilistischen
+     Änderungen), zeigt die Vorschläge als Vorher/Nachher-Markierung und
+     übernimmt sie erst nach Bestätigung durch die Redaktion; jede Übernahme
+     wird im Verlauf dokumentiert. Im Dummy simuliert (Beispiel: Beitrag des
+     FC Schruns enthält absichtliche Fehler); in der echten Umsetzung
+     übernimmt das die Claude-API mit eng gefasstem Systemprompt.
    - **PDF-Freigabeprozess:** Die Agentur lädt das fertig gestaltete PDF hoch
      und startet die Freigabe mit einstellbarer Frist (3/5/7/14 Tage). Die
      Ansprechperson erhält eine E-Mail mit Freigabe-Link; ohne Rückmeldung innerhalb

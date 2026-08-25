@@ -244,6 +244,17 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
 .timeline li.t-antwort{border-color:var(--c-green)}
 .timeline li.t-notiz{border-color:#d6b94a}
 .timeline li.t-pdf{border-color:#5d4a9c}
+.timeline li.t-ki{border-color:#1c7f9c}
+
+/* ---------- KI-Korrektur ---------- */
+#d-ki{margin-top:1rem;padding-top:1rem;border-top:1px dashed var(--c-line)}
+.ki-note{font-size:.82rem;color:var(--c-muted);margin-top:.45rem}
+.ki-box{background:#f4f9fb;border:1px solid #bfdde8;border-radius:var(--radius);padding:1rem 1.1rem;margin-top:.8rem;font-size:.95rem}
+.ki-box .ki-head{display:flex;align-items:center;gap:.5rem;font-weight:700;color:#155e75;margin-bottom:.6rem}
+.ki-box .ki-lbl{font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--c-muted);margin:.7rem 0 .25rem}
+.ki-box del{background:var(--c-red-soft);color:var(--c-red);text-decoration:line-through;padding:0 2px;border-radius:2px}
+.ki-box ins{background:var(--c-green-soft);color:var(--c-green);text-decoration:none;font-weight:700;padding:0 2px;border-radius:2px}
+.ki-box p+p{margin-top:.6rem}
 .timeline .tw{font-weight:700}
 .timeline .tt{color:var(--c-muted);font-size:.78rem}
 .askbox textarea{width:100%;border:1px solid #c6c6c6;border-radius:var(--radius);padding:.6rem .8rem;min-height:5rem;resize:vertical}
@@ -573,6 +584,7 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
             <p class="lede" id="d-einleitung"></p>
             <div id="d-text"></div>
             <div class="credit" id="d-credit"></div>
+            <div id="d-ki"></div>
           </section>
 
           <section class="card det-sec">
@@ -696,7 +708,7 @@ const DEMO_DATA = [
     funktion:'Jugendleiter', email:'jugend@fc-schruns.at', telefon:'',
     titel:'Erfolgreicher Saisonstart unserer Jugendmannschaften',
     einleitung:'Über 120 Kinder und Jugendliche jagen beim FC Schruns dem runden Leder nach – und das mit beachtlichem Erfolg.',
-    text:'Mit dem Ende der Sommerpause sind unsere sieben Jugendmannschaften wieder voll im Trainings- und Spielbetrieb. Die U12 konnte ihre ersten drei Meisterschaftsspiele allesamt gewinnen.\n\nEin großes Dankeschön gilt unseren ehrenamtlichen Trainerinnen und Trainern sowie allen Eltern, die unsere jungen Kicker Woche für Woche unterstützen. Kinder, die Lust auf Fußball haben, sind jederzeit herzlich zum Schnuppertraining eingeladen – einfach dienstags um 17 Uhr auf der Sportanlage vorbeischauen!',
+    text:'Mit dem Ende der Sommerpause sind unsere sieben Jugendmanschaften wieder voll im Trainings- und Spielbetrieb. Die U12 konnte ihre ersten drei Meisterschaftspiele allesamt gewinnen.\n\nEin grosses Dankeschön gilt unsere ehrenamtlichen Trainerinnen und Trainern sowie allen Eltern, die unsere jungen Kicker Woche für Woche unterstützen. Kinder die Lust auf Fussball haben, sind jederzeit herzlich zum Schnuppertraining eingeladen – einfach Dienstags um 17 Uhr auf der Sportanlage vorbeischauen!',
     credit:'Text: Michael Salzgeber · Fotos: Petra Netzer',
     eingereicht:'2026-08-23T20:12:00', status:'neu',
     fotos:[
@@ -1000,6 +1012,8 @@ function openDetail(ref){
   renderDetailStatus(e);
   renderFotos(e);
   renderVerlauf(e);
+  kiPending = null;
+  renderKi(e);
   document.getElementById('askText').value='';
   window.scrollTo({top:0});
 }
@@ -1092,6 +1106,89 @@ function manualPdfOk(){
   toast('PDF als freigegeben markiert.');
 }
 function openFreigabe(ref){ freigabeRef = ref; switchView('freigabe'); }
+
+/* ---------- KI-Korrektur (im Dummy simuliert) ----------
+   Prueft ausschliesslich Rechtschreibung, Grammatik und
+   Zeichensetzung – keine inhaltlichen/stilistischen Aenderungen.
+   In der echten Umsetzung uebernimmt das die Claude-API mit einem
+   entsprechend eng gefassten Systemprompt. */
+const KI_KORREKTUREN = [
+  ['Jugendmanschaften','Jugendmannschaften'],
+  ['Meisterschaftspiele','Meisterschaftsspiele'],
+  ['grosses','großes'],
+  ['gilt unsere ehrenamtlichen','gilt unseren ehrenamtlichen'],
+  ['Kinder die Lust','Kinder, die Lust'],
+  ['Fussball','Fußball'],
+  ['Dienstags um','dienstags um'],
+  ['Standart','Standard'],
+  ['villeicht','vielleicht'],
+  ['Kirchplaz','Kirchplatz'],
+  ['Gruss','Gruß'],
+  ['dass Fest','das Fest']
+];
+let kiPending = null;
+const KI_FIELDS = [['titel','Titel'],['einleitung','Einleitung'],['text','Text']];
+function kiMatches(e){
+  const found = [];
+  KI_FIELDS.forEach(([f])=>{
+    KI_KORREKTUREN.forEach(([from,to])=>{
+      if((e[f]||'').includes(from)) found.push({field:f, from, to});
+    });
+  });
+  return found;
+}
+function renderKi(e, state){
+  const el = document.getElementById('d-ki');
+  if(!el) return;
+  if(state==='running'){
+    el.innerHTML = '<span class="small muted">⏳ Text wird von der KI auf Rechtschreibung und Grammatik geprüft …</span>';
+    return;
+  }
+  if(state==='result'){
+    if(!kiPending || !kiPending.length){
+      el.innerHTML = `<div class="ki-box"><div class="ki-head">✨ KI-Korrektur</div>
+        <span style="color:var(--c-green);font-weight:600">Keine Fehler gefunden – Rechtschreibung und Grammatik sind in Ordnung.</span>
+        <p style="margin-top:.7rem"><button class="btn btn-ghost btn-sm" onclick="renderKi(entries.find(x=>x.ref===currentRef))">Schließen</button></p></div>`;
+      return;
+    }
+    let diffs = '';
+    KI_FIELDS.forEach(([f,label])=>{
+      const pairs = kiPending.filter(k=>k.field===f);
+      if(!pairs.length) return;
+      let html = esc(e[f]);
+      pairs.forEach(k=>{ html = html.split(esc(k.from)).join('<del>'+esc(k.from)+'</del><ins>'+esc(k.to)+'</ins>'); });
+      diffs += `<div class="ki-lbl">${label}</div>` + html.split(/\n{2,}/).map(p=>'<p>'+p.replace(/\n/g,'<br>')+'</p>').join('');
+    });
+    el.innerHTML = `<div class="ki-box">
+      <div class="ki-head">✨ KI-Korrektur – ${kiPending.length} ${kiPending.length===1?'Vorschlag':'Vorschläge'}</div>
+      <span class="small muted">Nur Rechtschreibung, Grammatik und Zeichensetzung – der Inhalt bleibt unverändert.</span>
+      ${diffs}
+      <p style="margin-top:.9rem;display:flex;gap:.6rem;flex-wrap:wrap">
+        <button class="btn btn-primary btn-sm" onclick="kiApply()">Korrekturen übernehmen</button>
+        <button class="btn btn-ghost btn-sm" onclick="renderKi(entries.find(x=>x.ref===currentRef))">Verwerfen</button>
+      </p></div>`;
+    return;
+  }
+  el.innerHTML = `<button class="btn btn-outline btn-sm" onclick="kiCheck()">✨&ensp;KI-Korrektur starten</button>
+    <div class="ki-note">Prüft ausschließlich Rechtschreibung, Grammatik und Zeichensetzung –
+    keine inhaltlichen oder stilistischen Änderungen. Vorschläge werden erst nach Bestätigung übernommen.</div>`;
+}
+function kiCheck(){
+  const e = entries.find(x=>x.ref===currentRef); if(!e) return;
+  renderKi(e, 'running');
+  setTimeout(()=>{ kiPending = kiMatches(e); renderKi(e, 'result'); }, 1100);
+}
+function kiApply(){
+  const e = entries.find(x=>x.ref===currentRef); if(!e || !kiPending) return;
+  const n = kiPending.length;
+  kiPending.forEach(k=>{ e[k.field] = e[k.field].split(k.from).join(k.to); });
+  kiPending = null;
+  e.verlauf.push({ts:new Date().toISOString(), who:'KI-Assistent', type:'ki',
+    text:'Rechtschreib- und Grammatikkorrektur übernommen ('+n+' '+(n===1?'Änderung':'Änderungen')+'). Keine inhaltlichen oder stilistischen Anpassungen.'});
+  saveStore();
+  openDetail(e.ref);
+  toast('KI-Korrekturen übernommen ('+n+').');
+}
 function renderFreigabe(ref){
   const el = document.getElementById('fg-content');
   const e = (ref && entries.find(x=>x.ref===ref)) || entries.find(x=>x.status==='pdf_offen');
