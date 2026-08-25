@@ -138,7 +138,7 @@ input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
   border:1px solid #c6c6c6;border-radius:var(--radius);padding:.6rem .8rem;background:#fff;width:100%}
 .field textarea{resize:vertical;min-height:6.5rem;line-height:1.5}
 .field input:focus,.field textarea:focus,.field select:focus{outline:3px solid var(--c-blue-soft);border-color:var(--c-blue)}
-.field.invalid input,.field.invalid textarea{border-color:var(--c-red);background:#fff8f7}
+.field.invalid input,.field.invalid textarea,.field.invalid select{border-color:var(--c-red);background:#fff8f7}
 .field .err{display:none;color:var(--c-red);font-size:.82rem}
 .field.invalid .err{display:block}
 .counter{font-size:.78rem;color:var(--c-muted);text-align:right}
@@ -277,9 +277,9 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
   <span class="tag">KLICK-DUMMY</span>
   <span>Gemeindezeitung Schruns · Beitragsportal &amp; Redaktion</span>
   <span class="spacer"></span>
-  <button id="btnViewPortal" class="active" onclick="switchView('portal')">Vereinsportal</button>
+  <button id="btnViewPortal" class="active" onclick="switchView('portal')">Einreichportal</button>
   <button id="btnViewAdmin" onclick="switchView('admin')">Redaktion (Backend)</button>
-  <button id="btnViewFreigabe" onclick="switchView('freigabe')">PDF-Freigabe (Verein)</button>
+  <button id="btnViewFreigabe" onclick="switchView('freigabe')">PDF-Freigabe (Einsender)</button>
   <button class="ghost" onclick="resetDemo()" title="Demodaten zurücksetzen">↺ Demo zurücksetzen</button>
 </div>
 
@@ -317,25 +317,39 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
 
     <h1 class="sechead">Gemeindezeitung – Beiträge einreichen</h1>
     <div class="secline"></div>
-    <p class="introtext">Liebe Vereine und Institutionen! Hier können Sie Ihre Texte und Fotos für die
-      Ausgabe <b>November 2026</b> der Schrunser Gemeindezeitung bequem online einreichen.</p>
+    <p class="introtext">Ob Verein, Betrieb, Wirtschaftsgemeinschaft, Institution, Gemeindemitarbeiter:in
+      oder Privatperson – hier können Sie Ihre Texte und Fotos für die Ausgabe <b>November 2026</b>
+      der Schrunser Gemeindezeitung bequem online einreichen.</p>
     <p class="deadline-line">Einsendeschluss: <b>Freitag, 2. Oktober 2026</b></p>
 
     <div class="stepper" id="stepper">
-      <div class="step active" data-step="1"><span class="num">1</span><span class="lbl">Verein &amp; Ansprechperson</span></div>
+      <div class="step active" data-step="1"><span class="num">1</span><span class="lbl">Absender:in &amp; Kontakt</span></div>
       <div class="step" data-step="2"><span class="num">2</span><span class="lbl">Beitrag &amp; Fotos</span></div>
       <div class="step" data-step="3"><span class="num">3</span><span class="lbl">Fertig</span></div>
     </div>
 
     <!-- ---------- Schritt 1 ---------- -->
     <section class="card formcard" id="step1">
-      <h2>Verein &amp; Ansprechperson</h2>
+      <h2>Absender:in &amp; Kontakt</h2>
       <p class="sub">Damit wir bei Rückfragen wissen, an wen wir uns wenden dürfen.</p>
       <div class="grid2">
-        <div class="field wide" id="f-verein">
-          <label>Verein / Organisation <span class="req">*</span></label>
-          <input type="text" id="i-verein" placeholder="z. B. Musikverein Schruns">
-          <span class="err">Bitte den Namen des Vereins angeben.</span>
+        <div class="field" id="f-kategorie">
+          <label>Ich reiche ein als <span class="req">*</span></label>
+          <select id="i-kategorie">
+            <option value="">Bitte wählen …</option>
+            <option value="verein">Verein</option>
+            <option value="betrieb">Betrieb / Wirtschaft</option>
+            <option value="institution">Institution / Organisation</option>
+            <option value="gemeinde">Gemeinde (Mitarbeiter:in)</option>
+            <option value="privat">Privatperson</option>
+          </select>
+          <span class="err">Bitte eine Kategorie wählen.</span>
+        </div>
+        <div class="field" id="f-verein">
+          <label>Verein / Betrieb / Organisation</label>
+          <input type="text" id="i-verein" placeholder="z. B. Musikverein Schruns, Bäckerei Muster …">
+          <span class="hint">Bei Einsendungen als Privatperson leer lassen.</span>
+          <span class="err">Bitte den Namen der Organisation angeben.</span>
         </div>
         <div class="field" id="f-vorname">
           <label>Vorname <span class="req">*</span></label>
@@ -348,8 +362,8 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
           <span class="err">Bitte Nachnamen angeben.</span>
         </div>
         <div class="field" id="f-funktion">
-          <label>Funktion im Verein</label>
-          <input type="text" id="i-funktion" placeholder="z. B. Schriftführerin, Obmann …">
+          <label>Funktion</label>
+          <input type="text" id="i-funktion" placeholder="z. B. Obmann, Geschäftsführerin, Mitarbeiter:in Bauamt …">
         </div>
         <div class="field" id="f-telefon">
           <label>Telefon</label>
@@ -421,9 +435,10 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
 
       <div class="checkline" id="f-rechte">
         <input type="checkbox" id="i-rechte">
-        <label for="i-rechte">Ich bestätige, dass der Verein über die erforderlichen <b>Bild- und Textrechte</b> verfügt, die
-          abgebildeten Personen mit einer Veröffentlichung einverstanden sind und der Beitrag in der
-          Gemeindezeitung sowie auf schruns.at veröffentlicht werden darf. <span class="req">*</span></label>
+        <label for="i-rechte">Ich bestätige, dass ich bzw. die einreichende Organisation über die erforderlichen
+          <b>Bild- und Textrechte</b> verfügt, die abgebildeten Personen mit einer Veröffentlichung
+          einverstanden sind und der Beitrag in der Gemeindezeitung sowie auf schruns.at
+          veröffentlicht werden darf. <span class="req">*</span></label>
       </div>
 
       <div class="formfoot">
@@ -451,7 +466,7 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
 
   </main>
 
-  <!-- Ansicht, die der Verein über den Freigabe-Link aus der E-Mail sieht -->
+  <!-- Ansicht, die Einsender:innen über den Freigabe-Link aus der E-Mail sehen -->
   <main class="wrap hidden" id="freigabe-main">
     <h1 class="sechead">PDF-Freigabe</h1>
     <div class="secline"></div>
@@ -510,7 +525,7 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
       </div>
 
       <div class="toolbar">
-        <input type="search" id="q" placeholder="Suchen (Verein, Titel …)" oninput="renderList()">
+        <input type="search" id="q" placeholder="Suchen (Absender, Titel …)" oninput="renderList()">
         <select id="fstatus" onchange="renderList()">
           <option value="">Alle Status</option>
           <option value="neu">Neu</option>
@@ -532,7 +547,7 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
       <div class="listwrap">
         <table class="list">
           <thead><tr>
-            <th>Ref.</th><th>Verein / Titel</th><th>Eingereicht</th><th>Fotos</th><th>Status</th><th></th>
+            <th>Ref.</th><th>Absender / Titel</th><th>Eingereicht</th><th>Fotos</th><th>Status</th><th></th>
           </tr></thead>
           <tbody id="tbody"></tbody>
         </table>
@@ -596,7 +611,7 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
           </section>
 
           <section class="card det-sec askbox">
-            <h3>Rückfrage an den Verein</h3>
+            <h3>Rückfrage an die Ansprechperson</h3>
             <textarea id="askText" placeholder="Ihre Rückfrage … (wird per E-Mail an die Ansprechperson gesendet)"></textarea>
             <p style="margin-top:.7rem;display:flex;gap:.6rem;flex-wrap:wrap">
               <button class="btn btn-gold btn-sm" onclick="sendAsk()">Rückfrage senden</button>
@@ -626,6 +641,8 @@ table.list tbody tr:hover{background:var(--c-blue-soft)}
 'use strict';
 
 const STORE_KEY = 'gz-schruns-dummy-v1';
+const KATEGORIE_LABEL = {verein:'Verein', betrieb:'Betrieb / Wirtschaft', institution:'Institution / Organisation', gemeinde:'Gemeinde', privat:'Privatperson'};
+function absenderName(e){ return e.verein || ((e.vorname||'')+' '+(e.nachname||'')).trim(); }
 const STATUS_LABEL = {
   neu:'Neu', pruefung:'In Prüfung', rueckfrage:'Rückfrage offen',
   freigegeben:'Für Agentur freigegeben',
@@ -634,7 +651,7 @@ const STATUS_LABEL = {
 
 const DEMO_DATA = [
   {
-    ref:'GZ-2026-001', verein:'Musikverein Schruns', vorname:'Elisabeth', nachname:'Bitschnau',
+    ref:'GZ-2026-001', kategorie:'verein', verein:'Musikverein Schruns', vorname:'Elisabeth', nachname:'Bitschnau',
     funktion:'Schriftführerin', email:'schriftfuehrung@mv-schruns.at', telefon:'+43 664 1234567',
     titel:'Ein Sommer voller Blasmusik',
     einleitung:'Von der Platzkonzert-Saison am Kirchplatz bis zum Bezirksmusikfest – der Musikverein Schruns blickt auf einen klingenden Sommer zurück.',
@@ -657,7 +674,7 @@ const DEMO_DATA = [
     ]
   },
   {
-    ref:'GZ-2026-002', verein:'Trachtengruppe Schruns', vorname:'Marlene', nachname:'Tschofen',
+    ref:'GZ-2026-002', kategorie:'verein', verein:'Trachtengruppe Schruns', vorname:'Marlene', nachname:'Tschofen',
     funktion:'Obfrau', email:'obfrau@trachtengruppe-schruns.at', telefon:'+43 650 9876543',
     titel:'50 Jahre Trachtengruppe – ein Jubiläum für ganz Schruns',
     einleitung:'Ein halbes Jahrhundert gelebtes Brauchtum: Die Trachtengruppe Schruns feierte ihr 50-Jahr-Jubiläum mit einem großen Fest.',
@@ -675,7 +692,7 @@ const DEMO_DATA = [
     ]
   },
   {
-    ref:'GZ-2026-003', verein:'FC Schruns', vorname:'Michael', nachname:'Salzgeber',
+    ref:'GZ-2026-003', kategorie:'verein', verein:'FC Schruns', vorname:'Michael', nachname:'Salzgeber',
     funktion:'Jugendleiter', email:'jugend@fc-schruns.at', telefon:'',
     titel:'Erfolgreicher Saisonstart unserer Jugendmannschaften',
     einleitung:'Über 120 Kinder und Jugendliche jagen beim FC Schruns dem runden Leder nach – und das mit beachtlichem Erfolg.',
@@ -693,7 +710,7 @@ const DEMO_DATA = [
     ]
   },
   {
-    ref:'GZ-2026-004', verein:'Bergrettung Schruns', vorname:'Thomas', nachname:'Vallaster',
+    ref:'GZ-2026-004', kategorie:'verein', verein:'Bergrettung Schruns', vorname:'Thomas', nachname:'Vallaster',
     funktion:'Ortsstellenleiter', email:'schruns@bergrettung-vbg.at', telefon:'+43 664 5551234',
     titel:'Übungssommer der Bergrettung: bereit für den Ernstfall',
     einleitung:'Von der Seilbahn-Evakuierung bis zur nächtlichen Suchaktion – die Bergrettung Schruns trainierte den Ernstfall.',
@@ -709,6 +726,22 @@ const DEMO_DATA = [
       {ts:'2026-08-24T11:20:00', who:'Redaktion', type:'status', text:'Status geändert auf „In Prüfung“.'},
       {ts:'2026-08-24T11:22:00', who:'Redaktion', type:'notiz', text:'Interne Notiz: Evtl. mit Beitrag der Feuerwehr auf einer Doppelseite „Sicherheit“ bündeln.'},
       {ts:'2026-08-24T15:40:00', who:'Redaktion', type:'status', text:'Beitrag geprüft und für die Agentur freigegeben – Agentur benachrichtigt.'}
+    ]
+  },
+  {
+    ref:'GZ-2026-005', kategorie:'betrieb', verein:'Wirtschaftsgemeinschaft Schruns-Tschagguns', vorname:'Sabine', nachname:'Juen',
+    funktion:'Geschäftsführerin', email:'office@wige-schruns.at', telefon:'+43 664 7788990',
+    titel:'Advent in Schruns: Aktionen der Wirtschaftsgemeinschaft',
+    einleitung:'Vom Adventmarkt bis zur langen Einkaufsnacht – die heimischen Betriebe laden zum Einkaufen im Ort ein.',
+    text:'Die Wirtschaftsgemeinschaft Schruns-Tschagguns hat für die Adventzeit wieder ein stimmungsvolles Programm zusammengestellt. Den Auftakt macht der Adventmarkt am Kirchplatz am ersten Adventwochenende.\n\nBei der langen Einkaufsnacht am 11. Dezember halten die Geschäfte im Ortszentrum bis 21 Uhr geöffnet – mit Punsch, Musik und einer Gewinnspielaktion. Wir freuen uns auf Ihren Besuch und danken allen, die mit ihrem Einkauf die heimischen Betriebe stärken!',
+    credit:'Text: Sabine Juen · Fotos: Archiv Wirtschaftsgemeinschaft',
+    eingereicht:'2026-08-25T08:30:00', status:'neu',
+    fotos:[
+      {name:'adventmarkt_kirchplatz.jpg', w:5472, h:3648, size:7.2},
+      {name:'lange_einkaufsnacht.jpg', w:6000, h:4000, size:8.1}
+    ],
+    verlauf:[
+      {ts:'2026-08-25T08:30:00', who:'System', type:'system', text:'Beitrag eingereicht.'}
     ]
   }
 ];
@@ -734,6 +767,7 @@ function resetDemo(){
   renderFilelist();
   document.querySelectorAll('#view-portal input[type=text],#view-portal input[type=email],#view-portal input[type=tel],#view-portal textarea').forEach(i=>i.value='');
   document.getElementById('i-rechte').checked = false;
+  document.getElementById('i-kategorie').value = '';
   freigabeRef = null;
   showStep(1); closeDetail(); renderList(); renderFreigabe(null);
   toast('Demodaten wurden zurückgesetzt.');
@@ -785,7 +819,9 @@ function invalid(fid, bad){
 }
 function gotoStep2(){
   let bad = false;
-  bad = invalid('f-verein', !document.getElementById('i-verein').value.trim()) || bad;
+  const kat = document.getElementById('i-kategorie').value;
+  bad = invalid('f-kategorie', !kat) || bad;
+  bad = invalid('f-verein', kat !== 'privat' && !document.getElementById('i-verein').value.trim()) || bad;
   bad = invalid('f-vorname', !document.getElementById('i-vorname').value.trim()) || bad;
   bad = invalid('f-nachname', !document.getElementById('i-nachname').value.trim()) || bad;
   const em = document.getElementById('i-email').value.trim();
@@ -871,6 +907,7 @@ function submitEntry(){
   const ref = 'GZ-2026-' + String(nr).padStart(3,'0');
   const entry = {
     ref,
+    kategorie: document.getElementById('i-kategorie').value,
     verein: document.getElementById('i-verein').value.trim(),
     vorname: document.getElementById('i-vorname').value.trim(),
     nachname: document.getElementById('i-nachname').value.trim(),
@@ -891,7 +928,7 @@ function submitEntry(){
 
   document.getElementById('refnr').textContent = 'Referenz: ' + ref;
   document.getElementById('successSummary').textContent =
-    '„' + entry.titel + '“ (' + entry.verein + ') wurde mit ' + entry.fotos.length +
+    '„' + entry.titel + '“ (' + absenderName(entry) + ') wurde mit ' + entry.fotos.length +
     (entry.fotos.length===1?' Foto':' Fotos') + ' an die Redaktion übermittelt.';
   showStep(3);
   toast('Beitrag erfolgreich übermittelt (Demo).');
@@ -913,12 +950,12 @@ function renderList(){
   const fs = document.getElementById('fstatus').value;
   const rows = entries
     .slice().sort((a,b)=>b.eingereicht.localeCompare(a.eingereicht))
-    .filter(e=>(!fs || e.status===fs) && (!q || (e.verein+' '+e.titel+' '+e.ref).toLowerCase().includes(q)));
+    .filter(e=>(!fs || e.status===fs) && (!q || (absenderName(e)+' '+e.vorname+' '+e.nachname+' '+e.titel+' '+e.ref).toLowerCase().includes(q)));
 
   document.getElementById('tbody').innerHTML = rows.map(e=>`
     <tr onclick="openDetail('${e.ref}')">
       <td class="muted small">${e.ref}</td>
-      <td><span class="tbl-title">${esc(e.verein)}</span><br><span class="tbl-sub">${esc(e.titel)}</span></td>
+      <td><span class="tbl-title">${esc(absenderName(e))}</span><br><span class="tbl-sub">${esc(KATEGORIE_LABEL[e.kategorie]||'')}${e.kategorie?' · ':''}${esc(e.titel)}</span></td>
       <td class="small">${fmtDate(e.eingereicht)}</td>
       <td>${e.fotos.length} <span class="muted small">(${fmtMB(e.fotos.reduce((s,f)=>s+f.size,0))})</span></td>
       <td><span class="badge b-${e.status}">${STATUS_LABEL[e.status]}</span></td>
@@ -948,13 +985,14 @@ function openDetail(ref){
   document.getElementById('adm-detail').classList.remove('hidden');
 
   document.getElementById('d-titel').textContent = e.titel;
-  document.getElementById('d-meta').textContent = e.ref + ' · ' + e.verein + ' · eingereicht am ' + fmtDate(e.eingereicht);
+  document.getElementById('d-meta').textContent = e.ref + ' · ' + absenderName(e) + ' · eingereicht am ' + fmtDate(e.eingereicht);
   document.getElementById('d-einleitung').textContent = e.einleitung || '';
   document.getElementById('d-einleitung').style.display = e.einleitung ? '' : 'none';
   document.getElementById('d-text').innerHTML = e.text.split(/\n{2,}/).map(p=>'<p>'+esc(p).replace(/\n/g,'<br>')+'</p>').join('');
   document.getElementById('d-credit').textContent = e.credit ? e.credit : 'Kein Texter-/Fotografen-Hinweis angegeben.';
   document.getElementById('d-kontakt').innerHTML = `
-    <dt>Verein</dt><dd>${esc(e.verein)}</dd>
+    <dt>Kategorie</dt><dd>${esc(KATEGORIE_LABEL[e.kategorie]||'–')}</dd>
+    ${e.verein?`<dt>Organisation</dt><dd>${esc(e.verein)}</dd>`:''}
     <dt>Name</dt><dd>${esc(e.vorname)} ${esc(e.nachname)}</dd>
     ${e.funktion?`<dt>Funktion</dt><dd>${esc(e.funktion)}</dd>`:''}
     <dt>E-Mail</dt><dd><a href="mailto:${esc(e.email)}">${esc(e.email)}</a></dd>
@@ -1001,7 +1039,7 @@ function renderPdf(e){
   }else if(e.status==='freigegeben' || e.status==='pdf_aenderung'){
     el.innerHTML = `
       <p class="small muted" style="margin-bottom:.7rem">${e.status==='pdf_aenderung'
-        ? 'Änderungswunsch des Vereins liegt vor (siehe Verlauf) – bitte korrigierte Version senden.'
+        ? 'Änderungswunsch liegt vor (siehe Verlauf) – bitte korrigierte Version senden.'
         : 'Beitrag liegt bei der Agentur. Sobald das gestaltete PDF vorliegt, hier hochladen und die Freigabe starten.'}</p>
       <input type="file" id="pdfFile" accept="application/pdf" style="font-size:.85rem;max-width:100%">
       <p style="margin-top:.8rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
@@ -1009,16 +1047,16 @@ function renderPdf(e){
         <select id="pdfTage" style="border:1px solid #c6c6c6;border-radius:2px;padding:.3rem">
           <option>3</option><option>5</option><option selected>7</option><option>14</option>
         </select><span class="small">Tage</span>
-        <button class="btn btn-primary btn-sm" onclick="sendPdf()">Zur Freigabe an Verein senden</button>
+        <button class="btn btn-primary btn-sm" onclick="sendPdf()">Zur Freigabe senden</button>
       </p>
-      <p class="small muted" style="margin-top:.5rem">Der Verein erhält eine E-Mail mit Freigabe-Link. Ohne Rückmeldung innerhalb der Frist gilt das PDF automatisch als freigegeben.</p>`;
+      <p class="small muted" style="margin-top:.5rem">Die Ansprechperson erhält eine E-Mail mit Freigabe-Link. Ohne Rückmeldung innerhalb der Frist gilt das PDF automatisch als freigegeben.</p>`;
   }else if(e.status==='pdf_offen'){
     el.innerHTML = `
       <div class="pdfmeta"><b>${esc(e.pdf.name)}</b><br>
         gesendet am ${fmtDateOnly(e.pdf.sent)} an ${esc(e.email)}<br>
         Frist: <b>${fmtDateOnly(e.pdf.frist)}</b> (noch ${daysLeft(e.pdf.frist)} Tage) – danach automatische Freigabe</div>
       <p style="margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap">
-        <button class="btn btn-outline btn-sm" onclick="openFreigabe('${e.ref}')">Vereins-Ansicht öffnen</button>
+        <button class="btn btn-outline btn-sm" onclick="openFreigabe('${e.ref}')">Freigabe-Ansicht öffnen</button>
         <button class="btn btn-ghost btn-sm" onclick="remindVerein()">Erinnerung senden</button>
         <button class="btn btn-ghost btn-sm" onclick="manualPdfOk()">Manuell freigeben</button>
       </p>`;
@@ -1042,7 +1080,7 @@ function sendPdf(){
 }
 function remindVerein(){
   const e = entries.find(x=>x.ref===currentRef); if(!e) return;
-  e.verlauf.push({ts:new Date().toISOString(), who:'System', type:'system', text:'Erinnerung an den Verein gesendet (Frist: '+fmtDateOnly(e.pdf.frist)+').'});
+  e.verlauf.push({ts:new Date().toISOString(), who:'System', type:'system', text:'Erinnerung an die Ansprechperson gesendet (Frist: '+fmtDateOnly(e.pdf.frist)+').'});
   saveStore(); renderVerlauf(e);
   toast('Erinnerung per E-Mail gesendet (Demo).');
 }
@@ -1060,7 +1098,7 @@ function renderFreigabe(ref){
   if(!e){
     el.innerHTML = `<section class="card formcard" style="text-align:center">
       <p>Derzeit liegt keine offene PDF-Freigabe vor.</p>
-      <p class="small muted" style="margin-top:.5rem">In der Redaktionsansicht kann bei einem für die Agentur freigegebenen Beitrag ein gestaltetes PDF zur Freigabe an den Verein gesendet werden.</p></section>`;
+      <p class="small muted" style="margin-top:.5rem">In der Redaktionsansicht kann bei einem für die Agentur freigegebenen Beitrag ein gestaltetes PDF zur Freigabe an die Ansprechperson gesendet werden.</p></section>`;
     return;
   }
   freigabeRef = e.ref;
@@ -1089,7 +1127,7 @@ function renderFreigabe(ref){
   el.innerHTML = `
   <section class="card formcard">
     <h2>Freigabe Ihrer Seite in der Gemeindezeitung</h2>
-    <p class="sub">Grüß Gott, ${esc(e.vorname)} ${esc(e.nachname)}! Der Beitrag „${esc(e.titel)}“ (${esc(e.verein)}, ${e.ref})
+    <p class="sub">Grüß Gott, ${esc(e.vorname)} ${esc(e.nachname)}! Der Beitrag „${esc(e.titel)}“ (${esc(absenderName(e))}, ${e.ref})
       wurde für die Ausgabe <b>November 2026</b> gestaltet. Bitte prüfen Sie die Vorschau.</p>
     <div class="pdfwrap">
       <div class="pdfpage" title="PDF-Vorschau (im Dummy schematisch)">
@@ -1107,7 +1145,7 @@ function renderFreigabe(ref){
 function vereinOk(){
   const e = entries.find(x=>x.ref===freigabeRef); if(!e) return;
   e.status = 'pdf_ok';
-  e.verlauf.push({ts:new Date().toISOString(), who:'Verein', type:'antwort', text:'PDF durch den Verein freigegeben.'});
+  e.verlauf.push({ts:new Date().toISOString(), who:'Einsender:in', type:'antwort', text:'PDF durch Einsender:in freigegeben.'});
   saveStore(); renderFreigabe(e.ref);
   toast('Freigabe übermittelt – vielen Dank!');
 }
@@ -1116,7 +1154,7 @@ function vereinChange(){
   const t = document.getElementById('fgText').value.trim();
   if(!t){ toast('Bitte zuerst den Änderungswunsch beschreiben.'); return; }
   e.status = 'pdf_aenderung';
-  e.verlauf.push({ts:new Date().toISOString(), who:'Verein', type:'antwort', text:'Änderungswunsch zum PDF: „'+t+'“'});
+  e.verlauf.push({ts:new Date().toISOString(), who:'Einsender:in', type:'antwort', text:'Änderungswunsch zum PDF: „'+t+'“'});
   saveStore(); renderFreigabe(e.ref);
   toast('Änderungswunsch an die Redaktion gesendet (Demo).');
 }
@@ -1184,12 +1222,12 @@ function addNote(){
 function downloadAll(){
   const n = entries.reduce((s,e)=>s+e.fotos.length,0);
   const mb = entries.reduce((s,e)=>s+e.fotos.reduce((x,f)=>x+f.size,0),0);
-  toast('ZIP-Download gestartet: '+n+' Fotos ('+fmtMB(mb)+'), sortiert nach Verein – im Dummy simuliert.');
+  toast('ZIP-Download gestartet: '+n+' Fotos ('+fmtMB(mb)+'), sortiert nach Absender – im Dummy simuliert.');
 }
 function downloadEntryPhotos(){
   const e = entries.find(x=>x.ref===currentRef); if(!e) return;
   const mb = e.fotos.reduce((s,f)=>s+f.size,0);
-  toast('ZIP-Download: '+e.fotos.length+' Fotos von „'+e.verein+'“ ('+fmtMB(mb)+') – im Dummy simuliert.');
+  toast('ZIP-Download: '+e.fotos.length+' Fotos von „'+absenderName(e)+'“ ('+fmtMB(mb)+') – im Dummy simuliert.');
 }
 
 /* ---------- Start ---------- */

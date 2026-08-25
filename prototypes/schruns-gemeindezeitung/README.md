@@ -1,8 +1,11 @@
 # Gemeindezeitung Schruns – Klick-Dummy
 
-Klickbarer Design-Dummy für ein Online-Tool, mit dem Vereine und Institutionen
-Beiträge (Texte + Fotos) für die Gemeindezeitung der Marktgemeinde Schruns
-(Ausgabe November 2026) einreichen können.
+Klickbarer Design-Dummy für ein Online-Tool, mit dem Vereine, Betriebe, die
+Wirtschaftsgemeinschaft, Institutionen, Gemeindemitarbeiter:innen und
+Privatpersonen Beiträge (Texte + Fotos) für die Gemeindezeitung der
+Marktgemeinde Schruns (Ausgabe November 2026) einreichen können. Im Formular
+wird dafür eine Absender-Kategorie gewählt; das Organisationsfeld ist nur
+für Nicht-Privatpersonen Pflicht.
 
 ## Öffnen
 
@@ -12,8 +15,8 @@ Der Dummy ist eine einzelne, in sich geschlossene HTML-Datei.
 Über die dunkle Leiste ganz oben kann zwischen den beiden Ansichten
 umgeschaltet werden:
 
-1. **Vereinsportal** (öffentliche Seite)
-   - Schritt 1: Verein & Ansprechperson (Verein, Name, Funktion, E-Mail, Telefon)
+1. **Einreichportal** (öffentliche Seite)
+   - Schritt 1: Absender:in & Kontakt (Kategorie, Organisation, Name, Funktion, E-Mail, Telefon)
    - Schritt 2: Beitrag (Titel, Einleitung, Text mit Zeichenzähler,
      Texter-/Fotografen-Hinweis) + Foto-Upload per Drag & Drop
      - Hinweisbox: Fotos unbearbeitet in Originalgröße hochladen (Druckqualität)
