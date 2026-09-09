@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+/* Design nach www.schruns.at – Tokens aus dem freigegebenen Klick-Dummy
+   (referenz-dummy/index.html). */
+:root {
+  --c-blue: #1063b6;
+  --c-blue-dark: #0b4d8f;
+  --c-blue-soft: #e8f1fa;
+  --c-head: #3a5a78;
+  --c-black: #1a1a1a;
+  --c-ink: #444444;
+  --c-muted: #767676;
+  --c-line: #dcdcdc;
+  --c-green: #2e7d4f;
+  --c-green-soft: #e3f2e9;
+  --c-red: #b3382e;
+  --c-red-soft: #fbe9e7;
+  --c-orange: #b26a00;
+  --c-orange-soft: #fdf1dc;
+}
+
+body {
+  color: var(--c-ink);
+  background: #fff;
+  font-family: var(--font-open-sans), "Segoe UI", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* ---------- Header (Schruns-Look) ---------- */
+.topbar { background: var(--c-blue); color: #fff; }
+.topbar-inner, .namebar-inner { max-width: 1240px; margin: 0 auto; padding: 0 1.25rem; display: flex; align-items: center; position: relative; }
+.topbar-inner { height: 64px; }
+.topbar .mg { margin-left: 170px; font-size: 1.5rem; font-weight: 400; }
+.namebar { background: #fff; border-bottom: 1px solid #e3e3e3; }
+.namebar-inner { height: 66px; }
+.namebar .ort { margin-left: 170px; font-size: 2.35rem; font-weight: 400; color: var(--c-black); line-height: 1; }
+.pagelabel { margin-left: auto; color: var(--c-head); font-weight: 600; font-size: 1.05rem; }
+.wappenbox { position: absolute; left: 1.25rem; top: 10px; z-index: 30; width: 142px; filter: drop-shadow(0 2px 4px rgba(0,0,0,.25)); }
+.wappenbox svg { width: 100%; height: auto; display: block; }
+@media (max-width: 920px) {
+  .topbar .mg, .namebar .ort { margin-left: 120px; }
+  .wappenbox { width: 96px; }
+  .namebar .ort { font-size: 1.8rem; }
+}
+
+/* ---------- Bausteine ---------- */
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 1.25rem; }
+.sechead { text-align: center; font-size: 1.3rem; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; color: #3d3d3d; margin: 3.2rem 0 1rem; }
+.secline { width: min(940px, 86%); height: 1px; background: var(--c-line); margin: 0 auto 1.8rem; }
+.card { background: #fff; border: 1px solid var(--c-line); border-radius: 2px; }
+.btn { display: inline-flex; align-items: center; gap: .5rem; border-radius: 2px; padding: .62rem 1.5rem; font-weight: 700; border: 1px solid transparent; cursor: pointer; transition: background .15s; }
+.btn-primary { background: var(--c-blue); color: #fff; }
+.btn-primary:hover { background: var(--c-blue-dark); }
+.btn-outline { background: #fff; color: var(--c-blue); border-color: var(--c-blue); }
+.btn-outline:hover { background: var(--c-blue-soft); }
+.btn-ghost { background: #fff; color: var(--c-muted); border-color: var(--c-line); }
+.btn-ghost:hover { background: #f4f4f4; }
+.btn-sm { padding: .35rem .95rem; font-size: .88rem; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.badge { display: inline-block; font-size: .78rem; font-weight: 700; border-radius: 3px; padding: .14rem .7rem; white-space: nowrap; }
+.b-neu { background: var(--c-blue-soft); color: var(--c-blue); }
+.b-pruefung { background: #fdf6d8; color: #8a6d00; }
+.b-rueckfrage { background: var(--c-orange-soft); color: var(--c-orange); }
+.b-freigegeben { background: var(--c-green-soft); color: var(--c-green); }
+.b-pdf_offen { background: #ece9f8; color: #5d4a9c; }
+.b-pdf_aenderung { background: var(--c-orange-soft); color: var(--c-orange); }
+.b-pdf_ok { background: #cdeeda; color: #14683a; }
+
+/* ---------- Formulare ---------- */
+.field label { font-weight: 700; font-size: .93rem; color: #333; display: block; margin-bottom: .3rem; }
+.field input, .field textarea, .field select {
+  border: 1px solid #c6c6c6; border-radius: 2px; padding: .6rem .8rem; background: #fff; width: 100%;
+}
+.field input:focus, .field textarea:focus, .field select:focus {
+  outline: 3px solid var(--c-blue-soft); border-color: var(--c-blue);
+}
+.field .hint { font-size: .82rem; color: var(--c-muted); margin-top: .25rem; display: block; }
+.field.invalid input, .field.invalid textarea, .field.invalid select { border-color: var(--c-red); background: #fff8f7; }
+.err { color: var(--c-red); font-size: .82rem; }
+.req { color: var(--c-red); }
+
+/* ---------- Stepper ---------- */
+.stepper { display: flex; margin: 2.2rem auto 1.6rem; }
+.step { flex: 1; display: flex; align-items: center; gap: .7rem; background: #fff; border: 1px solid var(--c-line); padding: .85rem 1.1rem; }
+.step + .step { border-left: none; }
+.step .num { width: 2rem; height: 2rem; border-radius: 50%; background: #f0f0f0; color: var(--c-muted); display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; border: 2px solid var(--c-line); }
+.step .lbl { font-size: .92rem; font-weight: 600; color: var(--c-muted); }
+.step.active { border-bottom: 3px solid var(--c-blue); }
+.step.active .num { background: var(--c-blue); border-color: var(--c-blue); color: #fff; }
+.step.active .lbl { color: var(--c-blue); }
+.step.done .num { background: var(--c-green); border-color: var(--c-green); color: #fff; }
+.step.done .lbl { color: var(--c-green); }
+
+/* ---------- Tabellen ---------- */
+table.list { width: 100%; border-collapse: collapse; background: #fff; font-size: .95rem; border: 1px solid var(--c-line); }
+table.list th { background: var(--c-blue); color: #fff; text-align: left; font-size: .82rem; letter-spacing: .05em; text-transform: uppercase; padding: .7rem .9rem; }
+table.list td { padding: .75rem .9rem; border-top: 1px solid var(--c-line); vertical-align: middle; }
+table.list tbody tr:hover { background: var(--c-blue-soft); }
+
+/* ---------- Footer ---------- */
+.site-foot { background: var(--c-blue); color: #dbe9f7; margin-top: 2.5rem; font-size: .92rem; }
+.site-foot a { color: #dbe9f7; }
+.site-foot .legal { background: var(--c-blue-dark); padding: .8rem 1.25rem; text-align: center; font-size: .8rem; color: #bcd6ee; }
+
+/* ---------- Sonstiges ---------- */
+.infobox { display: flex; gap: .9rem; background: var(--c-blue-soft); border: 1px solid #b9d4ec; border-radius: 2px; padding: 1rem 1.1rem; font-size: .93rem; }
+.fristbox { display: flex; gap: .7rem; background: #fdf6d8; border: 1px solid #e3d189; border-radius: 2px; padding: .9rem 1.1rem; font-size: .93rem; }
+.timeline { list-style: none; display: flex; flex-direction: column; gap: .7rem; font-size: .88rem; padding: 0; }
+.timeline li { border-left: 3px solid var(--c-line); padding: .1rem 0 .1rem .8rem; }
+.timeline li.t-rueckfrage { border-color: var(--c-orange); }
+.timeline li.t-freigabe { border-color: #5d4a9c; }
+.timeline li.t-notiz { border-color: #d6b94a; }
+.timeline li.t-zuweisung { border-color: var(--c-green); }
